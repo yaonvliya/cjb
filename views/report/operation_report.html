@@ -1,0 +1,278 @@
+<div class="animated fadeInRight">
+    <div class="search-box">
+        <form class="layui-form" id="operationReportSearchForm" lay-filter="operationReportSearchForm"
+              onsubmit="return false">
+            <input type="hidden" class="layui-input" name="status" value="1">
+            <div class="basic-search">
+                <div class="common-input-inline"><label class="search-form-label">报表年份：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" name="operationReportYear">
+                    </div>
+                </div>
+                <div class="common-input-inline"><label class="search-form-label">报表月份：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" name="operationReportMonth">
+                    </div>
+                </div>
+            #*<div class="common-input-inline">
+                <label class="search-form-label">报告类型：</label>
+                <div class="layui-input-inline">
+                    <select name="reportType">
+                        <option value="">全部</option>
+                        <option value="operation">运管报告</option>
+                        <option value="other">其他</option>
+                    </select>
+                </div>
+            </div>*#
+            </div>
+            <div class="layui-btn-group">
+                <button type="button" class="layui-btn layui-btn-primary" id="operationReportSearch"><i
+                        class="layui-icon">&#xe615;</i>
+                    查询
+                </button>
+                <button class="layui-btn layui-btn-primary" type="reset">重置</button>
+                <button type="button" class="layui-btn" lay-event="" id="generateOperationReportBtn"><i
+                        class="layui-icon">&#xe654;</i> 新增
+                </button>
+            </div>
+        </form>
+    </div>
+    <table id="operationReportDataTable" class="layui-hide" lay-filter="operationReportDataTable"></table>
+</div>
+
+
+<form class="layui-form p10 hide" id="generateOperationReportForm" lay-filter="generateOperationReportForm">
+    <div class="layui-form-item">
+        <label class="layui-form-label w100">运营报告年份</label>
+        <div class="layui-input-inline">
+            <input type="number" name="reportYear" maxlength="4" class="layui-input" autocomplete="off">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label w100">运营报告月份</label>
+        <div class="layui-input-inline">
+            <input type="number" name="reportMonth" maxlength="2" class="layui-input" autocomplete="off">
+        </div>
+    </div>
+    #*<div class="common-input-inline">
+        <label class="search-form-label">报告类型：</label>
+        <div class="layui-input-inline">
+            <select name="reportType">
+                <option value="operation">运管报告</option>
+                <option value="other">其他</option>
+            </select>
+        </div>
+    </div>*#
+    <div class="layui-form-item">
+        <label class="layui-form-label w100">运营报告备注</label>
+        <div class="layui-input-inline">
+            <textarea class="layui-textarea" name="remark" autocomplete="off"></textarea>
+        </div>
+    </div>
+    <div class="bottom-buttons">
+        <button type="button" class="layui-btn" id="operationReportNowSubmit">生成当月报告</button>
+        <button type="button" class="layui-btn layui-btn-primary" id="operationReportSubmit">生成历史报告</button>
+    </div>
+</form>
+
+
+<div class="right-win animated fadeInRight w1500" id="operationReportDetail">
+    <div class="right-win-top">
+        <a href="javascript:closeRightWin('operationReportDetail');" title="关闭"><i class="layui-icon close-right-win">&#x1006;</i></a>
+        <span class="right-win-title">运营报告详情</span>
+    </div>
+    <div class="right-win-content-box"></div>
+</div>
+
+<script type="text/html" id="operationReportOperation">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail"><i class="layui-icon">&#xe615;</i>查看报告详情</a>
+</script>
+
+<script type="text/javascript">
+    //    layform.render(null, "operationReportSearchForm");
+    var generateOperationReportWin, generateOperationReportForm = $('#generateOperationReportForm');
+    var operationReportDataTable
+    $(document).ready(function () {
+        var index = null;
+        operationReportDataTable = LayTableUtil.render({
+            elem: '#operationReportDataTable'
+            , cols: [[ //表头
+                {field: 'reportId', title: '运营报告id'}
+                , {field: 'reportYear', title: '运营报告年份'}
+                , {field: 'reportMonth', title: '运营报告月份'}
+                , {field: 'reportName', title: '运营报告名称'}
+//                , {field: 'reportType', title: '运营报告类型'}
+//                 , {field: 'remark', title: '备注'}
+                , {fixed: 'right', width: 150, toolbar: '#operationReportOperation'}
+            ]]
+            , url: operationReportApi.queryOperationReportList
+            , page: true
+            , id: 'operationReportDataTable'
+        });
+
+        //监听工具条
+        laytable.on('tool(operationReportDataTable)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'detail') {
+                var result = AjaxUtil.ajaxPost(operationReportApi.getOperationReportDetail, data.reportId);
+                if (result) {
+                    var info = result.data;
+                    // console.info(result)
+
+                    var content =
+                    '<p class="operation-report-item">'+
+                        '<label class="w150">累计交易总额：</label>'+
+                        '<label class="w100 mr20">'+info.investTotalAmt.amount+'</label>'+
+                        '<label class="w150">累计交易笔数：</label>'+
+                        '<label class="w100 mr20">'+info.investTotalNum+'</label>'+
+                        '<label class="w150">当期借款笔数：</label>'+
+                        '<label class="w100 mr20">'+info.loanMonthNum+'</label>'+
+                        '<label class="w150">借款余额：</label>'+
+                        '<label class="w100">'+info.toRepayAmt.amount+'</label>'+
+                    '</p>'+
+                    '<p class="operation-report-item">'+
+                        '<label class="w150">累计出借人数量：</label>'+
+                        '<label class="w100 mr20">'+info.investorTotalNum+'</label>'+
+                        '<label class="w150">累计借款人数量：</label>'+
+                        '<label class="w100 mr20">'+info.loanerTotalNum+'</label>'+
+                        '<label class="w150">当期出借人数量：</label>'+
+                        '<label class="w100 mr20">'+info.investorMonthNum+'</label>'+
+                        '<label class="w150">当期借款人数量：</label>'+
+                        '<label class="w100">'+info.loanerMonthNum+'</label>'+
+                    '</p>'+
+                    '<p class="operation-report-item">'+
+                        '<label class="w150">当期交易总额：</label>'+
+                        '<label class="w100 mr20">'+info.investMonthAmt.amount+'</label>'+
+                        '<label class="w150">在投人数量：</label>'+
+                        '<label class="w100 mr20">'+info.investingUserNum+'</label>'+
+                        '<label class="w150">当月交易笔数：</label>'+
+                        '<label class="w100 mr20">'+info.investMonthNum+'</label>'+
+                        '<label class="w150">运营天数：</label>'+
+                        '<label class="w100">'+info.safeOperationDays+'</label>'+
+                    '</p>'+
+                    '<p class="operation-report-item">'+
+                        '<label class="w150">关联关系借款余额：</label>'+
+                        '<label class="w100 mr20">'+info.nexusUsersLoanAmt.amount+'</label>'+
+                        '<label class="w150">关联关系借款笔数：</label>'+
+                        '<label class="w100 mr20">'+info.nexusUsersLoanNum+'</label>'+
+                        '<label class="w150">逾期90天以上笔数：</label>'+
+                        '<label class="w100 mr20">'+info.overdueNinetyDaysNum+'</label>'+
+                        '<label class="w150">逾期总金额：</label>'+
+                        '<label class="w100">'+info.overdueTotalAmt.amount+'</label>'+
+                    '</p>'+
+                    '<p class="operation-report-item">'+
+                        '<label class="w150">逾期次数：</label>'+
+                        '<label class="w100 mr20">'+info.overdueTotalNum+'</label>'+
+                        '<label class="w150">逾期90天以上金额：</label>'+
+                        '<label class="w100 mr20">'+info.overdueNinetyDaysAmt.amount+'</label>'+
+                        '<label class="w150">累计代偿金额：</label>'+
+                        '<label class="w100 mr20">'+info.compensatoryTotalAmt.amount+'</label>'+
+                        '<label class="w150">累计代偿笔数：</label>'+
+                        '<label class="w100">'+info.compensatoryTotalNum+'</label>'+
+                    '</p>'+
+                    '<p class="operation-report-item">'+
+                        '<label class="w150">提现手续费：</label>'+
+                        '<label class="w100 mr20">'+info.withdrawCostAmt.amount+'</label>'+
+                        '<label class="w150">充值手续费：</label>'+
+                        '<label class="w100 mr20">'+info.rechargeCostAmt+'</label>'+
+                        '<label class="w150">债权转让手续费：</label>'+
+                        '<label class="w100">'+info.transferCostAmt.amount+'</label>'+
+                    '</p>'+
+                    '<p class="operation-report-item">'+
+                        '<label class="w250">最大十户借款人待还金额占比：</label>'+
+                        '<label class="w100 mr20">'+info.tenInvestorsPercentToRepay+'</label>'+
+                        '<label class="w250">最大单户借款人待还金额占比：</label>'+
+                        '<label class="w150">'+info.investorPercentToRepay+'</label>'+
+                    '</p>'+
+                    '<p class="operation-report-item">'+
+                        '<label class="w200">借款服务费：</label>'+
+                        '<label>'+info.loanCostAmt+'</label>'+
+                    '</p>'+
+                    '<p class="operation-report-item">'+
+                        '<label class="w200">当月出借人年龄占比：</label>'+
+                        '<textarea class="w800 h100">'+formatList(info.investorAgeMonthPercentJson)+'</textarea>'+
+                    '</p>'+
+                    '<p class="operation-report-item">'+
+                        '<label class="w200">当月出借人金额年龄段占比：</label>'+
+                        '<textarea class="w800 h100">'+formatList(info.investorAmountPercentAgeMonthJson)+'</textarea>'+
+                    '</p>'+
+                    '<p class="operation-report-item">'+
+                        '<label class="w200">当月出借人性别占比：</label>'+
+                        '<textarea class="w800 h100">'+formatList(info.investorSexMonthPercentJson)+'</textarea>'+
+                    '</p>'+
+                    '<p class="operation-report-item">'+
+                        '<label class="w200">当月出借金额男女占比：</label>'+
+                        '<textarea class="w800 h100">'+formatList(info.investorAmountPercentSexMonthJson)+'</textarea>'+
+                    '</p>'+
+                    '<p class="operation-report-item">'+
+                        '<label class="w200">用户地区分布：</label>'+
+                        '<textarea class="w800 h150">'+formatList(info.regionUserJson)+'</textarea>'+
+                    '</p>';
+
+                    $('#operationReportDetail > .right-win-content-box').html(content);
+
+                    openRightWin('operationReportDetail');
+
+                }
+
+            }
+        });
+
+        $('#operationReportSearchForm [id="operationReportSearch"]').click(function () {
+            LayTableUtil.reload(operationReportDataTable, 'operationReportSearchForm');
+        });
+        // SearchForm绑定回车事件
+        $("#operationReportSearchForm").bind('keypress', function (event) {
+            if (event.keyCode == "13") {
+                $('#operationReportSearchForm [id="operationReportSearch"]').click();
+            }
+        });
+
+        $('#generateOperationReportBtn').click(function () {
+            generateOperationReportWin = LayerUtil.open('生成运营报告', generateOperationReportForm, '400px', null, 'generateOperationReportForm');
+            generateOperationReportForm[0].reset();
+        });
+
+
+        $('#operationReportSubmit').click(function () {
+            var json = DataDeal.formToJsonObj($('#generateOperationReportForm'));
+            json.isHistory = true;
+            if (json.reportYear == '') {
+                layer.msg("请输入运营报告年份");
+                return;
+            }
+            if (json.reportMonth == '') {
+                layer.msg("请输入运营报告月份");
+                return;
+            }
+            generateOperationReportSubimt(json);
+        });
+
+        $('#operationReportNowSubmit').click(function () {
+            generateOperationReportSubimt({});
+        });
+
+
+    });
+
+    function generateOperationReportSubimt(data) {
+        var result = AjaxUtil.ajaxPost(operationReportApi.generate, JSON.stringify(data));
+        if (result) {
+            LayerUtil.close(generateOperationReportWin);
+            layer.msg("报告生成成功");
+            LayTableUtil.reload(operationReportDataTable, "operationReportSearchForm");
+        }
+    }
+
+
+    function formatList(data) {
+        var str = '';
+        if (data) {
+            for (var i = 0; i < data.length; i++) {
+                var tmp = data[i];
+                str += tmp.message + '，占比:' + tmp.percent + '，数值:' + tmp.account+'；';
+            }
+        }
+        return str;
+    }
+</script>

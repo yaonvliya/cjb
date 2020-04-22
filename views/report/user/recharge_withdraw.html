@@ -1,0 +1,126 @@
+<div class="animated fadeInRight">
+	<div class="search-box">
+		<form class="layui-form" id="userTransactionDetailReportSearchForm" lay-filter="userTransactionDetailReportSearchForm"
+			  onsubmit="return false">
+			<div class="basic-search">
+				<div class="common-input-inline">
+					<label class="search-form-label">登陆帐号：</label>
+					<div class="layui-input-inline">
+						<input class="layui-input" name="safeLoginAccount" autocomplete="off"/>
+					</div>
+				</div>
+				<div class="common-input-inline">
+					<label class="search-form-label">交易类型：</label>
+					<div class="layui-input-inline">
+						<select name="tradeType" lay-search="">
+							<option value="">请选择</option>
+							<option value="recharge">充值</option>
+							<option value="withdraw">提现</option>
+						</select>
+					</div>
+				</div>
+				<div class="common-input-inline">
+					<label class="search-form-label">查询日期：</label>
+					<div class="layui-input-inline">
+						<input class="layui-input dp-il" name="tradeTimeLeftRange"
+							   autocomplete="off"/>
+						<span>—</span>
+						<input class="layui-input dp-il" name="tradeTimeRightRange"
+							   autocomplete="off"/>
+					</div>
+				</div>
+				<div class="more-search">
+					<div class="common-input-inline">
+						<label class="search-form-label">用户名称：</label>
+						<div class="layui-input-inline">
+							<input class="layui-input" name="realName" autocomplete="off"/>
+						</div>
+					</div>
+					<div class="common-input-inline">
+						<label class="search-form-label">用户角色：</label>
+						<div class="layui-input-inline">
+							<select name="userRole" lay-search="">
+								<option value="">请选择</option>
+								<option value="investor">投资人</option>
+								<option value="loaner">借款人</option>
+								<option value="compensatory">代偿户/担保人</option>
+							</select>
+						</div>
+					</div>
+					<div class="common-input-inline">
+						<label class="search-form-label">交易状态：</label>
+						<div class="layui-input-inline">
+							<select name="txn_status" lay-search="">
+								<option value="">请选择</option>
+								<option value="1">交易成功</option>
+								<option value="2">交易失败</option>
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="layui-btn-group">
+				<button type="button" class="layui-btn layui-btn-primary" id="searchReport">
+					<i class="layui-icon">&#xe615;</i>查询
+				</button>
+				<button class="layui-btn layui-btn-primary" type="reset">重置</button>
+				<button type="button" class="layui-btn layui-btn-primary" data-show="off"
+						onclick="showMoreSearch(this,'userTransactionDetailReportSearchForm')"><i class="layui-icon">&#xe61a;</i> 更多
+				</button>
+				<button type="button" class="layui-btn" id="downloadReportDetail">
+					<i class="layui-icon">&#xe601;</i>下载数据
+				</button>
+			</div>
+		</form>
+	</div>
+	<table id="userTransactionDetailReportData" class="layui-hide" lay-filter="userTransactionDetailReportData"></table>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function () {
+
+		layform.render(null, "userTransactionDetailReportSearchForm");
+		laydate.render({elem: '#userTransactionDetailReportSearchForm [name="tradeTimeLeftRange"]', type: 'date', trigger: 'click', value: new Date()});
+		laydate.render({elem: '#userTransactionDetailReportSearchForm [name="tradeTimeRightRange"]', type: 'date', trigger: 'click'});
+
+
+		var userTransactionDetailReportDataTable = LayTableUtil.render({
+			elem: '#userTransactionDetailReportData'
+			, cols: [[ //表头
+				{field: 'safe_login_account', title: '登陆帐号', width:130}
+				, {field: 'user_name', title: '用户名'}
+				, {field: 'user_role', title: '用户角色', width:130}
+				, {field: 'txn_ssn', title: '交易流水'}
+				, {field: 'txn_amt', title: '交易金额(元)', width:140, align: 'right',templet: function (d) {return MoneyUtil.formatMoney(d.txn_amt)}}
+				, {field: 'txn_type', title: '交易类型', width:100}
+				, {field: 'txn_status', title: '交易状态', width:120}
+				, {field: 'txn_desc', title: '交易描述'}
+				, {field: 'row_add_time', title: '交易时间', width:170}
+			]]
+			, url: reportApi.dataTable.userTransactionDetail.search
+			, page: true
+			, toolbar: true
+			, where: {tradeTimeLeftRange : DateUtils.dateToStr("yyyy-MM-dd", new Date())}
+			, defaultToolbar: ['filter', 'exports']
+			, title: '充值提现情况分析报表_' + DateUtils.longToDateStringYMD(new Date())
+		});
+
+
+		$('#userTransactionDetailReportSearchForm [id="downloadReportDetail"]').click(function () {
+			location.href = reportApi.dataTable.userTransactionDetail.download + "?" + $('#userTransactionDetailReportSearchForm').serialize();
+		});
+
+		$('#userTransactionDetailReportSearchForm [id="searchReport"]').click(function () {
+			LayTableUtil.reload(userTransactionDetailReportDataTable, 'userTransactionDetailReportSearchForm');
+		});
+		// SearchForm绑定回车事件
+		$("#userTransactionDetailReportSearchForm").bind('keypress', function (event) {
+			if (event.keyCode == "13") {
+				$('#userTransactionDetailReportSearchForm [id="searchReport"]').click();
+			}
+		});
+
+	});
+
+
+</script>

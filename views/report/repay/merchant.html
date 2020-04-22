@@ -1,0 +1,89 @@
+<div class="animated fadeInRight">
+	<div class="search-box">
+		<form class="layui-form" id="merchantRepayReportSearchForm" lay-filter="merchantRepayReportSearchForm"
+			  onsubmit="return false">
+			<div class="basic-search">
+				<div class="common-input-inline">
+					<label class="search-form-label">商户用户名：</label>
+					<div class="layui-input-inline">
+						<input class="layui-input" name="loginAccount" autocomplete="off"/>
+					</div>
+				</div>
+				<div class="common-input-inline">
+					<label class="search-form-label">还款时间：</label>
+					<div class="layui-input-inline">
+						<input class="layui-input dp-il" name="leftTime" autocomplete="off"/>
+						<span>—</span>
+						<input class="layui-input dp-il" name="rightTime" autocomplete="off"/>
+					</div>
+				</div>
+			</div>
+			<div class="layui-btn-group">
+				<button type="button" class="layui-btn layui-btn-primary" id="searchReport">
+					<i class="layui-icon">&#xe615;</i>查询
+				</button>
+				<button class="layui-btn layui-btn-primary" type="reset">重置</button>
+			</div>
+		</form>
+	</div>
+	<table id="merchantRepayReportData" class="layui-hide" lay-filter="merchantRepayReportData"></table>
+</div>
+
+
+<script type="text/html" id="merchantRepayOperation">
+	<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail"><i class="layui-icon">&#xe615;</i>详情</a>
+</script>
+
+<script type="text/javascript">
+	$(document).ready(function () {
+		laydate.render({elem: '#merchantRepayReportSearchForm [name="leftTime"]', type: 'date', trigger: 'click'});
+		laydate.render({elem: '#merchantRepayReportSearchForm [name="rightTime"]', type: 'date', trigger: 'click'});
+
+		var merchantRepayReportDataTable = LayTableUtil.render({
+			elem: '#merchantRepayReportData'
+			, cols: [[ //表头
+				{field: 'merchant_name', title: '商户名称', unresize: true, sort: true, totalRowText: '合计(元)：'}
+				, {field: 'merchant_login_name', title: '商户用户名'}
+				, {field: 'merchant_source', title: '商户来源'}
+				, {field: 'repay_total_amt', title: '应还款总额(元)', align: 'right', totalRow: true}
+				, {field: 'total_principal_amt', title: '应还款本金(元)', align: 'right', totalRow: true}
+				, {field: 'total_interest_amt', title: '应还款利息(元)', align: 'right', totalRow: true}
+				, {title: '操作', width: 80, align: 'center', toolbar: '#merchantRepayOperation'}
+			]]
+			, url: reportApi.repayManager.merchantRepay.search
+			, page: true
+			, totalRow: true
+			, toolbar: true
+			, defaultToolbar: ['filter', 'exports']
+			, title: '待还款汇总(商户)报表_' + DateUtils.longToDateStringYMD(new Date())
+		});
+
+		laytable.on('tool(merchantRepayReportData)', function (obj) {
+			var data = obj.data;
+			if (obj.event === 'detail') {
+				sessionStorage.setItem("merchantNameForReapySearch", data.merchant_name);
+				var jumpUrl = apiContext + "/repayManager/reportView/loanRepay";
+				var flag = $('#rightBoxTitle li[lay-id="' + jumpUrl + '"]').text();
+				if (StringUtil.isEmpty(flag)) {
+					tabAction.tabAdd("融资人还款查询", jumpUrl);
+				} else {
+					tabAction.tabChange(jumpUrl);
+					$("#rightBoxContent .layui-show").load(jumpUrl);
+				}
+			}
+		});
+
+		$('#merchantRepayReportSearchForm [id="searchReport"]').click(function () {
+			LayTableUtil.reload(merchantRepayReportDataTable, 'merchantRepayReportSearchForm');
+		});
+		// SearchForm绑定回车事件
+		$("#merchantRepayReportSearchForm").bind('keypress', function (event) {
+			if (event.keyCode == "13") {
+				$('#merchantRepayReportSearchForm [id="searchReport"]').click();
+			}
+		});
+
+	});
+
+
+</script>

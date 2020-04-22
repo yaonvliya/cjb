@@ -1,0 +1,133 @@
+<div class="animated fadeInRight">
+	<div class="search-box">
+		<form class="layui-form" id="creditSearchForm" lay-filter="creditSearchForm">
+			<div class="basic-search">
+                <div class="common-input-inline"><label class="search-form-label">用户名称：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" name="userRealName">
+                    </div>
+                </div>
+                <div class="common-input-inline"><label class="search-form-label">所属商户：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" name="merchantUserName">
+                    </div>
+                </div>
+                <div class="common-input-inline"><label class="search-form-label">授信用户手机号码：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" name="userLoginName">
+                    </div>
+                </div>
+            </div>
+            <div class="more-search">
+                <div class="common-input-inline"><label class="search-form-label">授信状态：</label>
+                    <div class="layui-input-inline">
+                        <select name="creditStatus" lay-search="">
+                            <option value="">全部</option>
+                            <option value="online">正常</option>
+                            <option value="offline">停用</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="common-input-inline">
+                    <label class="search-form-label">授信日期：</label>
+                    <div class="layui-input-inline">
+                        <input class="layui-input dp-il" name="creditTimeLeftRange" id="creditTimeLeftRangeSearch" autocomplete="off"/>
+                        <span>—</span>
+                        <input class="layui-input dp-il" name="creditTimeRightRange" id="creditTimeRightRangeSearch" autocomplete="off"/>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-btn-group">
+                <button type="button" class="layui-btn layui-btn-primary" id="creditSearch">
+                    <i class="layui-icon">&#xe615;</i> 查询
+                </button>
+                <button class="layui-btn layui-btn-primary" type="reset">重置</button>
+                <button type="button" class="layui-btn layui-btn-primary" data-show="off" onclick="showMoreSearch(this,'creditSearchForm')"><i class="layui-icon">&#xe61a;</i> 更多
+                    <button type="button" class="layui-btn" id="creditAdd"><i class="layui-icon">&#xe654;</i> 新增</button>
+            </div>
+        </form>
+	</div>
+
+	<table id="credit" class="layui-hide" lay-filter="credit"></table>
+</div>
+
+<form class="layui-form p10 w430 hide" id="creditForm" lay-filter="creditForm">
+    <input type="hidden" name="creditId">
+    <div class="layui-form-item">
+        <label class="layui-form-label w100">所属商户</label>
+        <div class="layui-input-inline" style="width: 250px;">
+            <select id="merchantId" name="merchantId" lay-verify="required" lay-search="" placeholder="请输入商户名称"
+                   autocomplete="off" class="layui-input">
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label w100">用户登录账号</label>
+        <div class="layui-input-inline" style="width: 250px;">
+            <input type="hidden" name="userLoginName">
+            <input type="number" id="creditUserLoginName" lay-verify="required" placeholder="输入用户登录账号进行查询"
+                   autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div id="creditUserInfo" class="hide">
+        <input type="hidden" id="userId" name="userId">
+        <div class="layui-form-item">
+            <label class="layui-form-label w100">用户名</label>
+            <div class="layui-input-inline" style="width: 250px;">
+                <input type="text" readonly name="userRealName"
+                       autocomplete="off" class="layui-input" style="border: none;">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label w100">用户证件号</label>
+            <div class="layui-input-inline" style="width: 250px;">
+                <input type="text" readonly name="userCertNo"
+                       autocomplete="off" class="layui-input" style="border: none;">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label w100">用户手机号</label>
+            <div class="layui-input-inline" style="width: 250px;">
+                <input type="text" readonly name="userCellphone"
+                       autocomplete="off" class="layui-input" style="border: none;">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label w100">授信状态</label>
+        <div class="layui-input-inline" style="width: 250px;">
+            <input type="hidden" name="creditStatus" value="online" >
+            <input id="creditStatusChk" lay-skin="switch" lay-text="正常|停用" lay-filter="creditStatus" type="checkbox" checked="">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label w100">授信到期时间</label>
+        <div class="layui-input-inline" style="width: 250px;">
+            <input type="text" id="creditDeadline" name="creditDeadline" lay-verify="required" placeholder="请输入授信到期时间"
+                   autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label w100">备注</label>
+        <div class="layui-input-inline" style="width: 250px;">
+            <textarea type="text" name="remark" placeholder="" autocomplete="off"
+					  class="layui-textarea"></textarea>
+		</div>
+	</div>
+	<div id="creditFormButtons" class="bottom-buttons">
+		<button class="layui-btn" type="button" lay-submit lay-filter="creditSubmit">立即提交</button>
+		<button class="layui-btn layui-btn-primary" type="button" id="creditReset">重置</button>
+	</div>
+</form>
+
+<script type="text/html" id="creditBar">
+    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="revision"><i class="layui-icon">&#xe642;</i>额度订正</a>
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail"><i class="layui-icon">&#xe615;</i>详情</a>
+	<a class="layui-btn layui-btn-xs" lay-event="edit"><i class="layui-icon">&#xe642;</i>编辑</a>
+</script>
+
+<script type="text/html" id="creditStatusTpl">
+    <input type="checkbox" name="creditStatus" value="{{d.creditId}}" lay-skin="switch" lay-text="正常|停用" lay-filter="currCreditStatus" {{ d.creditStatus.code == 'online' ? 'checked' : '' }}>
+</script>
+
+<script src="js/assets/credit.js"></script>

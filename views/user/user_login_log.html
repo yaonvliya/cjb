@@ -1,0 +1,62 @@
+<div class="animated fadeInRight">
+    <div class="search-box">
+        <form class="layui-form inline" id="searchUserLoginLogForm" onsubmit="return false">
+            <div class="basic-search">
+                <div class="common-input-inline">
+                    <label class="search-form-label">登录账号：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="loginAccount" class="layui-input" autocomplete="off">
+                    </div>
+                </div>
+                <div class="common-input-inline">
+                    <label class="search-form-label">用户登录日期：</label>
+                    <div class="layui-input-inline">
+						<input class="layui-input dp-il" name="loginDate" id="loginDate" autocomplete="off"/>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-btn-group">
+                <button type="button" class="layui-btn layui-btn-primary" id="searchUserLoginLog"><i class="layui-icon">&#xe615;</i> 查询</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </form>
+    </div>
+
+    <table id="userLoginLog" class="layui-hide" lay-filter="userLoginLog"></table>
+</div>
+
+<script type="text/javascript">
+
+    var userLoginLogTable;
+    $(document).ready(function () {
+		laydate.render({elem: '#loginDate', type: 'date', trigger: 'click', value: new Date(), done: function(){
+			$('#searchUserLoginLog').click();
+        }});
+
+        userLoginLogTable = LayTableUtil.render({
+            elem: '#userLoginLog'
+            ,cols: [[ //表头
+                {field: 'userAccount', title: '用户账户'}
+                ,{field: 'loginIp', title: '用户登录IP'}
+                ,{field: 'loginTime', title: '用户登录时间', templet: function (d) { return DateUtils.longToDateString(d.loginTime)}}
+                ,{field: 'loginTerminal', title: '用户登录渠道'}
+            ]]
+            , url: userManagerApi.loginLog
+			, where: DataDeal.formToJsonObj($("#searchUserLoginLogForm"))
+            , page: true
+            , id: 'userLoginLogTable'
+        });
+
+        $('#searchUserLoginLog').click(function () {
+            LayTableUtil.reload(userLoginLogTable, 'searchUserLoginLogForm');
+        });
+
+        // SearchForm绑定回车事件
+        $("#searchUserLoginLogForm").bind('keypress', function (event) {
+            if (event.keyCode == "13") {
+                $('#searchUserLoginLog').click();
+            }
+        });
+    });
+
+</script>

@@ -1,0 +1,141 @@
+<div class="animated fadeInRight">
+	<div class="search-box">
+		<form class="layui-form" lay-filter="searchActivityForm" id="activitySearchForm">
+			<div class="basic-search">
+				<div class="common-input-inline">
+					<label class="search-form-label">活动名称</label>
+					<div class="layui-input-inline">
+						<input class="layui-input" name="activityName" id="activityName" placeholder="根据活动名称搜索">
+					</div>
+				</div>
+				<div class="common-input-inline">
+					<label class="search-form-label">活动状态</label>
+					<div class="layui-input-inline">
+						<select name="activityStatus" id="activityStatus">
+							<option value=''>全部</option>
+							<option value='online'>正常</option>
+							<option value='offline'>停用</option>
+						</select>
+					</div>
+				</div>
+				<div class="common-input-inline">
+					<label class="search-form-label">活动列表展示与否</label>
+					<div class="layui-input-inline">
+						<select name="showSwitch" id="activityShowSwitch">
+							<option value=''>全部</option>
+							<option value=true>是</option>
+							<option value=false>否</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="layui-btn-group">
+				<button type="button" class="layui-btn layui-btn-primary" id="reloadActivity"><i class="layui-icon">&#xe615;</i> 查询</button>
+				<button class="layui-btn layui-btn-primary" type="reset">重置</button>
+				<button type="button" class="layui-btn" id="addActivityBtn"><i class="layui-icon">&#xe654;</i> 新增</button>
+			</div>
+		</form>
+	</div>
+
+	<table id="activity" class="layui-hide" lay-filter="activity"></table>
+</div>
+
+<div class="right-win animated fadeInRight" id="addActivity">
+	<div class="right-win-top">
+		<a href="javascript:closeActivityModelFrame();" title="关闭"><i
+				class="layui-icon close-right-win">&#x1006;</i></a>
+		<span class="right-win-title" id="addModalActivityTitle">新建活动</span>
+		<span class="right-win-btn">
+			<button class="layui-btn" type="button" id="activitySubmit">
+				<i class="layui-icon">&#xe605;</i>保存
+			</button>
+		</span>
+	</div>
+	<div class="right-win-content-box">
+		<form class="layui-form" enctype="multipart/form-data" lay-filter="addActivityForm" id="activityForm">
+			<button class="hide" type="button" lay-submit lay-filter="activityFormSubmit" id="activitySubmitBtn"></button>
+			<input class="layui-input hide" name="activityId" autocomplete="off">
+			<div class="layui-form-item">
+				<div class="layui-block">
+					<label class="layui-form-label">活动名称：</label>
+					<div class="layui-input-inline">
+						<input class="layui-input" lay-verify="required" name="activityName">
+					</div>
+                    <label class="layui-form-label w100">展示顺序：</label>
+                    <div class="layui-input-inline">
+                        <input class="layui-input" type="number" lay-verify="required" name="showIndex"
+                               placeholder="请输入数字">
+                    </div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-block">
+					<label class="layui-form-label">开始时间：</label>
+					<div class="layui-input-inline">
+						<input class="layui-input" lay-verify="required" name="startTime" id="addActivityStartTime"
+							   autocomplete="off">
+					</div>
+					<label class="layui-form-label w100">结束时间：</label>
+					<div class="layui-input-inline">
+						<input class="layui-input" lay-verify="required|beforeTime" startTime="" name="finishTime"
+							   id="addActivityFinishTimee" autocomplete="off">
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-block">
+					<label class="layui-form-label">活动地址：</label>
+					<div class="layui-input-inline">
+						<input class="layui-input" lay-verify="required" name="activityIndexUrl" autocomplete="off">
+					</div>
+					<label class="layui-form-label w100">banner地址：</label>
+					<div class="layui-input-inline">
+						<input class="layui-input" lay-verify="required" name="activityBannerUrl" autocomplete="off">
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-block">
+                    <label class="layui-form-label">活动状态：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" hidden name="activityStatus" value="online" id="addActivityStatus">
+                        <input type="radio" name="activityStatusTemp" lay-filter="activityStatusFilter" value="online" title="正常" checked>
+                        <input type="radio" name="activityStatusTemp" lay-filter="activityStatusFilter" value="offline" title="停用">
+                    </div>
+					<label class="layui-form-label w100">活动列表展示：</label>
+					<div class="layui-input-inline">
+                        <input type="text" hidden name="showSwitch" value=true id="addActivityShowSwitch">
+                        <input type="radio" name="showSwitchTemp" lay-filter="activityShowSwitchFilter" value=true title="是" checked>
+                        <input type="radio" name="showSwitchTemp" lay-filter="activityShowSwitchFilter" value=false title="否">
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item layui-form-text">
+				<label class="layui-form-label">活动内容：</label>
+				<div class="layui-input-block">
+					<textarea name="activityContent" id="activityContent" lay-verify="contact"></textarea>
+				</div>
+			</div>
+		</form>
+
+	</div>
+</div>
+
+<script type="text/html" id="activityOperation">
+	<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail"><i class="layui-icon">&#xe615;</i>详情</a>
+	<a class="layui-btn layui-btn-xs" lay-event="edit"><i class="layui-icon">&#xe642;</i>编辑</a>
+	<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon">&#xe640;</i>删除</a>
+</script>
+<script type="text/html" id="activityIndexUrlTpl">
+	<a href="{{d.activityIndexUrl}}" class="layui-table-link" target="_blank">{{ d.activityIndexUrl }}</a>
+</script>
+<script type="text/html" id="activityBannerUrlTpl">
+	<a href="{{d.activityBannerUrl}}" class="layui-table-link" target="_blank">{{ d.activityBannerUrl }}</a>
+</script>
+<script type="text/html" id="activityStatusTpl">
+    <input type="checkbox" value="{{d.activityId}}" lay-skin="switch" lay-text="正常|停用" lay-filter="activityStatusTpl" {{ d.activityStatus.code== 'online' ? 'checked' : '' }}>
+</script>
+<script type="text/html" id="activityShowSwitchTpl">
+    <input type="checkbox" value="{{d.activityId}}" title="活动列表展示" lay-filter="activityShowSwitchTpl" {{ d.showSwitch== true ? 'checked' : '' }}>
+</script>
+<script src="js/message/activity.js"></script>

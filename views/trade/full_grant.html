@@ -1,0 +1,73 @@
+<div class="animated fadeInRight">
+    <table id="tradeFullGrant" class="layui-hide" lay-filter="tradeFullGrant"></table>
+</div>
+
+<form class="layui-form p10 hide w450" lay-filter="fullGrantForm" id="fullGrantForm">
+    <input class="layui-input hide" name="tradeId" autocomplete="off">
+    <div class="layui-form-item">
+        <div class="layui-block">
+            <label class="layui-form-label w200">是否允许借款人直接提现：</label>
+            <div class="layui-input-block">
+                <input type="radio" name="loanerDirectWithdrawFlag" value="true" title="允许" checked>
+                <input type="radio" name="loanerDirectWithdrawFlag" value="false" title="不允许">
+            </div>
+        </div>
+    </div>
+    <div class="bottom-buttons">
+        <button class="layui-btn" lay-submit lay-filter="fullGrantSubmit">确认</button>
+    </div>
+</form>
+
+<script type="text/html" id="tradeFullGrantOperation">
+    <a class="layui-btn layui-btn-xs" lay-event="refused"><i class="layui-icon">&#xe65e;</i>放款</a>
+</script>
+
+<script type="text/javascript">
+    var fullGrantForm = $('#fullGrantForm');
+    $(document).ready(function () {
+    	var index = null;
+        layform.render(null, 'fullGrantForm');
+
+        var tradeFullGrantTable = LayTableUtil.render({
+            elem: '#tradeFullGrant'
+            , cols: [[
+                {field: 'tradeName', title: '交易名称', width: 180}
+                , {field: 'loanUserName', title: '融资用户姓名', width: 120}
+                , {field: 'riskLevel', title: '标的类型'}
+                , {field: 'tradeInterestRate', title: '预期年化收益率', width: 140, templet: function (d) {return NumberUtil.transfPercentage(d.tradeInterestRate)}}
+                , {field: 'loanTerm', title: '借款期限值', width: 120, templet: function (d) {return d.loanTerm + d.loanTermUnit.message}}
+                , {field: 'loanAmount', title: '借款额度', width: 130, templet: function (d) {return MoneyUtil.formatMoney(d.loanAmount.amount) + "元"}}
+                , {field: 'singleMinAmount', title: '起始投资金额', width: 120, templet: function (d) {return MoneyUtil.formatMoney(d.singleMinAmount.amount) + "元"}}
+                , {field: 'tradeStatus', title: '交易状态', width: 120, templet: function (d) {return d.tradeStatus.message}}
+                , {field: 'repayMethod', title: '还款方式', width: 140, templet: function (d) {return d.repayMethod.message}}
+                , {field: 'investBeginTime', title: '投资起始时间', width: 180, templet: function (d) {return DateUtils.longToDateString(d.investBeginTime)}}
+                , {field: 'investDeadline', title: '投资截止时间', width: 180, templet: function (d) {return DateUtils.longToDateString(d.investDeadline)}}
+                , {fixed: 'right', title: '操作', align:'center', toolbar: '#tradeFullGrantOperation', width: 100}
+            ]]
+            , url: tradeApiUrl.trade.fullGrantList
+            , page: true
+            , id: 'tradeFullGrantTable'
+        });
+
+        laytable.on('tool(tradeFullGrant)', function(obj){
+            var data = obj.data;
+            if(obj.event === 'refused'){
+                index = LayerUtil.open("放款", fullGrantForm, '500px', null, 'fullGrantForm');
+            }
+            fullGrantForm.find('[name="tradeId"]').val(data.tradeId);
+        });
+
+        //监听提交
+        layform.on('submit(fullGrantSubmit)', function (data) {
+        	console.log(DataDeal.formToJsonObj($('#fullGrantForm')));
+
+            var result = AjaxUtil.ajaxPostWithLoading(tradeApiUrl.trade.fullGrant, JSON.stringify(data.field));
+            if (result) {
+                layer.close(index);
+                layer.msg("放款成功");
+                LayTableUtil.refresh(tradeFullGrantTable);
+            }
+            return false;
+        });
+    });
+</script>

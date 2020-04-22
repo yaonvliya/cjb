@@ -1,0 +1,109 @@
+<div class="animated fadeInRight">
+	<div class="search-box">
+		<form class="layui-form" id="rechargeStatisticsReportSearchForm" lay-filter="rechargeStatisticsReportSearchForm"
+			  onsubmit="return false">
+			<div class="basic-search">
+				<div class="common-input-inline">
+					<label class="search-form-label">登陆帐号：</label>
+					<div class="layui-input-inline">
+						<input class="layui-input" name="loginAccount" autocomplete="off"/>
+					</div>
+				</div>
+				<div class="common-input-inline">
+					<label class="search-form-label">查询日期：</label>
+					<div class="layui-input-inline">
+						<input class="layui-input dp-il" name="leftTime" autocomplete="off"/>
+						<span>—</span>
+						<input class="layui-input dp-il" name="rightTime" autocomplete="off"/>
+					</div>
+				</div>
+                <span class="ml50 c-red">注：首充时间、首充金额、充值总额均在查询日期范围内</span>
+				<div class="more-search">
+                    <div class="common-input-inline">
+                        <label class="search-form-label">用户角色：</label>
+                        <div class="layui-input-inline">
+                            <select name="info1" lay-search="">
+                                <option value="">请选择</option>
+                                <option value="investor">投资人</option>
+                                <option value="loaner">借款人</option>
+                                <option value="compensatory">代偿户/担保人</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="common-input-inline">
+                        <label class="search-form-label">用户类型：</label>
+                        <div class="layui-input-inline">
+                            <select name="info2" lay-search="">
+                                <option value="">请选择</option>
+                                <option value="GR">个人</option>
+                                <option value="JG">企业</option>
+                            </select>
+                        </div>
+                    </div>
+				</div>
+			</div>
+			<div class="layui-btn-group">
+				<button type="button" class="layui-btn layui-btn-primary" id="searchReport">
+					<i class="layui-icon">&#xe615;</i>查询
+				</button>
+				<button class="layui-btn layui-btn-primary" type="reset">重置</button>
+				<button type="button" class="layui-btn layui-btn-primary" data-show="off"
+						onclick="showMoreSearch(this,'rechargeStatisticsReportSearchForm')"><i class="layui-icon">&#xe61a;</i> 更多
+				</button>
+				<button type="button" class="layui-btn" id="downloadReportDetail">
+					<i class="layui-icon">&#xe601;</i>下载数据
+				</button>
+			</div>
+		</form>
+	</div>
+	<table id="rechargeStatisticsReportData" class="layui-hide" lay-filter="rechargeStatisticsReportData"></table>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function () {
+
+		layform.render(null, "rechargeStatisticsReportSearchForm");
+		laydate.render({elem: '#rechargeStatisticsReportSearchForm [name="leftTime"]', type: 'date', trigger: 'click'});
+		laydate.render({elem: '#rechargeStatisticsReportSearchForm [name="rightTime"]', type: 'date', trigger: 'click'});
+
+
+		var rechargeStatisticsReportDataTable = LayTableUtil.render({
+			elem: '#rechargeStatisticsReportData'
+			, cols: [[ //表头
+				{field: 'real_name', title: '用户名称', totalRowText: '合计(元)：'}
+                , {field: 'login_account', title: '登陆帐号'}
+				, {field: 'user_role', title: '用户角色', width:140}
+				, {field: 'user_type', title: '用户类型', width:140}
+				, {field: 'txn_acct_id', title: '资金账户'}
+                , {field: 'first_time', title: '首充时间'}
+				, {field: 'first_amt', title: '首充金额(元)', width:160, align: 'right', totalRow: true,templet: function (d) {return MoneyUtil.formatMoney(d.first_amt)}}
+				, {field: 'txn_amt_total', title: '充值总额(元)', width:160, align: 'right', totalRow: true,templet: function (d) {return MoneyUtil.formatMoney(d.txn_amt_total)}}
+			]]
+			, url: reportApi.dataTable.rechargeStatistics.search
+			, page: true
+			, toolbar: true
+			, totalRow: true
+			, where: {tradeTimeLeftRange : DateUtils.dateToStr("yyyy-MM-dd", new Date())}
+			, defaultToolbar: ['filter', 'exports']
+			, title: '充值统计报表_' + DateUtils.longToDateStringYMD(new Date())
+		});
+
+
+		$('#rechargeStatisticsReportSearchForm [id="downloadReportDetail"]').click(function () {
+			location.href = reportApi.dataTable.rechargeStatistics.download + "?" + $('#rechargeStatisticsReportSearchForm').serialize();
+		});
+
+		$('#rechargeStatisticsReportSearchForm [id="searchReport"]').click(function () {
+			LayTableUtil.reload(rechargeStatisticsReportDataTable, 'rechargeStatisticsReportSearchForm');
+		});
+		// SearchForm绑定回车事件
+		$("#rechargeStatisticsReportSearchForm").bind('keypress', function (event) {
+			if (event.keyCode == "13") {
+				$('#rechargeStatisticsReportSearchForm [id="searchReport"]').click();
+			}
+		});
+
+	});
+
+
+</script>

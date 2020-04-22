@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta name="renderer" content="webkit">
+
+	<title>车聚宝金融 - 后台管理系统</title>
+
+	<!-- 浏览器标签小图标 -->
+	<link rel="shortcut icon" href="img/common/favicon.ico">
+
+    <link href="iconfont/iconfont.css" rel="stylesheet">
+
+    <!-- layui -->
+	<link href="plugins/layui/css/layui.css?v=2.2.5" rel="stylesheet" media="all">
+
+	<!-- 齐全的CSS3动画库 -->
+	<link href="css/animate.css" rel="stylesheet">
+
+	<!-- zTree -->
+	<link href="plugins/zTree/css/metroStyle/metroStyle.css" rel="stylesheet">
+
+	<!-- viewer -->
+	<link href="plugins/viewer/viewer.min.css" rel="stylesheet">
+
+	<!-- 自定义通用样式 -->
+	<link href="css/style.css" rel="stylesheet">
+	<link href="css/base.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="layui-layout layui-layout-admin">
+	<!-- 头部开始 -->
+	<div class="layui-header header">
+		<div class="layui-main">
+			<a class="logo">
+				<i class="iconfont icon-logo"></i>
+				<span>车聚宝后台管理系统</span>
+			</a>
+
+			<div class="layui-input-inline index-search-box">
+				<input type="text" placeholder="输入页面名称，回车查询" id="searchMenuBtn" class="layui-input">
+				<span class="float-in-input cr-pr"><i class="layui-icon">&#x1006;</i></span>
+			</div>
+
+			<!--顶部功能区域开始-->
+			<ul class="layui-nav navbar-float-right">
+				<li class="layui-nav-item">
+					<a href="javascript:;" title="刷新当前页面" id="refreshWinBtn">
+						<i class="layui-icon">&#xe669;</i>刷新
+					</a>
+				</li>
+				<li class="layui-nav-item">
+					<a href="javascript:;" id="userRealName"><i class="layui-icon">&#xe66f;</i><span></span></a>
+					<dl class="layui-nav-child">
+						<dd><a href="javascript:;" id="changeLoginPwdBtn"><i class="layui-icon">&#xe631;</i> 修改密码</a>
+						</dd>
+					<!--##						<dd><a href="javascript:;"><i class="layui-icon">&#xe620;</i> 安全管理</a></dd>-->
+						<dd><a href="javascript:logout();"><i class="layui-icon">&#x1006;</i> 退出登录</a></dd>
+					</dl>
+				</li>
+			</ul>
+			<!--顶部功能区域结束-->
+		</div>
+	</div>
+	<!-- 头部结束 -->
+
+	<!-- 左侧导航开始 -->
+	<div class="layui-side layui-bg-black">
+		<div class="layui-side-scroll">
+			<ul class="layui-nav layui-nav-tree layui-inline" id="menuList" lay-filter="menu">
+				<li class="layui-nav-item layui-this">
+					<a href="javascript:;" data-url="home"><i class="iconfont icon-shouye"></i>后台首页</a>
+				</li>
+			</ul>
+
+		</div>
+	</div>
+	<!-- 左侧导航结束 -->
+
+	<!--右侧内容开始-->
+	<div class="content-main-body">
+		<!-- layui-tab 容器 -->
+		<div class="layui-tab layui-tab-brief" lay-allowClose="true" lay-filter="content-main">
+			<div class="close-all-tab-box hide"><a href="javascript:closeAllTab();">全部关闭</a></div>
+			<!-- tab title容器 -->
+			<ul class="layui-tab-title" id="rightBoxTitle"></ul>
+			<!-- tab content容器 -->
+			<div class="layui-tab-content" id="rightBoxContent"></div>
+		</div>
+	</div>
+	<!--右侧内容结束-->
+
+
+	<!-- 底部固定区域 -->
+	<div class="layui-footer">
+		© 上海开颜金融信息服务有限公司 - 车聚宝金融后台管理系统
+	</div>
+</div>
+
+<!--通用蒙版-->
+<div class="mask"></div>
+
+<!--修改密码窗口-->
+<form class="layui-form layui-form-pane p50 w400 hide" id="changePwdForm" lay-filter="changePwdForm">
+	<div class="layui-form-item">
+		<label class="layui-form-label">旧密码</label>
+		<div class="layui-input-block">
+			<input class="layui-input" type="password" name="oldPassword" id="oldPwd" lay-verify="required"
+				   placeholder="请输入旧密码">
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">新密码</label>
+		<div class="layui-input-block">
+			<input class="layui-input" type="password" name="newPassword" id="newPwd" lay-verify="required|password"
+				   placeholder="请输入新密码">
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">确认密码</label>
+		<div class="layui-input-block">
+			<input class="layui-input" type="password" name="confirmNewPwd" lay-verify="required|password|equalTo"
+				   equalTo="newPwd" placeholder="请再次输入新密码">
+		</div>
+	</div>
+	<button type="button" class="layui-btn w" lay-submit lay-filter="changePwdSubmit">确认修改</button>
+</form>
+
+
+<!-- 基础js -->
+<script src="js/jquery.min.js?v=2.1.4"></script>
+<script src="js/jquery.cookie.js"></script>
+
+<!-- layui插件 -->
+<script src="plugins/layui/layui.js?v=2.2.5"></script>
+
+<!--百度提供的图表插件-->
+<script async src="plugins/echarts/echarts.min.js?v=3.6.2"></script>
+
+<!-- 富文本编辑器 -->
+<script src="plugins/xheditor/xheditor-1.2.2.min.js"></script>
+<script async src="plugins/xheditor/xheditor_lang/zh-cn.js"></script>
+
+<!-- zTree -->
+<script async src="plugins/zTree/js/jquery.ztree.all.min.js"></script>
+
+<!-- viewer -->
+<script async src="plugins/viewer/viewer.min.js?v=0.5.0"></script>
+
+<!-- plupload -->
+<script async src="plugins/plupload-2.3.6/js/plupload.full.min.js"></script>
+
+<!-- 配置文件 -->
+<script src="js/host-config.properties.js"></script>
+<!-- 工具类js -->
+<script src="js/base-utils.js"></script>
+<!-- urlAPI -->
+<script src="js/local-api-config.js"></script>
+<!-- layui表单验证扩展js -->
+<script src="js/layui.validata.extends.js"></script>
+<!-- 首页基本js -->
+<script src="js/index.js"></script>
+
+<script language="javascript">
+	// 禁止浏览器后退
+	history.pushState(null, null, document.URL);
+	window.addEventListener('popstate', function () {
+		history.pushState(null, null, document.URL);
+	});
+</script>
+</body>
+
+</html>

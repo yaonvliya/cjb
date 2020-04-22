@@ -1,0 +1,85 @@
+<div class="animated fadeInRight">
+	<div class="search-box">
+		<form class="layui-form" id="loanCreditReportSearchForm" lay-filter="loanCreditReportSearchForm">
+			<div class="basic-search">
+				<div class="common-input-inline"><label class="search-form-label">授信人账号：</label>
+					<div class="layui-input-inline">
+						<input type="text" class="layui-input" name="loginAccount">
+					</div>
+				</div>
+				<div class="common-input-inline"><label class="search-form-label">所属商户：</label>
+					<div class="layui-input-inline">
+						<input type="text" class="layui-input" name="merchantName">
+					</div>
+				</div>
+				<div class="common-input-inline"><label class="search-form-label">授信状态：</label>
+					<div class="layui-input-inline">
+						<select name="status" lay-search="">
+							<option value="">全部</option>
+							<option value="online">正常</option>
+							<option value="offline">停用</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="layui-btn-group">
+				<button type="button" class="layui-btn layui-btn-primary" id="searchReport">
+					<i class="layui-icon">&#xe615;</i>查询
+				</button>
+				<button class="layui-btn layui-btn-primary" type="reset">重置</button>
+				<button type="button" class="layui-btn" id="downloadReportDetail">
+					<i class="layui-icon">&#xe601;</i>下载数据
+				</button>
+			</div>
+		</form>
+	</div>
+
+	<table id="loanCreditReportDataTable" class="layui-hide" lay-filter="loanCreditReportDataTable"></table>
+</div>
+
+
+<script type="text/javascript">
+	$(document).ready(function () {
+
+		layform.render(null, "loanCreditReportSearchForm");
+
+		var loanCreditReportDataTable = LayTableUtil.render({
+			elem: '#loanCreditReportDataTable'
+			, id: 'creditTable'
+			, cols: [[ //表头
+				{field: 'user_login_name', title: '授信人账号', width:130}
+				, {field: 'user_real_name', title: '授信人姓名'}
+				, {field: 'user_cert_no', title: '授信用户证件'}
+				, {field: 'user_cellphone', title: '授信用户手机号', width:130}
+				, {field: 'merchant_user_name', title: '所属商户'}
+				, {field: 'credit_time', title: '授信时间', width:170}
+				, {field: 'credit_deadline', title: '授信到期时间', width:120}
+				, {field: 'credit_status', title: '授信状态', width:100}
+				, {field: 'credit_used_amount', title: '已用信额度(元)', width:130, align: 'right', templet: function (d) {return MoneyUtil.formatMoney(d.creditUsedAmount)}}
+			]]
+			, url: reportApi.dataTable.loanCredit.search
+			, page: true
+			, toolbar: true
+			, defaultToolbar: ['filter', 'exports']
+			, title: '借款人授信分析报表_' + DateUtils.longToDateStringYMD(new Date())
+		});
+
+
+		$('#loanCreditReportSearchForm [id="searchReport"]').click(function () {
+			LayTableUtil.reload(loanCreditReportDataTable, "loanCreditReportSearchForm");
+		});
+
+		$('#loanCreditReportSearchForm [id="downloadReportDetail"]').click(function () {
+			location.href = reportApi.dataTable.loanCredit.download + "?" + $('#loanCreditReportSearchForm').serialize();
+		});
+
+		// SearchForm绑定回车事件
+		$("#loanCreditReportSearchForm").bind('keypress', function (event) {
+			if (event.keyCode == "13") {
+				$('#loanCreditReportSearchForm [id="searchReport"]').click();
+			}
+		});
+
+	});
+
+</script>

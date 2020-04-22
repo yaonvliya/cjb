@@ -1,0 +1,75 @@
+<div class="animated fadeInRight">
+	<div class="search-box">
+		<form class="layui-form" id="userInvestRangeReportSearchForm" lay-filter="userInvestRangeReportSearchForm"
+			  onsubmit="return false">
+			<div class="basic-search">
+				<div class="common-input-inline">
+					<label class="search-form-label">投资人用户名：</label>
+					<div class="layui-input-inline">
+						<input class="layui-input" name="loginAccount" autocomplete="off"/>
+					</div>
+				</div>
+				<div class="common-input-inline">
+					<label class="search-form-label">活动时间：</label>
+					<div class="layui-input-inline">
+						<input class="layui-input dp-il" name="leftTime" autocomplete="off"/>
+						<span>—</span>
+						<input class="layui-input dp-il" name="rightTime" autocomplete="off"/>
+					</div>
+				</div>
+			</div>
+			<div class="layui-btn-group">
+				<button type="button" class="layui-btn layui-btn-primary" id="searchReport">
+					<i class="layui-icon">&#xe615;</i>查询
+				</button>
+				<button class="layui-btn layui-btn-primary" type="reset">重置</button>
+				<button type="button" class="layui-btn" id="downloadReportDetail">
+					<i class="layui-icon">&#xe601;</i>下载数据
+				</button>
+			</div>
+		</form>
+	</div>
+	<table id="userInvestRangeReportData" class="layui-hide" lay-filter="userInvestRangeReportData"></table>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function () {
+		laydate.render({elem: '#userInvestRangeReportSearchForm [name="leftTime"]', type: 'date', trigger: 'click'});
+		laydate.render({elem: '#userInvestRangeReportSearchForm [name="rightTime"]', type: 'date', trigger: 'click'});
+
+		var userInvestRangeReportDataTable = LayTableUtil.render({
+			elem: '#userInvestRangeReportData'
+			, cols: [[ //表头
+				{field: 'invest_user_account', title: '投资人用户名'}
+				, {field: 'invest_user_name', title: '投资人姓名'}
+				, {field: 'totalInvestAmt', title: '活动期间总投资额(元)'}
+				, {field: 'investingInvestAmt', title: '再投总资产额(元)'}
+				, {field: 'firstInvestTime', title: '首投时间'}
+				, {field: 'isFirstInvest', title: '是否为首次投资'}
+				, {field: 'firstInvestAmt', title: '首投金额(元)', align: 'right'}
+			]]
+			, url: reportApi.dataTable.userInvestRangeAmt.search
+			, page: true
+			, toolbar: true
+			, defaultToolbar: ['filter', 'exports']
+			, title: '用户活动期投资报表_' + DateUtils.longToDateStringYMD(new Date())
+		});
+
+		$('#userInvestRangeReportSearchForm [id="downloadReportDetail"]').click(function () {
+			location.href = reportApi.dataTable.userInvestRangeAmt.download + "?" + $('#userInvestRangeReportSearchForm').serialize();
+		});
+
+		$('#userInvestRangeReportSearchForm [id="searchReport"]').click(function () {
+			LayTableUtil.reload(userInvestRangeReportDataTable, 'userInvestRangeReportSearchForm');
+		});
+		// SearchForm绑定回车事件
+		$("#userInvestRangeReportSearchForm").bind('keypress', function (event) {
+			if (event.keyCode == "13") {
+				$('#userInvestRangeReportSearchForm [id="searchReport"]').click();
+			}
+		});
+
+	});
+
+
+</script>

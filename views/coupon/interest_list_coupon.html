@@ -1,0 +1,101 @@
+<div class="animated fadeInRight">
+	<div class="search-box">
+		<form class="layui-form" id="userInterestCouponListSearchForm" lay-filter="userInterestCouponListSearchForm">
+			<div class="basic-search">
+				<div class="common-input-inline"><label class="search-form-label">手机号码：</label>
+					<div class="layui-input-inline">
+						<input type="text" name="userId" placeholder="请输入用户手机号码" class="layui-input">
+					</div>
+				</div>
+				<div class="common-input-inline"><label class="search-form-label">发放场景：</label>
+					<div class="layui-input-inline">
+						<select name="couponObtainSource">
+							<option value="">全部</option>
+							<option value="register">注册发放</option>
+							<option value="realname">实名发放</option>
+							<option value="invite">邀请发放</option>
+							<option value="invest">投资发放</option>
+							<option value="manual">手动发放</option>
+						</select>
+					</div>
+				</div>
+				<div class="common-input-inline"><label class="search-form-label">活动名称：</label>
+					<div class="layui-input-inline">
+						<input type="text" name="couponActivityName" placeholder="请输入活动名称" class="layui-input">
+					</div>
+				</div>
+				<div class="common-input-inline">
+					<label class="search-form-label">状态：</label>
+					<div class="layui-input-inline">
+						<select name="usedFlag">
+							<option value=""></option>
+							<option value="used">已使用</option>
+							<option value="unUsed">未使用</option>
+							<option value="expire">已过期</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="more-search">
+				<div class="common-input-inline">
+					<label class="search-form-label">使用时间：</label>
+					<div class="layui-input-inline">
+						<input class="layui-input dp-il" name="couponUsedTimeLeftRange"
+							   id="interestListCouponUsedTimeLeftRangeSearch" autocomplete="off"/>
+						<span>—</span>
+						<input class="layui-input dp-il" name="couponUsedTimeRightRange"
+							   id="interestListCouponUsedTimeRightRangeSearch" autocomplete="off"/>
+					</div>
+				</div>
+			</div>
+			<div class="layui-btn-group">
+				<button class="layui-btn layui-btn-primary" type="button" id="userInterestCouponListSearchBtn"><i
+						class="layui-icon">&#xe615;</i> 查询
+				</button>
+				<button class="layui-btn layui-btn-primary" type="reset">重置</button>
+				<button type="button" class="layui-btn layui-btn-primary" data-show="off"
+						onclick="showMoreSearch(this,'userInterestCouponListSearchForm')"><i
+						class="layui-icon">&#xe61a;</i> 更多
+				</button>
+			</div>
+		</form>
+	</div>
+
+	<table id="userInterestCouponListDataList" lay-filter="userInterestCouponListDataList"></table>
+</div>
+
+<form class="layui-form p10 w340 hide" id="sendInterestForm" lay-filter="sendCashForm">
+	<div class="layui-form-item">
+		<label class="layui-form-label w90">用户登录账号</label>
+		<div class="layui-input-inline w200">
+			<input type="number" id="sendInterestAccount" name="loginAccount" lay-verify="required" maxlength="11"
+				   placeholder="输入用户登录账号进行查询" class="layui-input" autocomplete="off">
+			<input type="hidden" name="userId">
+		</div>
+	</div>
+	<div id="sendInterestUserInfo" class="layui-form-item hide">
+		<label class="layui-form-label w90">用户姓名</label>
+		<div class="layui-input-inline">
+			<span class="layui-form-mid" name="userName"></span>
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label w90">年化收益率</label>
+		<div class="layui-input-inline w200">
+			<input type="number" name="grantInterest" lay-verify="required" placeholder="输入加息券收益率" class="layui-input"
+				   autocomplete="off">
+		</div>
+		<div class="layui-form-mid layui-word-aux inline">%
+		</div>
+	</div>
+	<div class="bottom-buttons">
+		<button type="button" class="layui-btn" lay-submit lay-filter="cashCouponDetailSubmit">立即提交</button>
+		<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+	</div>
+</form>
+
+<script type="text/html" id="addInterestCouponToolBar">
+	<button class="layui-btn layui-btn-sm" type="button" lay-event="addInterestCoupon"><i class="layui-icon">&#xe654;</i> 发放加息券</button>
+</script>
+
+<script src="js/coupon/interest_list_coupon.js"></script>

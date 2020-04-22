@@ -1,0 +1,218 @@
+##<h5 class="title-row">完善资料</h5>
+
+<form class="layui-form">
+	<input type="hidden" name="userId" id="upload_company_pic_userId">
+	<input type="hidden" name="userType" id="upload_company_pic_userType">
+	<div class="user-row upload legalPersonIdentity">
+		<label>法人身份证正面：</label>
+		<div class="layui-upload-list">
+			<img class="layui-upload-img pic" id="certCardFrontImg" src="img/upload-default.png">
+			<input type="hidden" id="certCardFront" name="certCardFront">
+		</div>
+	</div>
+
+	<div class="user-row upload legalPersonIdentity">
+		<label>法人身份证反面：</label>
+		<div class="layui-upload-list">
+			<img class="layui-upload-img pic" id="certCardBackImg" src="img/upload-default.png">
+			<input type="hidden" id="certCardBack" name="certCardBack">
+		</div>
+	</div>
+
+	<div class="user-row mt-20 legalPersonIdentity">
+		<label>身份证到期日期：</label>
+		<div class="input-div ml-30">
+			<input id="certCardExpireTime" name="certCardExpireTime" class="layui-input date-due"
+				   placeholder="yyyy-MM-dd">
+		</div>
+	</div>
+
+	<div class="user-row upload businessLicense">
+		<label>营业执照：</label>
+		<div class="layui-upload-list">
+			<img class="layui-upload-img pic" id="businessLicenseImg" src="img/upload-default.png">
+			<input type="hidden" id="businessLicense" name="businessLicense">
+		</div>
+	</div>
+	<div class="user-row mt-20 businessLicense">
+		<label>营业执照到期日期：</label>
+		<div class="input-div ml-30">
+			<input id="businessLicenseExpireTime" name="businessLicenseExpireTime" class="layui-input date-due"
+				   placeholder="yyyy-MM-dd">
+		</div>
+	</div>
+
+	<div class="user-row upload legalPersonCreditReporting">
+		<label>法人征信报告：</label>
+		<div class="layui-upload-list imgList" id="legalPersonCreditReportingImgList">
+			<img class="layui-upload-img pic" id="legalPersonCreditReportingImg"
+				 src="img/upload-default.png">
+			<input type="hidden" id="legalPersonCreditReporting" name="legalPersonCreditReporting">
+		</div>
+	</div>
+	<div class="user-row mt-20 legalPersonCreditReporting">
+		<label>法人征信报告到期日期：</label>
+		<div class="input-div ml-30">
+			<input id="legalPersonCreditReportingExpireTime" name="legalPersonCreditReportingExpireTime"
+				   class="layui-input date-due" placeholder="yyyy-MM-dd">
+		</div>
+	</div>
+	<div class="user-row upload enterpriseCreditReporting">
+		<label>企业征信报告：</label>
+		<div class="layui-upload-list imgList" id="enterpriseCreditReportingImgList">
+			<img class="layui-upload-img pic" id="enterpriseCreditReportingImg"
+				 src="img/upload-default.png">
+			<input type="hidden" id="enterpriseCreditReporting" name="enterpriseCreditReporting">
+		</div>
+	</div>
+	<div class="user-row mt-20 enterpriseCreditReporting">
+		<label>企业征信报告到期日期：</label>
+		<div class="input-div ml-30">
+			<input id="enterpriseCreditReportingExpireTime" name="enterpriseCreditReportingExpireTime"
+				   class="layui-input date-due" placeholder="yyyy-MM-dd">
+		</div>
+	</div>
+
+	<div class="user-row upload roadTransportLicense">
+		<label>道路运输经营许可证：</label>
+		<div class="layui-upload-list">
+			<img class="layui-upload-img pic" id="roadTransportLicenseImg"
+				 src="img/upload-default.png">
+			<input type="hidden" id="roadTransportLicense" name="roadTransportLicense">
+		</div>
+	</div>
+	<div class="user-row mt-20 roadTransportLicense">
+		<label>道路运输经营许可证到期日期：</label>
+		<div class="input-div ml-30">
+			<input id="roadTransportLicenseExpireTime" name="roadTransportLicenseExpireTime"
+				   class="layui-input date-due" placeholder="yyyy-MM-dd">
+		</div>
+	</div>
+
+	<div class="user-row upload imgs thirdContract">
+		<label>运输合同：</label>
+		<div class="layui-upload-list imgList" id="transportContractImgList">
+			<img class="layui-upload-img pic" id="transportContractImg" src="img/upload-default.png">
+		</div>
+		<input type="hidden" id="transportContract" name="transportContract">
+	</div>
+	<div class="user-row mt-20 thirdContract">
+		<label>运输合同到期日期：</label>
+		<div class="input-div ml-30">
+			<input id="transportContractExpireTime" name="transportContractExpireTime" class="layui-input date-due"
+				   placeholder="yyyy-MM-dd">
+		</div>
+	</div>
+
+	<input class="row-btn" type="button" id="subBtn" lay-submit lay-filter="*" value="立即提交">
+
+</form>
+
+<script>
+	var submit = loanApiUrl.loanUserInfo.companyUploadInfo;
+	var credentials = ["certCardFront", "certCardBack", "certCardWithSelf", "businessLicense", "legalPersonCreditReporting", "enterpriseCreditReporting", "roadTransportLicense", "transportContract"];
+	var dateTime = ["certCardExpireTime", "businessLicenseExpireTime", "roadTransportLicenseExpireTime", "transportContractExpireTime", "legalPersonCreditReportingExpireTime", "enterpriseCreditReportingExpireTime"];
+	$(document).ready(function () {
+
+		if (uploadType) {
+			layui.each(uploadType, function (k,v) {
+				$('.' + v).remove();
+			});
+			submit = loanApiUrl.loanUserInfo.updateUploadInfo;
+		}
+		uploadType.length = 0;
+
+		layui.use('laydate', function () {
+			var laydate = layui.laydate;
+
+			layui.each(dateTime, function (i, objId) {
+				laydate.render({
+					elem: '#' + objId
+				});
+			});
+		});
+
+		layui.form.on('submit(*)', function (data) {
+			var result = AjaxUtil.ajaxPost(submit, JSON.stringify(data.field));
+			if (result) {
+				layer.msg("资料提交成功，请等待审核结果", {time: 1000}, function () {
+					$('#uploadMaterialContainer').empty();
+				})
+			}
+			return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+		});
+
+
+		layui.each(credentials, function (i, objId) {
+			(function () {
+				var uploader = new plupload.Uploader({
+					runtimes: 'html5,flash,silverlight,html4',
+					browse_button: objId + "Img",
+					multi_selection: (objId == "transportContract" || objId == "legalPersonCreditReporting" || objId == "enterpriseCreditReporting"),
+					flash_swf_url: '../../plugins/plupload-2.1.2/js/Moxie.swf',
+					silverlight_xap_url: '../../plugins/plupload-2.1.2/js/Moxie.xap',
+					filters: {
+						mime_types: [ //只允许上传图片和zip文件
+							{title: "Image files", extensions: "jpg,jpeg"},
+						],
+						max_file_size: '10M', //最大只能上传400kb的文件
+						prevent_duplicates: false //不允许选取重复文件
+					},
+					url: 'https://oss.aliyuncs.com',
+
+					init: {
+						PostInit: function () {
+
+						},
+
+						FilesAdded: function (up, files) {
+							var userId = $('#upload_company_pic_userId').val();
+							layui.each(files, function (i, file) {
+								PluploadUtil.set_upload_param(up, "loan", file, objId, userId);
+							});
+
+						},
+
+						BeforeUpload: function (up, file) {
+
+						},
+
+						UploadProgress: function (up, file) {
+
+						},
+
+						FileUploaded: function (up, file, info) {
+							if (info.status == 200) {
+								var message = ($("#" + objId).val() ? $("#" + objId).val() + ";" : $("#" + objId).val()) + file.name;
+								$("#" + objId).val(message);
+
+								PluploadUtil.previewImg(objId + "Img", file, up.settings.multi_selection);
+
+							} else {
+								layer.msg(info.response);
+							}
+						},
+
+						Error: function (up, err) {
+							errorHandler(err);
+						}
+					}
+				});
+
+				uploader.init();
+			})();
+		});
+
+	});
+
+	function errorHandler(err) {
+		if (err.code == plupload.FILE_EXTENSION_ERROR) {
+			layer.msg("图片仅支持JPG、PNG格式");
+		} else if (err.code == plupload.FILE_SIZE_ERROR) {
+			layer.msg("图片大小不能超过3M");
+		} else {
+			layer.msg(err.message);
+		}
+	}
+
+</script>

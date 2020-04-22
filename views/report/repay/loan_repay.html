@@ -1,0 +1,138 @@
+<div class="animated fadeInRight">
+	<div class="search-box">
+		<form class="layui-form" id="loanRepayReportSearchForm" lay-filter="loanRepayReportSearchForm"
+			  onsubmit="return false">
+			<div class="basic-search">
+				<div class="common-input-inline">
+					<label class="search-form-label">项目名称：</label>
+					<div class="layui-input-inline">
+						<input class="layui-input" name="tradeName" autocomplete="off"/>
+					</div>
+				</div>
+				<div class="common-input-inline">
+					<label class="search-form-label">所属商户：</label>
+					<div class="layui-input-inline w200">
+						<input class="layui-input w200" name="merchantName" autocomplete="off"/>
+					</div>
+				</div>
+				<div class="common-input-inline">
+					<label class="search-form-label">还款状态：</label>
+					<div class="layui-input-inline">
+						<select name="repayStatus">
+							<option value="">全部</option>
+							<option value="0" selected>未还款</option>
+							<option value="1">已还款</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="more-search">
+				<div class="common-input-inline">
+					<label class="search-form-label">借款人名称：</label>
+					<div class="layui-input-inline">
+						<input class="layui-input" name="loginAccount" autocomplete="off"/>
+					</div>
+				</div>
+				<div class="common-input-inline">
+					<label class="search-form-label">预期还款时间：</label>
+					<div class="layui-input-inline">
+						<input class="layui-input dp-il" name="leftTime" autocomplete="off"/>
+						<span>—</span>
+						<input class="layui-input dp-il" name="rightTime" autocomplete="off"/>
+					</div>
+				</div>
+				<div class="common-input-inline">
+					<label class="search-form-label">起息时间：</label>
+					<div class="layui-input-inline">
+						<input class="layui-input dp-il" name="info1" autocomplete="off"/>
+						<span>—</span>
+						<input class="layui-input dp-il" name="info2" autocomplete="off"/>
+					</div>
+				</div>
+			</div>
+			<div class="layui-btn-group">
+				<button type="button" class="layui-btn layui-btn-primary" id="searchReport">
+					<i class="layui-icon">&#xe615;</i>查询
+				</button>
+				<button class="layui-btn layui-btn-primary" type="reset">重置</button>
+				<button type="button" class="layui-btn layui-btn-primary" data-show="off"
+						onclick="showMoreSearch(this,'loanRepayReportSearchForm')"><i class="layui-icon">&#xe61a;</i> 更多
+				</button>
+				<button type="button" class="layui-btn" id="downloadReportDetail">
+					<i class="layui-icon">&#xe601;</i>下载数据
+				</button>
+			</div>
+		</form>
+	</div>
+	<table id="loanRepayReportData" class="layui-hide" lay-filter="loanRepayReportData"></table>
+</div>
+
+<script type="text/javascript">
+	var merchantName = sessionStorage.getItem("merchantNameForReapySearch") || null;
+	if (merchantName) {
+		$('#loanRepayReportSearchForm [name="merchantName"]').val(merchantName);
+		sessionStorage.clear("merchantNameForReapySearch");
+	}
+
+	$(document).ready(function () {
+		laydate.render({elem: '#loanRepayReportSearchForm [name="leftTime"]', type: 'date', trigger: 'click'});
+		laydate.render({elem: '#loanRepayReportSearchForm [name="rightTime"]', type: 'date', trigger: 'click'});
+		laydate.render({elem: '#loanRepayReportSearchForm [name="info1"]', type: 'date', trigger: 'click'});
+		laydate.render({elem: '#loanRepayReportSearchForm [name="info2"]', type: 'date', trigger: 'click'});
+		layform.render("select", "loanRepayReportSearchForm");
+
+		var loanRepayReportDataTable = LayTableUtil.render({
+			elem: '#loanRepayReportData'
+			, cols: [[ //表头
+				{field: 'trade_name', title: '项目名称', width: 170, fixed: 'left'}
+				, {field: 'loan_account_name', title: '借款人用户名', width: 150, fixed: 'left'}
+				, {field: 'loan_user_name', title: '借款人名称', width: 160, fixed: 'left'}
+				, {field: 'loan_user_cert', title: '借款人身份证', width: 180}
+				, {field: 'merchant_name', title: '所属商户', width: 180}
+				, {field: 'loan_product', title: '产品名称', width: 160}
+                , {field: 'product_item_name', title: '子产品名称', width: 160}
+				, {field: 'loan_term', title: '期限', width: 80}
+				, {field: 'loan_interest_rate', title: '借款年化', width: 100}
+				, {field: 'loan_apply_amount', title: '借款金额(元)', width: 120, align: 'right'}
+				, {field: 'service_fee_amt', title: '服务费(元)', width: 110, align: 'right'}
+                , {field: 'service_fee_overdue_amt', title: '服务费滞纳金(元)', width: 140, align: 'right'}
+				, {field: 'loan_apply_time', title: '借款日期', width: 170}
+				, {field: 'trade_grant_time', title: '起息时间', width: 170}
+				, {field: 'repay_method', title: '还款方式', width: 140,}
+				, {field: 'curr_repay_period', title: '期数/总期数', width: 120, unresize: true, sort: true, totalRowText: '合计(元)：'}
+				, {field: 'repay_total_amt', title: '应还总额(元)', width: 120, align: 'right', totalRow: true}
+				, {field: 'curr_repay_principal_amt', title: '应还本金(元)', width: 120, align: 'right', totalRow: true}
+				, {field: 'curr_repay_interest_amt', title: '应还利息(元)', width: 120, align: 'right', totalRow: true}
+                , {field: 'curr_overdue_amt', title: '逾期罚息(元)', width: 120, align: 'right', totalRow: true}
+				, {field: 'curr_expect_repay_time', title: '预期还款时间', width: 170}
+				, {field: 'curr_actual_repay_time', title: '实际还款时间', width: 170}
+				, {field: 'curr_actual_repay_user_name', title: '实际还款人', width: 160}
+				, {field: 'curr_repay_status', title: '还款状态', width: 100, fixed: 'right'}
+			]]
+			, url: reportApi.repayManager.loanRepay.search
+			, page: true
+			, totalRow: true
+			, toolbar: true
+			, where: {"merchantName": merchantName, "repayStatus": "0"}
+			, defaultToolbar: ['filter', 'exports']
+			, title: '融资人还款查询报表_' + DateUtils.longToDateStringYMD(new Date())
+		});
+
+		$('#loanRepayReportSearchForm [id="downloadReportDetail"]').click(function () {
+			location.href = reportApi.repayManager.loanRepay.download + "?" + $('#loanRepayReportSearchForm').serialize();
+		});
+
+		$('#loanRepayReportSearchForm [id="searchReport"]').click(function () {
+			LayTableUtil.reload(loanRepayReportDataTable, 'loanRepayReportSearchForm');
+		});
+		// SearchForm绑定回车事件
+		$("#loanRepayReportSearchForm").bind('keypress', function (event) {
+			if (event.keyCode == "13") {
+				$('#loanRepayReportSearchForm [id="searchReport"]').click();
+			}
+		});
+
+	});
+
+
+</script>

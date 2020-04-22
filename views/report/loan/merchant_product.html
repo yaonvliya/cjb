@@ -1,0 +1,75 @@
+<div class="animated fadeInRight">
+	<div class="search-box">
+		<form class="layui-form" id="merchantProductReportSearchForm" lay-filter="merchantProductReportSearchForm"
+			  onsubmit="return false">
+			<div class="basic-search">
+				<div class="common-input-inline">
+					<label class="search-form-label">商户名称：</label>
+					<div class="layui-input-inline">
+						<input class="layui-input" name="merchantName" autocomplete="off"/>
+					</div>
+				</div>
+				<div class="common-input-inline">
+					<label class="search-form-label">登陆帐号：</label>
+					<div class="layui-input-inline">
+						<input class="layui-input" name="loginAccount" autocomplete="off"/>
+					</div>
+				</div>
+			</div>
+			<div class="layui-btn-group">
+				<button type="button" class="layui-btn layui-btn-primary" id="searchReport">
+					<i class="layui-icon">&#xe615;</i>查询
+				</button>
+				<button class="layui-btn layui-btn-primary" type="reset">重置</button>
+				<button type="button" class="layui-btn" id="downloadReportDetail">
+					<i class="layui-icon">&#xe601;</i>下载数据
+				</button>
+			</div>
+		</form>
+	</div>
+	<table id="merchantProductReportData" class="layui-hide" lay-filter="merchantProductReportData"></table>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function () {
+
+		// layform.render(null, "merchantProductReportSearchForm");
+
+		var merchantProductReportDataTable = LayTableUtil.render({
+			elem: '#merchantProductReportData'
+			, cols: [[ //表头
+				{field: 'merchant_user_name', title: '商户名称'}
+                , {field: 'merchant_login_name', title: '登陆帐号'}
+				, {field: 'merchant_credit_amount', title: '授信额度(元)', width:160, align: 'right', templet: function (d) {return MoneyUtil.formatMoney(d.merchant_credit_amount)}}
+				, {field: 'balance', title: '授信余额(元)', width:160, align: 'right', templet: function (d) {return MoneyUtil.formatMoney(d.balance)}}
+				, {field: 'merchant_credit_deadline', title: '授信到期时间'}
+                , {field: 'grading', title: '风控等级'}
+                , {field: 'product_name', title: '产品名称'}
+			]]
+			, url: reportApi.dataTable.merchantProduct.search
+			, page: true
+			, toolbar: true
+			, where: {tradeTimeLeftRange : DateUtils.dateToStr("yyyy-MM-dd", new Date())}
+			, defaultToolbar: ['filter', 'exports']
+			, title: '商户产品报表_' + DateUtils.longToDateStringYMD(new Date())
+		});
+
+
+		$('#merchantProductReportSearchForm [id="downloadReportDetail"]').click(function () {
+			location.href = reportApi.dataTable.merchantProduct.download + "?" + $('#merchantProductReportSearchForm').serialize();
+		});
+
+		$('#merchantProductReportSearchForm [id="searchReport"]').click(function () {
+			LayTableUtil.reload(merchantProductReportDataTable, 'merchantProductReportSearchForm');
+		});
+		// SearchForm绑定回车事件
+		$("#merchantProductReportSearchForm").bind('keypress', function (event) {
+			if (event.keyCode == "13") {
+				$('#merchantProductReportSearchForm [id="searchReport"]').click();
+			}
+		});
+
+	});
+
+
+</script>

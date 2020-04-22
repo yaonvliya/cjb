@@ -1,0 +1,63 @@
+<div class="animated fadeInRight">
+    <div class="search-box">
+        <form class="layui-form inline" id="userSmsRecordForm" onsubmit="return false">
+            <div class="basic-search">
+                <div class="common-input-inline">
+                    <label class="search-form-label">登录账号：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="userMobile" class="layui-input" autocomplete="off">
+                    </div>
+                </div>
+                <div class="common-input-inline">
+                    <label class="search-form-label">发送时间：</label>
+                    <div class="layui-input-inline">
+                        <input class="layui-input dp-il" name="leftTimeRange" autocomplete="off"/>
+                        <span>—</span>
+                        <input class="layui-input dp-il" name="rightTimeRange" autocomplete="off"/>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-btn-group">
+                <button type="button" class="layui-btn layui-btn-primary" id="searchUserSmsRecord"><i class="layui-icon">&#xe615;</i> 查询</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </form>
+    </div>
+
+    <table id="userSmsRecord" class="layui-hide" lay-filter="userSmsRecord"></table>
+</div>
+
+<script type="text/javascript">
+
+    var userSmsRecordTable;
+    $(document).ready(function () {
+        laydate.render({elem: '#userSmsRecordForm [name="leftTimeRange"]', type: 'date', trigger: 'click', value: new Date()});
+        laydate.render({elem: '#userSmsRecordForm [name="rightTimeRange"]', type: 'date', trigger: 'click'});
+
+        userSmsRecordTable = LayTableUtil.render({
+            elem: '#userSmsRecord'
+            ,cols: [[ //表头
+                {field: 'userMobile', title: '用户账户', width: 160}
+                ,{field: 'smsContent', title: '短信内容'}
+                ,{field: 'smsChannel', title: '发送渠道', width: 160, templet: function (d) { return d.smsChannel}}
+                ,{field: 'rowAddTime', title: '发送时间', width: 180, templet: function (d) { return DateUtils.longToDateString(d.rowAddTime) }}
+            ]]
+            , url: userManagerApi.smsRecord
+			, where: DataDeal.formToJsonObj($("#userSmsRecordForm"))
+            , page: true
+            , id: 'userSmsRecordTable'
+        });
+
+        $('#searchUserSmsRecord').click(function () {
+            LayTableUtil.reload(userSmsRecordTable, 'userSmsRecordForm');
+        });
+
+        // SearchForm绑定回车事件
+        $("#userSmsRecordForm").bind('keypress', function (event) {
+            if (event.keyCode == "13") {
+                $('#searchUserSmsRecord').click();
+            }
+        });
+    });
+
+</script>

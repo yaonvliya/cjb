@@ -1,0 +1,144 @@
+<div class="animated fadeInRight">
+    <div class="search-box">
+        <form class="layui-form inline" id="searchFaqList" lay-filter="searchFaqForm">
+            <div class="basic-search">
+                <div class="common-input-inline">
+                    <label class="search-form-label">标题：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="faqTitle" id="selectFaqTitle" class="layui-input">
+                    </div>
+                </div>
+                <div class="common-input-inline">
+                    <label class="search-form-label">状态：</label>
+                    <div class="layui-input-inline">
+                        <select name="faqStatus" id="selectFaqStatus" class="layui-input">
+                            <option value=''>全部</option>
+                            <option value='online'>正常</option>
+                            <option value='offline'>停用</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="common-input-inline">
+                    <label class="search-form-label">模块：</label>
+                    <div class="layui-input-inline">
+                        <select name="faqModule" id="selectFaqType" class="layui-input">
+                            <option value=''>全部</option>
+                            <option value='common'>公共问题</option>
+                            <option value='finance'>资金问题</option>
+                            <option value='assets'>资产问题</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="common-input-inline">
+                    <label class="search-form-label">是否首页展示：</label>
+                    <div class="layui-input-inline">
+                        <select name="indexSwitch" id="selectFaqIndexSwitch" class="layui-input">
+                            <option value=''>全部</option>
+                            <option value=true>是</option>
+                            <option value=false>否</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-btn-group">
+                <button type="button" class="layui-btn layui-btn-primary" id="reloadFaq"><i
+                        class="layui-icon">&#xe615;</i> 查询
+                </button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                <button type="button" class="layui-btn" id="addFaqBtn"><i class="layui-icon">&#xe654;</i> 新增</button>
+            </div>
+        </form>
+    </div>
+
+    <table id="faq" class="layui-hide" lay-filter="faq"></table>
+</div>
+
+<div class="right-win animated fadeInRight w650" id="addFaq">
+    <div class="right-win-top">
+        <a href="javascript:closeFaqModelFrame();" title="关闭"><i
+                class="layui-icon close-right-win">&#x1006;</i></a>
+        <span class="right-win-title" id="addModalFaqTitle">新建问题</span>
+        <span class="right-win-btn">
+			<button type="button" class="layui-btn" id="faqSubmit">
+				<i class="layui-icon">&#xe605;</i>保存
+			</button>
+		</span>
+    </div>
+    <div class="right-win-content-box">
+        <form class="layui-form" enctype="multipart/form-data" id="addFaqForm" lay-filter="addFaqForm">
+            <button class="hide" type="button" lay-submit lay-filter="addFaqSubmit" id="faqSubmitBtn"></button>
+            <input class="layui-input hide" name="faqId" autocomplete="off">
+            <div class="layui-form-item">
+                <label class="layui-form-label">问题标题：</label>
+                <div class="float-in-input-div">
+                    <input name="faqTitle" id="addFaqTitle" type="text" class="layui-input w500"
+                           lay-verify="required" placeholder="请输入问题标题" maxlength="30">
+                    <span class="c-main-blue float-in-input">0/30</span>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">页面顺序：</label>
+                <div class="layui-input-inline">
+                    <input name="sortValue" id="addFaqSortValue" type="number"
+                           class="layui-input-inline layui-input w100" placeholder="请输入数字" lay-verify="required">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">问题模块：</label>
+                <div class="layui-input-inline w100 ">
+                    <select name="faqModule" id="addFaqModule" lay-verify="required"
+                            lay-filter="faqModuleFilter">
+                        <option value=''>请选择</option>
+                        <option value='common'>公共问题</option>
+                        <option value='finance'>资金问题</option>
+                        <option value='assets'>资产问题</option>
+                    </select>
+                </div>
+                <label class="layui-form-label">问题类型：</label>
+                <input class="layui-input hide" name="faqTypeId" autocomplete="off">
+                <input class="layui-input hide" name="faqType" autocomplete="off">
+                <div class="layui-input-inline w100 ">
+                    <select name="faqTypeName" id="addFaqTypeName" lay-verify="required"
+                            lay-filter="faqTypeNameFilter">
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">问题状态：</label>
+                <div class="layui-input-inline w100">
+                    <input type="text" hidden name="faqStatus" value="online" id="addFaqStatus">
+                    <input type="radio" name="faqStatusTemp" lay-filter="faqStatusFilter" value="online" title="正常"
+                           checked>
+                    <input type="radio" name="faqStatusTemp" lay-filter="faqStatusFilter" value="offline" title="停用">
+                </div>
+                <label class="layui-form-label">首页展示：</label>
+                <div class="layui-input-inline w100">
+                    <input type="text" hidden name="indexSwitch" value=true id="addFaqIndexSwitch">
+                    <input type="radio" name="indexSwitchTemp" lay-filter="faqIndexSwitchFilter" value=true title="是"
+                           checked>
+                    <input type="radio" name="indexSwitchTemp" lay-filter="faqIndexSwitchFilter" value=false title="否">
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">问题答案：</label>
+                <div class="layui-input-block">
+                    <textarea id="faqAnswer" name="faqContent" lay-verify="contact"></textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script type="text/html" id="faqOperation">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail"><i class="layui-icon">&#xe615;</i>详情</a>
+    <a class="layui-btn layui-btn-xs" lay-event="edit"><i class="layui-icon">&#xe642;</i>编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon">&#xe640;</i>删除</a>
+</script>
+<script type="text/html" id="faqIndexSwitchTpl">
+    <input type="checkbox" value="{{d.faqId}}" title="在首页展示" lay-filter="faqIndexSwitchTpl" {{ d.indexSwitch== true
+           ? 'checked' : '' }}>
+</script>
+<script type="text/html" id="faqStatusTpl">
+    <input type="checkbox" value="{{d.faqId}}" lay-skin="switch" lay-text="正常|停用" lay-filter="faqStatusTpl" {{
+           d.faqStatus.code== 'online' ? 'checked' : '' }}>
+</script>
+<script src="js/message/faq.js"></script>

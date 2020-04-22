@@ -1,0 +1,91 @@
+<div class="animated fadeInRight">
+	<div class="search-box">
+		<form class="layui-form" id="investDetailReportSearchForm" lay-filter="investDetailReportSearchForm"
+			  onsubmit="return false">
+			<div class="basic-search">
+				<div class="common-input-inline">
+					<label class="search-form-label">投资人用户名：</label>
+					<div class="layui-input-inline">
+						<input class="layui-input" name="loginAccount" autocomplete="off"/>
+					</div>
+				</div>
+				<div class="common-input-inline">
+					<label class="search-form-label">投资金额：</label>
+					<div class="layui-input-inline">
+						<input type="number" class="layui-input dp-il w100" name="leftAmt" autocomplete="off"/>
+						<span>—</span>
+						<input type="number" class="layui-input dp-il w100" name="rightAmt" autocomplete="off"/>
+					</div>
+				</div>
+				<div class="common-input-inline">
+					<label class="search-form-label">投资时间：</label>
+					<div class="layui-input-inline">
+						<input class="layui-input dp-il" name="leftTime" autocomplete="off"/>
+						<span>—</span>
+						<input class="layui-input dp-il" name="rightTime" autocomplete="off"/>
+					</div>
+				</div>
+			</div>
+			<div class="layui-btn-group">
+				<button type="button" class="layui-btn layui-btn-primary" id="searchReport">
+					<i class="layui-icon">&#xe615;</i>查询
+				</button>
+				<button class="layui-btn layui-btn-primary" type="reset">重置</button>
+				<button type="button" class="layui-btn" id="downloadReportDetail">
+					<i class="layui-icon">&#xe601;</i>下载数据
+				</button>
+			</div>
+		</form>
+	</div>
+	<table id="investDetailReportData" class="layui-hide" lay-filter="investDetailReportData"></table>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function () {
+
+		laydate.render({elem: '#investDetailReportSearchForm [name="leftTime"]', type: 'date', trigger: 'click'});
+		laydate.render({elem: '#investDetailReportSearchForm [name="rightTime"]', type: 'date', trigger: 'click'});
+
+		var investDetailReportDataTable = LayTableUtil.render({
+			elem: '#investDetailReportData'
+			, cols: [[ //表头
+				{field: 'trade_name', title: '交易名称', sort: true, width: 180, fixed: 'left'}
+				, {field: 'invest_user_account', title: '投资人用户名', width: 130}
+				, {field: 'deposit_account', title: '资金账户名', width: 140}
+				, {field: 'invest_user_name', title: '投资人姓名', width: 150}
+				, {field: 'invest_time', title: '投资时间', width: 170}
+				, {field: 'invest_term', title: '投资周期', width: 100}
+				, {field: 'risk_level', title: '标的类型', width: 100}
+				, {field: 'invest_id', title: '投资流水号', width: 230}
+				, {field: 'invest_amt', title: '投资金额(元)', width: 120, align: 'right'}
+				, {field: 'expected_proceeds_amt', title: '预期收益(元)', width: 120, align: 'right'}
+				, {field: 'loan_user_name', title: '融资方用户名', width: 140}
+				, {field: 'loan_user_account', title: '融资方姓名', width: 140}
+				, {field: 'invest_status', title: '交易状态', width: 110, fixed: 'right'}
+				, {field: 'transfer_status', title: '转让状态', width: 110, fixed: 'right'}
+			]]
+			, url: reportApi.dataTable.investDetail.search
+			, page: true
+			, toolbar: true
+			, defaultToolbar: ['filter', 'exports']
+			, title: '投资明细报表_' + DateUtils.longToDateStringYMD(new Date())
+		});
+
+		$('#investDetailReportSearchForm [id="downloadReportDetail"]').click(function () {
+			location.href = reportApi.dataTable.investDetail.download + "?" + $('#investDetailReportSearchForm').serialize();
+		});
+
+		$('#investDetailReportSearchForm [id="searchReport"]').click(function () {
+			LayTableUtil.reload(investDetailReportDataTable, 'investDetailReportSearchForm');
+		});
+		// SearchForm绑定回车事件
+		$("#investDetailReportSearchForm").bind('keypress', function (event) {
+			if (event.keyCode == "13") {
+				$('#investDetailReportSearchForm [id="searchReport"]').click();
+			}
+		});
+
+	});
+
+
+</script>

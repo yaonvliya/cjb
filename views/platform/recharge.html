@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="format-detection" content="telephone=no,email=no,address=no"/>
+    <title>充值</title>
+    <link rel="shortcut icon" href="../../img/common/favicon.ico"/>
+    <link href="../../css/base.css" rel="stylesheet">
+    <link href="../../plugins/layui/css/layui.css" rel="stylesheet">
+
+    <style type="text/css">
+        .recharge-form{
+            width: 400px;
+            margin: 100px auto 0;
+            padding: 10px;
+        }
+
+    </style>
+</head>
+<body class="bg-white">
+
+    <form class="layui-form recharge-form" id="rechargeForm">
+        <div class="layui-form-item">
+            <label class="layui-form-label">账户:</label>
+            <div class="layui-input-inline">
+                <input name="accountId" type="hidden" />
+                <input name="accountType" value="$!{accountType}" type="hidden" />
+                <span class="layui-form-mid">#if($!{accountType}=='3')平台营销账户#elseif($!{accountType}=='4')平台手续费账户#elseif($!{accountType}=='7')平台资金账户#end</span>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">充值金额:</label>
+            <div class="layui-input-inline">
+                <input type="number" name="amount" lay-verify="number" placeholder="请输入充值金额" class="layui-input" autocomplete="off">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label"></label>
+            <div class="layui-input-inline">
+                <button class="layui-btn" type="button" lay-submit lay-filter="rechargeFormSubmit">下一步</button>
+            </div>
+        </div>
+    </form>
+
+
+<script src="../../js/jquery.min.js"></script>
+<script src="../../plugins/layui/layui.js?v=2.1.5"></script>
+<script src="../../js/jquery.cookie.js"></script>
+<script src="../../js/host-config.properties.js"></script>
+<script src="../../js/local-api-config.js"></script>
+<script src="../../js/base-utils.js"></script>
+<script>
+    var layform;
+    $(document).ready(function () {
+        layui.use(['form'], function () {
+            layform = layui.form;
+            layform.on('submit(rechargeFormSubmit)', function (data) {
+                var result = AjaxUtil.ajaxPost(fuiouAccountApi.recharge, JSON.stringify(data.field));
+                if (result) {
+                    var token = result.data;
+                    window.open('../../fuiou/jump2Fuiou?token=' + token, '_self');
+                }
+                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+            });
+        });
+
+	});
+</script>
+</body>
+</html>
+

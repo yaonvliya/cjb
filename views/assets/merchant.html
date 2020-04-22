@@ -1,0 +1,198 @@
+<style>
+    #merchantForm .layui-input-inline {
+        width: 250px;
+    }
+</style>
+<div class="animated fadeInRight">
+	<div class="search-box">
+		<form class="layui-form" id="merchantSearchForm" lay-filter="merchantSearchForm">
+			<div class="basic-search">
+                <div class="common-input-inline"><label class="search-form-label">商户手机号码：</label class="layui-form-label w150">
+                    <div class="layui-input-inline">
+                        <input class="layui-input" name="userAccount" autocomplete="off">
+                    </div>
+                </div>
+				<div class="common-input-inline"><label class="search-form-label">用户名称：</label class="layui-form-label w150">
+					<div class="layui-input-inline">
+						<input class="layui-input" name="merchantUserName" autocomplete="off"/>
+					</div>
+				</div>
+				<div class="common-input-inline"><label class="search-form-label">状态：</label class="layui-form-label w150">
+					<div class="layui-input-inline">
+						<select name="merchantCreditStatus">
+							<option value="">全部</option>
+							<option value="online">正常</option>
+							<option value="offline">停用</option>
+						</select>
+					</div>
+				</div>
+			</div>
+            <div class="layui-btn-group">
+                <button type="button" class="layui-btn layui-btn-primary" id="merchantSearch">
+                    <i class="layui-icon">&#xe615;</i> 查询
+                </button>
+                <button class="layui-btn layui-btn-primary" type="reset">重置</button>
+                <button type="button" class="layui-btn" id="merchantAdd"><i class="layui-icon">&#xe654;</i> 新增</button>
+            </div>
+        </form>
+	</div>
+
+	<table id="merchant" class="layui-hide" lay-filter="merchant"></table>
+</div>
+
+<div id="merchantDetailWin" class="right-win animated fadeInRight w700">
+	<div class="right-win-top">
+		<a href="javascript:closeRightWin('merchantDetailWin');" title="关闭"><i
+				class="layui-icon close-right-win">&#x1006;</i></a>
+		<span class="right-win-title" id="merchantDetailWinTitle"></span>
+		<span class="right-win-btn">
+			<button class="layui-btn" type="button" id="merchantSubmit">
+				<i class="layui-icon">&#xe605;</i>提交
+			</button>
+		</span>
+    </div>
+    <div class="right-win-content-box">
+        <div class="slimScrollDiv win-content fl">
+            <form class="layui-form" id="merchantForm" lay-filter="merchantForm">
+                <input type="hidden" id="" name="merchantId" >
+                <div class="layui-form-item">
+                    <label class="layui-form-label w150">商户用户登录账号</label>
+                    <div class="layui-input-inline">
+                        <input type="hidden" name="merchantUserId">
+                        <input type="hidden" name="merchantUserName">
+                        <input type="hidden" name="merchantCertNo">
+                        <input type="hidden" name="merchantCellphone">
+                        <input type="hidden" name="merchantLoginName">
+                        <input type="number" id="merchantUser" placeholder="输入用户登录账号进行查询"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div id="merchantUserInfo" class="hide">
+                    <div id="merchantEnterpriseUserInfo">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label w150">企业名称</label>
+                            <div class="layui-input-inline">
+                                <span class="layui-form-mid" name="merchantUserEnterpriseName"></span>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label w150">法人姓名</label>
+                            <div class="layui-input-inline">
+                                <span class="layui-form-mid" name="merchantUserArtificialPersonName"></span>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label w150">法人身份证号</label>
+                            <div class="layui-input-inline">
+                                <span class="layui-form-mid" name="merchantUserEnterpriseLegalCert"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label w150">开户行卡号</label>
+                        <div class="layui-input-inline">
+                            <span class="layui-form-mid" name="merchantUserBankCardNo"></span>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label w150">开户行</label>
+                        <div class="layui-input-inline">
+                            <span class="layui-form-mid" name="merchantUserBankType"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label w150">授信额度（元）</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="merchantCreditAmount" required lay-verify="required|amount" placeholder="请输入授信额度（元）"
+                        autocomplete="off" class="layui-input" oninput="if(value>1000000000){value=1000000000}else if(value<0){value=0}else{value=value}">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label w150">授信到期时间</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="merchantCreditDeadline" name="merchantCreditDeadline" required lay-verify="required" placeholder="请选择授信到期时间"
+                        autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item fl">
+                    <label class="layui-form-label w150">授信状态</label>
+                    <div class="layui-input-inline">
+                        <input type="hidden" id="merchantCreditStatus" name="merchantCreditStatus" value="online" >
+                        <input id="merchantCreditStatusChk" lay-skin="switch" lay-text="正常|停用" lay-filter="merchantCreditStatus" type="checkbox" checked="">
+                    </div>
+                </div>
+                #*<div class="layui-form-item fl">
+                    <label class="layui-form-label w150">是否需要审核提现</label>
+                    <div class="layui-input-inline">
+                        <input type="hidden" id="withdrawExamineFlag" name="withdrawExamineFlag" value="true" >
+                        <input id="withdrawExamineFlagChk" lay-skin="switch" lay-text="是|否" lay-filter="withdrawExamineFlag" type="checkbox" checked="">
+                    </div>
+                </div>*#
+                <div class="layui-form-item fl">
+                    <label class="layui-form-label w150">商户能否提现</label>
+                    <div class="layui-input-inline">
+                        <input type="hidden" id="withdrawFlag" name="withdrawFlag" value="false" >
+                        <input id="withdrawFlagChk" lay-skin="switch" lay-text="是|否" lay-filter="withdrawFlag" type="checkbox" checked="">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label w150">商户描述</label>
+                    <div class="layui-input-inline">
+                        <textarea name="merchantDesc" placeholder="请输入商户描述"
+                                  autocomplete="off" class="layui-input h80"></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label w150">商户地址</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="merchantAddress" placeholder="请输入商户地址"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label w150">风控等级</label>
+                    <div class="layui-input-inline">
+                        <select name="grading">
+                            <option value="">请选择</option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                            <option value="D">D</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label w150">商户来源</label>
+                    <div class="layui-input-inline">
+                        <select name="source">
+                            <option value="pingtai">平台</option>
+                            <option value="leili">雷励</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="hide" type="button" lay-submit lay-filter="merchantSubmit" id="merchantSubmitBtn"></button>
+			</form>
+		</div>
+		<div class="right-win-drag" data-winId="merchantDetailWin"></div>
+	</div>
+</div>
+
+<script type="text/html" id="merchantBar">
+	<a class="layui-btn layui-btn-xs" lay-event="edit"><i class="layui-icon">&#xe642;</i>编辑</a>
+    <a class="layui-btn layui-btn-xs" lay-event="productManage"><i class="layui-icon">&#xe642;</i>产品维护</a>
+</script>
+
+<script type="text/html" id="merchantCreditStatusTpl">
+    <input type="checkbox" name="merchantCreditStatus" value="{{d.merchantId}}" lay-skin="switch" lay-text="正常|停用" lay-filter="currMerchantCreditStatus" {{ d.merchantCreditStatus.code == 'online' ? 'checked' : '' }}>
+</script>
+
+<script type="text/html" id="withdrawExamineFlagTpl">
+    <input type="checkbox" name="withdrawExamineFlag" value="{{d.merchantId}}" title="审核提现" lay-filter="currWithdrawExamineFlag" {{ d.withdrawExamineFlag ? 'checked' : '' }}>
+</script>
+
+<script type="text/html" id="withdrawFlagTpl">
+    <input type="checkbox" name="withdrawFlag" value="{{d.merchantId}}" title="允许提现" lay-filter="currWithdrawFlag" {{ d.withdrawFlag ? 'checked' : '' }}>
+</script>
+
+<script src="js/assets/merchant.js"></script>

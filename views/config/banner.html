@@ -1,0 +1,138 @@
+<div class="animated fadeInRight">
+	<div class="search-box">
+		<form class="layui-form inline" lay-filter="searchBannerForm" id="bannerSearchForm">
+			<div class="basic-search">
+				<div class="common-input-inline">
+					<label class="search-form-label">描述</label>
+					<div class="layui-input-inline">
+						<input class="layui-input" name="bannerDesc" id="bannerDesc" placeholder="根据描述搜索">
+					</div>
+				</div>
+			</div>
+			<div class="common-input-inline">
+				<label class="search-form-label">平台</label>
+				<div class="layui-input-inline">
+					<select name="bannerDomain" id="bannerDomain">
+						<option value=""></option>
+						<option value="PC||Index">PC官网首页</option>
+##						<option value="PC||Pointmall">PC官网积分商城</option>
+						<option value="H5||Index">H5首页</option>
+##						<option value="H5||Pointmall">H5积分商城</option>
+						<option value="H5||Asserts">H5借款平台</option>
+						<option value="APP||Index">APP首页</option>
+##						<option value="APP||Pointmall">APP积分商城</option>
+					</select>
+				</div>
+			</div>
+            <div class="common-input-inline">
+                <label class="search-form-label">状态</label>
+                <div class="layui-input-inline">
+                    <select name="bannerStatus">
+                        <option value=""></option>
+                        <option value="online">正常</option>
+                        <option value="offline">停用</option>
+                    </select>
+                </div>
+            </div>
+			<div class="layui-btn-group">
+				<button type="button" class="layui-btn layui-btn-primary" id="reloadBanner"><i class="layui-icon">&#xe615;</i> 查询</button>
+				<button class="layui-btn layui-btn-primary" type="reset">重置</button>
+				<button type="button" class="layui-btn" id="addBannerBtn"><i class="layui-icon">&#xe654;</i> 新增</button>
+			</div>
+		</form>
+	</div>
+
+	<table id="banner" class="layui-hide" lay-filter="banner"></table>
+</div>
+
+<form class="layui-form p10 hide w450" lay-filter="addBannerForm"
+	  id="bannerForm">
+	<input class="layui-input hide" name="bannerId" autocomplete="off">
+	<div class="layui-form-item">
+		<div class="layui-block">
+			<label class="layui-form-label">描述：</label>
+			<div class="layui-input-block">
+				<input class="layui-input" lay-verify="required" name="bannerDesc">
+			</div>
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<div class="layui-block">
+			<label class="layui-form-label">图片地址：</label>
+			<div class="layui-input-block">
+				<input class="layui-input" lay-verify="required" name="bannerImgUrl" autocomplete="off">
+			</div>
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<div class="layui-block">
+			<label class="layui-form-label">跳转地址：</label>
+			<div class="layui-input-block">
+				<input class="layui-input" lay-verify="required" name="bannerJumpUrl" autocomplete="off">
+			</div>
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<div class="layui-block">
+			<label class="layui-form-label">展示顺序：</label>
+			<div class="layui-input-block">
+				<input class="layui-input" type="number" lay-verify="required" name="showIndex" placeholder="请输入数字">
+			</div>
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<div class="layui-block">
+			<label class="layui-form-label">所属域：</label>
+			<div class="layui-input-block">
+				<select lay-verify="required" name="bannerDomain">
+					<option value=""></option>
+					<option value="PC||Index">PC官网首页</option>
+##					<option value="PC||Pointmall">PC官网积分商城</option>
+					<option value="H5||Index">H5首页</option>
+##					<option value="H5||Pointmall">H5积分商城</option>
+					<option value="H5||Asserts">H5借款平台</option>
+					<option value="APP||Index">APP首页</option>
+##					<option value="APP||Pointmall">APP积分商城</option>
+				</select>
+			</div>
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<div class="layui-block">
+			<label class="layui-form-label">状态：</label>
+			<div class="layui-input-block">
+                <input type="text" hidden name="bannerStatus" value="online" id="addBannerStatus">
+                <input type="radio" name="bannerStatusTemp" lay-filter="bannerStatusFilter" value="online" title="正常" checked>
+                <input type="radio" name="bannerStatusTemp" lay-filter="bannerStatusFilter" value="offline" title="停用">
+			</div>
+		</div>
+	</div>
+    <div class="layui-form-item">
+        <div class="layui-block">
+            <label class="layui-form-label">角色描述：</label>
+            <div class="layui-input-block">
+                <input class="layui-input" type="number" lay-verify="required" name="profitRoleNote" placeholder="请输入数字">
+            </div>
+        </div>
+    </div>
+	<div class="bottom-buttons">
+		<button type="reset" class="layui-btn">重置</button>
+		<button class="layui-btn" lay-submit="" lay-filter="bannerForm" id="bannerSubmit">确认提交</button>
+	</div>
+</form>
+
+<script type="text/html" id="bannerOperation">
+	<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail"><i class="layui-icon">&#xe615;</i>详情</a>
+	<a class="layui-btn layui-btn-xs" lay-event="edit"><i class="layui-icon">&#xe642;</i>编辑</a>
+	<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon">&#xe640;</i>删除</a>
+</script>
+<script type="text/html" id="bannerImgUrlTpl">
+	<a href="{{d.bannerImgUrl}}" class="layui-table-link" target="_blank">{{ d.bannerImgUrl }}</a>
+</script>
+<script type="text/html" id="bannerJumpUrlTpl">
+	<a href="{{d.bannerJumpUrl}}" class="layui-table-link" target="_blank">{{ d.bannerJumpUrl }}</a>
+</script>
+<script type="text/html" id="bannerStatusTpl">
+    <input type="checkbox" value="{{d.bannerId}}" lay-skin="switch" lay-text="正常|停用" lay-filter="bannerStatusTpl" {{ d.bannerStatus.code== 'online' ? 'checked' : '' }}>
+</script>
+<script src="js/message/banner.js"></script>

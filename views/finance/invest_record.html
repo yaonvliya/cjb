@@ -1,0 +1,90 @@
+<div class="animated fadeInRight">
+	<div class="search-box">
+		<form class="layui-form" id="invest-search-form" lay-filter="invest-search-form">
+			<div class="basic-search">
+                <div class="common-input-inline">
+                    <label class="search-form-label">投资人姓名：</label>
+                    <div class="layui-input-inline">
+                        <input class="layui-input" name="investUserName" autocomplete="off"/>
+                    </div>
+                </div>
+                <div class="common-input-inline">
+                    <label class="search-form-label">投资标的名称：</label>
+                    <div class="layui-input-inline">
+                        <input class="layui-input" name="tradeName" autocomplete="off"/>
+                    </div>
+                </div>
+                <div class="common-input-inline">
+                    <label class="search-form-label">投资时间：</label>
+                    <div class="layui-input-inline">
+                        <input class="layui-input" name="investTime" id="investTimeSearch" autocomplete="off"/>
+                    </div>
+                </div>
+			</div>
+			<div class="layui-btn-group">
+				<button type="button" class="layui-btn layui-btn-primary" id="invest-search"><i class="layui-icon">&#xe615;</i> 查询</button>
+				<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+			</div>
+		</form>
+	</div>
+
+	<table id="investRecord" class="layui-hide" lay-filter="investRecord"></table>
+</div>
+
+<script type="text/javascript">
+
+	$(document).ready(function () {
+
+        laydate.render({elem: '#investTimeSearch', type: 'date', trigger: 'click', value: new Date(), done: function(){
+			$('#invest-search').click();
+		}});
+
+		var personalTableIns = LayTableUtil.render({
+			elem: '#investRecord'
+			, cols: [[ //表头
+				{field: 'investUserAccount', title: '投资人手机号'}
+				, {field: 'investUserName', title: '投资人姓名'}
+                , {field: 'investAmt', title: '投资金额', templet: function (d) { return MoneyUtil.formatMoney(d.investAmt.amount) + "元"}}
+                , {field: 'investTime', title: '投资时间', templet: function(d){ return DateUtils.longToDateString(d.investTime)}}
+                , {field: 'tradeName', title: '投资标的名称'}
+                , {field: 'couponCashAmt', title: '使用红包金额', templet: function (d) {
+                	if(d.couponCashId){
+                        return MoneyUtil.formatMoney(d.couponCashAmt.amount) + "元"
+                    } else {
+                        return "未使用红包";
+                    }
+                }}
+                , {field: 'couponInterestRate', title: '加息券', templet: function (d) {
+                    if(d.couponInterestId){
+                        return NumberUtil.transfPercentage(d.couponInterestRate)
+                    } else {
+                        return "未使用加息券";
+                    }
+                }}
+                , {field: 'isTransferTrade', title: '是否为转让标', templet: function (d) {
+                    if(d.isTransferTrade){
+                        return "转让标"
+                    } else {
+                        return "---";
+                    }
+
+                }}
+			]]
+			, url: financeApiUrl.invest.list
+			, page: true
+			, where: {investTime : DateUtils.dateToStr("yyyy-MM-dd", new Date())}
+			, id: 'investRecordTable'
+		})
+
+		$('#invest-search').on('click', function () {
+			LayTableUtil.reload(personalTableIns, "invest-search-form");
+		});
+
+        // SearchForm绑定回车事件
+        $("#invest-search-form").bind('keypress', function (event) {
+            if (event.keyCode == "13") {
+                $('#invest-search').click();
+            }
+        });
+	});
+</script>

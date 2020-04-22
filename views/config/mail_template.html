@@ -1,0 +1,108 @@
+<div class="animated fadeInRight">
+	<div class="search-box">
+		<form class="layui-form inline" lay-filter="searchMailTemplateForm" id="mailTemplateSearchForm">
+			<div class="basic-search">
+				<div class="common-input-inline">
+					<label class="search-form-label">模板编号</label>
+					<div class="layui-input-inline">
+						<input class="layui-input" name="mailTemplateId" autocomplete="off">
+					</div>
+				</div>
+				<div class="common-input-inline">
+					<label class="search-form-label">模板说明</label>
+					<div class="layui-input-inline">
+						<input class="layui-input" name="mailTemplateNote" autocomplete="off">
+					</div>
+				</div>
+				<div class="common-input-inline">
+					<label class="search-form-label">邮件类型</label>
+					<div class="layui-input-inline">
+						<select name="mailType">
+							<option value=""></option>
+							<option value="textMail">普通文件邮件</option>
+							<option value="htmlMail">HTML邮件</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="layui-btn-group">
+				<button type="button" class="layui-btn layui-btn-primary" id="reloadMailTemplate"><i class="layui-icon">&#xe615;</i> 查询</button>
+				<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+				<button type="button" class="layui-btn" id="addMailTemplateBtn"><i class="layui-icon">&#xe654;</i> 新增</button>
+			</div>
+		</form>
+	</div>
+
+	<table id="mailTemplate" class="layui-hide" lay-filter="mailTemplate"></table>
+</div>
+
+<div class="right-win animated fadeInRight" id="mailTemplateDetailWin">
+    <div class="right-win-top">
+        <a href="javascript:closeMailTemplateDetailWin();" title="关闭"><i
+                class="layui-icon close-right-win">&#x1006;</i></a>
+        <span class="right-win-title" id="mailTemplateDetailWinTitle"></span>
+        <span class="right-win-btn">
+			<button type="button" class="layui-btn" id="mailTemplateSubmitBtn">
+				<i class="layui-icon">&#xe605;</i>保存
+			</button>
+		</span>
+    </div>
+    <div class="right-win-content-box">
+		<form class="layui-form" lay-filter="mailTemplateForm"
+			  id="mailTemplateForm">
+            <button class="hide" type="button" lay-submit lay-filter="mailTemplateSubmit"
+                    id="mailTemplateSubmit"></button>
+			<div class="layui-form-item">
+				<div class="layui-block">
+					<label class="layui-form-label">模板编号：</label>
+					<div class="layui-input-block">
+						<input class="layui-input" lay-verify="required" id="mailTemplateId" name="mailTemplateId">
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-block">
+					<label class="layui-form-label">模板说明：</label>
+					<div class="layui-input-block">
+						<input class="layui-input" lay-verify="required" name="mailTemplateNote" autocomplete="off">
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-block">
+					<label class="layui-form-label">邮件类型：</label>
+					<div class="layui-input-block">
+						<select name="mailType" lay-verify="required">
+							<option value=""></option>
+							<option value="textMail">普通文件邮件</option>
+							<option value="htmlMail">HTML邮件</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-block">
+					<label class="layui-form-label">模板主题：</label>
+					<div class="layui-input-block">
+						<input class="layui-input" lay-verify="required" name="mailTemplateSubject" autocomplete="off">
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-block">
+					<label class="layui-form-label">模板内容：</label>
+					<div class="layui-input-block">
+						<textarea lay-verify="required" id="mailTemplateContent" name="mailTemplateContent" autocomplete="off"></textarea>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script type="text/html" id="mailTemplateOperation">
+	<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail"><i class="layui-icon">&#xe615;</i>详情</a>
+	<a class="layui-btn layui-btn-xs" lay-event="edit"><i class="layui-icon">&#xe642;</i>编辑</a>
+	<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon">&#xe640;</i>删除</a>
+</script>
+<script src="js/message/mail_template.js"></script>

@@ -1,0 +1,94 @@
+<div class="animated fadeInRight">
+    <div class="search-box">
+        <form class="layui-form" id="reportSearchForm" lay-filter="reportSearchForm" onsubmit="return false">
+            <input type="hidden" class="layui-input" name="status" value="1">
+            <div class="basic-search">
+                <div class="common-input-inline"><label class="search-form-label">报表ID：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" name="reportId">
+                    </div>
+                </div>
+                <div class="common-input-inline"><label class="search-form-label">报表名称：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" name="reportName">
+                    </div>
+                </div>
+                <div class="common-input-inline">
+                    <label class="search-form-label">报表类型：</label>
+                    <div class="layui-input-inline">
+                        <select name="reportType">
+                            <option value="">全部</option>
+                            <option value="user">用户相关</option>
+                            <option value="invest">投资相关</option>
+                            <option value="loan">借款相关</option>
+                            <option value="repay">还款相关</option>
+                            <option value="other">其他</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-btn-group">
+                <button type="button" class="layui-btn layui-btn-primary" id="reportSearch"><i class="layui-icon">&#xe615;</i>
+                    查询
+                </button>
+                <button class="layui-btn layui-btn-primary" type="reset">重置</button>
+            </div>
+        </form>
+    </div>
+    <table id="reportDataTable" class="layui-hide" lay-filter="reportDataTable"></table>
+</div>
+
+<script type="text/html" id="reportOperation">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail"><i class="layui-icon">&#xe615;</i>查看报表</a>
+</script>
+
+<script>
+    var reportLoadUrl;
+    layform.render(null, "reportSearchForm");
+    $(document).ready(function () {
+        var index = null;
+        var reportTable = LayTableUtil.render({
+            elem: '#reportDataTable'
+            , cols: [[ //表头
+                {field: 'reportId', title: '报表ID', width: 80}
+                , {field: 'reportName', title: '报表名称', width: 200}
+                , {field: 'remark', title: '备注'}
+                , {fixed: 'right', width: 120, toolbar: '#reportOperation'}
+            ]]
+            , url: reportApi.list
+            , where: {status: 1}
+            , page: true
+            , id: 'reportDataTable'
+        });
+
+        //监听工具条
+        laytable.on('tool(reportDataTable)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'detail') {
+                var reportType = data.reportType;
+                var reportCode = data.reportCode;
+                var reportName = data.reportName;
+
+                var jumpUrl = reportApi.detail + reportType + "/" + reportCode;
+                var flag = $('#rightBoxTitle li[lay-id="' + jumpUrl + '"]').text();
+                if (StringUtil.isEmpty(flag)) {
+                    tabAction.tabAdd(reportName, jumpUrl);
+                } else {
+                    tabAction.tabChange(jumpUrl);
+                    $("#rightBoxContent .layui-show").load(jumpUrl);
+                }
+            }
+        });
+
+        $('#reportSearchForm [id="reportSearch"]').click(function () {
+            LayTableUtil.reload(reportTable, 'reportSearchForm');
+        });
+        // SearchForm绑定回车事件
+        $("#reportSearchForm").bind('keypress', function (event) {
+            if (event.keyCode == "13") {
+                $('#reportSearchForm [id="reportSearch"]').click();
+            }
+        });
+
+    });
+</script>

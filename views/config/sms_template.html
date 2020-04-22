@@ -1,0 +1,88 @@
+<div class="animated fadeInRight">
+	<div class="search-box">
+		<form class="layui-form inline" lay-filter="searchSmsTemplateForm" id="smsTemplateSearchForm">
+			<div class="basic-search">
+				<div class="common-input-inline">
+					<label class="search-form-label">模板编号</label>
+					<div class="layui-input-inline">
+						<input class="layui-input" name="smsTemplateId" autocomplete="off">
+					</div>
+				</div>
+				<div class="common-input-inline">
+					<label class="search-form-label">模板说明</label>
+					<div class="layui-input-inline">
+						<input class="layui-input" name="smsTemplateNote" autocomplete="off">
+					</div>
+				</div>
+				<div class="common-input-inline">
+					<label class="search-form-label">短信通道</label>
+					<div class="layui-input-inline">
+						<select name="smsChannel">
+							<option value=""></option>
+							<option value="notify_channel">通知类短信</option>
+							<option value="market_channel">营销类短信</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="layui-btn-group">
+				<button type="button" class="layui-btn layui-btn-primary" id="reloadSmsTemplate"><i class="layui-icon">&#xe615;</i> 查询</button>
+				<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+				<button type="button" class="layui-btn" id="addSmsTemplateBtn"><i class="layui-icon">&#xe654;</i> 新增</button>
+			</div>
+		</form>
+	</div>
+
+	<table id="smsTemplate" class="layui-hide" lay-filter="smsTemplate"></table>
+</div>
+
+<form class="layui-form p10 w450 hide" lay-filter="smsTemplateForm"
+	  id="smsTemplateForm">
+	<div class="layui-form-item">
+		<div class="layui-block">
+			<label class="layui-form-label">模板编号：</label>
+			<div class="layui-input-block">
+				<input class="layui-input" lay-verify="required" id="smsTemplateId" name="smsTemplateId">
+			</div>
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<div class="layui-block">
+			<label class="layui-form-label">模板说明：</label>
+			<div class="layui-input-block">
+				<input class="layui-input" lay-verify="required" name="smsTemplateNote" autocomplete="off">
+			</div>
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<div class="layui-block">
+			<label class="layui-form-label">模板通道：</label>
+			<div class="layui-input-block">
+				<select name="smsChannel" lay-verify="required">
+					<option value=""></option>
+					<option value="notify_channel">通知类短信</option>
+					<option value="market_channel">营销类短信</option>
+				</select>
+			</div>
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<div class="layui-block">
+			<label class="layui-form-label">模板内容：</label>
+			<div class="layui-input-block">
+				<textarea class="layui-textarea" lay-verify="required" name="smsTemplateContent" autocomplete="off"></textarea>
+			</div>
+		</div>
+	</div>
+	<div class="bottom-buttons">
+		<button type="reset" class="layui-btn" id="smsTemplateReset">重置</button>
+		<button class="layui-btn" lay-submit="" lay-filter="smsTemplateSubmit" id="smsTemplateSubmit">确认提交</button>
+	</div>
+</form>
+
+<script type="text/html" id="smsTemplateOperation">
+	<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail"><i class="layui-icon">&#xe615;</i>详情</a>
+	<a class="layui-btn layui-btn-xs" lay-event="edit"><i class="layui-icon">&#xe642;</i>编辑</a>
+	<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon">&#xe640;</i>删除</a>
+</script>
+<script src="js/message/sms_template.js"></script>

@@ -1,0 +1,69 @@
+<div class="animated fadeInRight">
+    <table id="tradeRefused" class="layui-hide" lay-filter="tradeRefused"></table>
+</div>
+
+<form class="layui-form p10 hide w450" lay-filter="abortTradeForm" id="abortTradeForm">
+    <input class="layui-input hide" name="tradeId" autocomplete="off">
+    <div class="layui-form-item">
+        <div class="layui-block">
+            <label class="layui-form-label">流标原因：</label>
+            <div class="layui-input-block">
+                <textarea class="layui-textarea" lay-verify="required" name="abortCause" rows="5"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="bottom-buttons">
+        <button class="layui-btn" lay-submit lay-filter="abortTradeSubmit" id="abortTradeSubmit">确认</button>
+    </div>
+</form>
+
+<script type="text/html" id="tradeRefusedOperation">
+    <a class="layui-btn layui-btn-xs" lay-event="refused"><i class="layui-icon">&#xe601;</i>流标</a>
+</script>
+
+<script type="text/javascript">
+    var abortTradeForm = $('#abortTradeForm');
+    $(document).ready(function () {
+    	var index = null;
+        layform.render(null, 'searchTradeRefusedForm');
+
+        var tradeRefusedTable = LayTableUtil.render({
+            elem: '#tradeRefused'
+            , cols: [[
+                {field: 'tradeName', title: '交易名称', width: 180}
+                , {field: 'riskLevel', title: '标的类型'}
+                , {field: 'tradeInterestRate', title: '预期年化收益率', width: 140, templet: function (d) {return NumberUtil.transfPercentage(d.tradeInterestRate)}}
+                , {field: 'loanTerm', title: '借款期限值', width: 120, templet: function (d) {return d.loanTerm + d.loanTermUnit.message}}
+                , {field: 'loanAmount', title: '借款额度', width: 130, templet: function (d) {return MoneyUtil.formatMoney(d.loanAmount.amount) + "元"}}
+                , {field: 'singleMinAmount', title: '起始投资金额', width: 120, templet: function (d) {return MoneyUtil.formatMoney(d.singleMinAmount.amount) + "元"}}
+                , {field: 'tradeStatus', title: '交易状态', width: 120, templet: function (d) {return d.tradeStatus.message}}
+                , {field: 'repayMethod', title: '还款方式', width: 140, templet: function (d) {return d.repayMethod.message}}
+                , {field: 'investBeginTime', title: '投资起始时间', width: 180, templet: function (d) {return DateUtils.longToDateString(d.investBeginTime)}}
+                , {field: 'investDeadline', title: '投资截止时间', width: 180, templet: function (d) {return DateUtils.longToDateString(d.investDeadline)}}
+                , {fixed: 'right', title: '操作', align:'center', toolbar: '#tradeRefusedOperation', width: 100}
+            ]]
+            , url: tradeApiUrl.trade.tradeRefusedList
+            , page: true
+            , id: 'tradeRefusedTable'
+        });
+
+        laytable.on('tool(tradeRefused)', function(obj){
+            var data = obj.data;
+            if(obj.event === 'refused'){
+                index = LayerUtil.open("流标", abortTradeForm, '500px', null, 'abortTradeForm');
+            }
+            abortTradeForm.find('[name="tradeId"]').val(data.tradeId);
+        });
+
+        //监听提交
+        layform.on('submit(abortTradeSubmit)', function (data) {
+            var result = AjaxUtil.ajaxPostWithLoading(tradeApiUrl.trade.refused, JSON.stringify(data.field));
+            if (result) {
+                layer.close(index);
+                layer.msg("操作成功");
+                LayTableUtil.reload(tradeRefusedTable, 'tradeRefusedSearchForm');
+            }
+            return false;
+        });
+    });
+</script>

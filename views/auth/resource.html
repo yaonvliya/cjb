@@ -1,0 +1,119 @@
+<div class="animated fadeInRight">
+	<div class="search-box">
+		<form class="layui-form" id="auth-resource-search-form">
+			<div class="basic-search">
+				<div class="common-input-inline"><label class="search-form-label">资源名称</label>
+					<div class="layui-input-inline">
+						<input class="layui-input" name="resourceName" autocomplete="off"/>
+					</div>
+				</div>
+				<div class="common-input-inline"><label class="search-form-label">资源类型</label>
+					<div class="layui-input-inline">
+						<select name="resourceType">
+							<option value=""></option>
+							<option value="menuGroup">菜单组</option>
+							<option value="menuItem">菜单</option>
+							<option value="button">按钮</option>
+							<option value="action">请求</option>
+						</select>
+					</div>
+				</div>
+				<div class="common-input-inline"><label class="search-form-label">资源URL</label>
+					<div class="layui-input-inline">
+						<input class="layui-input" name="resourceUrl" autocomplete="off"/>
+					</div>
+				</div>
+			</div>
+			<div class="layui-btn-group">
+				<button type="button" class="layui-btn layui-btn-primary" id="auth-resource-search"><i class="layui-icon">&#xe615;</i> 查询</button>
+				<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+				<button type="button" class="layui-btn" id="auth-resource-add"><i class="layui-icon">&#xe654;</i> 新增</button>
+			</div>
+		</form>
+	</div>
+
+	<table id="auth-resource" class="layui-hide" lay-filter="auth-resource"></table>
+</div>
+
+<form class="layui-form p10 w400 hide" id="auth-resource-form" lay-filter="auth-resource-form">
+	<input type="text" name="resourceId" autocomplete="off" class="layui-input hide"/>
+	<div class="layui-form-item">
+		<label class="layui-form-label">资源名称</label>
+		<div class="layui-input-block">
+			<input type="text" id="auth-resource_resourceName" name="resourceName" required lay-verify="required"
+				   placeholder="请输入资源名称" autocomplete="off" class="layui-input">
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">资源类型</label>
+		<div class="layui-input-block">
+			<select id="auth-resource-resourceType" name="resourceType" lay-verify="required"
+					lay-filter="auth-resource-resourceType">
+				<option value=""></option>
+				<option value="menuGroup">菜单组</option>
+				<option value="menuItem">菜单</option>
+				<option value="button">按钮</option>
+				<option value="action">请求</option>
+			</select>
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">资源图标</label>
+		<div class="layui-input-block">
+			<input type="text" name="resourceIcon" placeholder="请输入资源图标" autocomplete="off" class="layui-input">
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">资源URL</label>
+		<div class="layui-input-block">
+			<input type="text" name="resourceUrl" placeholder="请输入资源URL" autocomplete="off" class="layui-input">
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">上级资源</label>
+		<div class="layui-input-block">
+			<input type="hidden" id="parentResourceId" name="parentResourceId" value="-1">
+			<input type="text" readonly="readonly" onclick="showResourceTree()" id="parentResourceName"
+				   name="parentResourceName" placeholder="请选择上级资源" autocomplete="off" class="layui-input">
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">资源排序</label>
+		<div class="layui-input-block">
+			<input type="text" name="resourceOrder" required lay-verify="required" placeholder="请输入资源排序"
+				   autocomplete="off" class="layui-input">
+		</div>
+	</div>
+
+	<div class="bottom-buttons">
+		<button class="layui-btn" type="button" lay-submit lay-filter="authResourceSubmit">立即提交</button>
+		<button class="layui-btn layui-btn-primary" type="button" id="auth-resource-from-reset">重置</button>
+	</div>
+</form>
+
+<div id="menuContent" class="h500 hide oa">
+	<ul id="authResourceTree" class="ztree w160"></ul>
+</div>
+
+<script type="text/html" id="authResourceBar">
+	<a class="layui-btn layui-btn-xs" lay-event="edit"><i class="layui-icon">&#xe642;</i>编辑</a>
+	<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon">&#xe640;</i>删除</a>
+</script>
+
+<script type="text/html" id="resourceTypeTpl">
+	{{# if(d.resourceType == "menuGroup") { }}
+	菜单组
+	{{# } else if(d.resourceType == "menuItem") { }}
+	菜单
+	{{# } else if(d.resourceType == "button") { }}
+	按钮
+	{{# } else if(d.resourceType == "action") { }}
+	请求
+	{{# } }}
+</script>
+
+<script type="text/html" id="resourceIconTpl">
+	<i class="iconfont {{ d.resourceIcon }}"></i>
+</script>
+
+<script src="js/auth/resource.js"></script>

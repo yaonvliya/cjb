@@ -1,0 +1,116 @@
+<div class="animated fadeInRight">
+	<div class="search-box">
+		<form class="layui-form" id="loanApplyReportSearchForm" lay-filter="loanApplyReportSearchForm">
+			<div class="basic-search">
+				<div class="common-input-inline"><label class="search-form-label">借款人姓名：</label>
+					<div class="layui-input-inline">
+						<input type="text" class="layui-input" name="userRealName">
+					</div>
+				</div>
+				<div class="common-input-inline"><label class="search-form-label">所属商户：</label>
+					<div class="layui-input-inline">
+						<input type="text" class="layui-input" name="merchantUserName">
+					</div>
+				</div>
+				<div class="common-input-inline"><label class="search-form-label">借款状态：</label>
+					<div class="layui-input-inline">
+						<select name="loanStatus" lay-search="">
+							<option value="">全部</option>
+							<option value="committed">待审核</option>
+							<option value="merchant_dismiss">商户驳回</option>
+							<option value="platform_dismiss">风控驳回</option>
+							<option value="wait_publish">待发标</option>
+							<option value="collecting">融资中</option>
+							<option value="aborted">已流标</option>
+							<option value="wait_grant">待放款</option>
+							<option value="wait_repay">待还款</option>
+							<option value="finished">已完成</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="layui-btn-group">
+				<button type="button" class="layui-btn layui-btn-primary" id="searchReport">
+					<i class="layui-icon">&#xe615;</i>查询
+				</button>
+				<button class="layui-btn layui-btn-primary" type="reset">重置</button>
+				<button type="button" class="layui-btn" id="downloadReportDetail">
+					<i class="layui-icon">&#xe601;</i>下载数据
+				</button>
+			</div>
+		</form>
+	</div>
+
+	<table id="loanApplyReportDataTable" class="layui-hide" lay-filter="loanApplyReportDataTable"></table>
+</div>
+
+
+<script type="text/javascript">
+	$(document).ready(function () {
+
+		loadSearchMerchant();
+
+		layform.render(null, "loanApplyReportSearchForm");
+		var loanApplyReportDataTable = LayTableUtil.render({
+			elem: '#loanApplyReportDataTable'
+			, id: 'applyTable'
+			, cellMinWidth: 120
+			, cols: [[ //表头
+				{field: 'userLoginName', title: '借款人账号', width: 130, fixed: 'left'}
+				, {field: 'userRealName', title: '借款人名称', width: 180, fixed: 'left'}
+				, {field: 'merchantUserName', title: '商户名称', width: 200, fixed: 'left'}
+				, {field: 'source', title: '商户来源'}
+				, {field: 'productName', title: '产品名称'}
+				, {field: 'loanApplyAmount', title: '借款金额(元)', align: 'right'}
+				, {field: 'applyDays', title: '借款期限'}
+				, {field: 'loanApplyTime', title: '借款申请时间', width: 180}
+				, {field: 'repayMethod', title: '还款方式', width: 180}
+				, {field: 'loanInterestRate', title: '借款年化'}
+				, {field: 'loanInterestAmount', title: '借款利息(元)', align: 'right'}
+				, {field: 'serviceFeeRate', title: '服务费率'}
+				, {field: 'serviceFeeAmt', title: '服务费(元)', align: 'right'}
+				, {field: 'serviceFeeType', title: '服务费收取方式', width: 130}
+				, {field: 'serviceFeeStatus', title: '缴费状态'}
+				, {field: 'applyCompensatoryStatus', title: '代偿状态'}
+				, {field: 'loanStatus', title: '借款状态'}
+				, {field: 'tradeName', title: '项目名称', width: 180}
+				, {field: 'tradeCreateTime', title: '发标时间', width: 180}
+				, {field: 'interestEffectiveTime', title: '起息时间', width: 180}
+				, {field: 'expectRepayTime', title: '还款时间', width: 180}
+			]]
+			, url: reportApi.dataTable.loanApply.search
+			, page: true
+			, toolbar: true
+			, defaultToolbar: ['filter', 'exports']
+			, title: '借款情况分析报表_' + DateUtils.longToDateStringYMD(new Date())
+		});
+
+
+		$('#loanApplyReportSearchForm [id="searchReport"]').click(function () {
+			LayTableUtil.reload(loanApplyReportDataTable, "loanApplyReportSearchForm");
+		});
+
+		$('#loanApplyReportSearchForm [id="downloadReportDetail"]').click(function () {
+			// TODO 控制下载的时间返回
+
+			location.href = reportApi.dataTable.loanApply.download + "?" + $('#loanApplyReportSearchForm').serialize();
+		});
+
+		// SearchForm绑定回车事件
+		$("#loanApplyReportSearchForm").bind('keypress', function (event) {
+			if (event.keyCode == "13") {
+				$('#loanApplyReportSearchForm [id="searchReport"]').click();
+			}
+		});
+
+	});
+
+	function loadSearchMerchant(merchantName) {
+		var result = AjaxUtil.ajaxPost(assetsApi.getOnlineMerchantList, JSON.stringify({"merchantUserName": merchantName}));
+		if (result) {
+			var merchantList = result.data;
+			SelectUtil.setSelectOpts(merchantList, "creditMerchantId", "merchantId", "merchantUserName");
+		}
+	}
+
+</script>

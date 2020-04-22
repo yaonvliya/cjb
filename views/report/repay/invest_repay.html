@@ -1,0 +1,105 @@
+<div class="animated fadeInRight">
+	<div class="search-box">
+		<form class="layui-form" id="investRepayReportSearchForm" lay-filter="investRepayReportSearchForm"
+			  onsubmit="return false">
+			<div class="basic-search">
+				<div class="common-input-inline">
+					<label class="search-form-label">项目名称：</label>
+					<div class="layui-input-inline">
+						<input class="layui-input" name="tradeName" autocomplete="off"/>
+					</div>
+				</div>
+				<div class="common-input-inline">
+					<label class="search-form-label">投资人用户名：</label>
+					<div class="layui-input-inline">
+						<input class="layui-input" name="loginAccount" autocomplete="off"/>
+					</div>
+				</div>
+				<div class="common-input-inline">
+					<label class="search-form-label">预期回款时间：</label>
+					<div class="layui-input-inline">
+						<input class="layui-input dp-il" name="leftTime" autocomplete="off"/>
+						<span>—</span>
+						<input class="layui-input dp-il" name="rightTime" autocomplete="off"/>
+					</div>
+				</div>
+				<div class="common-input-inline">
+					<label class="search-form-label">回款状态：</label>
+					<div class="layui-input-inline">
+						<select name="repayStatus">
+							<option value=""></option>
+							<option value="0" selected>未回款</option>
+							<option value="1">已回款</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="layui-btn-group">
+				<button type="button" class="layui-btn layui-btn-primary" id="searchReport">
+					<i class="layui-icon">&#xe615;</i>查询
+				</button>
+				<button class="layui-btn layui-btn-primary" type="reset">重置</button>
+				<button type="button" class="layui-btn" id="downloadReportDetail">
+					<i class="layui-icon">&#xe601;</i>下载数据
+				</button>
+			</div>
+		</form>
+	</div>
+	<table id="investRepayReportData" class="layui-hide" lay-filter="investRepayReportData"></table>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function () {
+		laydate.render({elem: '#investRepayReportSearchForm [name="leftTime"]', type: 'date', trigger: 'click'});
+		laydate.render({elem: '#investRepayReportSearchForm [name="rightTime"]', type: 'date', trigger: 'click'});
+		layform.render("select", "investRepayReportSearchForm");
+
+		var investRepayReportDataTable = LayTableUtil.render({
+			elem: '#investRepayReportData'
+			, cols: [[ //表头
+				{field: 'trade_name', title: '项目名称', width: 170, fixed: 'left'}
+				, {field: 'invest_user_account', title: '投资人用户名', width: 130}
+				, {field: 'invest_deposit_account', title: '投资人资金账户', width: 130}
+				, {field: 'invest_user_name', title: '投资人姓名', width: 150}
+				, {field: 'invest_safe_cert', title: '投资人身份证', width: 170}
+				, {field: 'invest_time', title: '投资时间', width: 170}
+				, {field: 'loan_user_name', title: '融资人姓名', width: 180}
+				, {field: 'loan_user_account', title: '融资人用户名', width: 130}
+				, {field: 'loan_safe_cert', title: '融资人身份证', width: 170}
+				, {field: 'repay_period', title: '期数/总期数', width: 110}
+				, {field: 'plan_repay_time', title: '应回款时间', width: 170}
+				, {field: 'repay_method', title: '回款方式', width: 150}
+				, {field: 'repay_total_amt', title: '应回款总额(元)', width: 140, align: 'right'}
+				, {field: 'capital_amt', title: '应回款本金(元)', width: 140, align: 'right'}
+				, {field: 'trade_interest_amt', title: '应回款利息(元)', width: 140, align: 'right'}
+                , {field: 'overdue_interest_amt', title: '应收罚息(元)', width: 140, align: 'right'}
+				, {field: 'actual_repay_time', title: '实际回款时间', width: 170}
+				, {field: 'repay_status', title: '回款状态', width: 100, fixed: 'right'}
+				, {field: 'transfer_status', title: '转让状态', width: 100, fixed: 'right'}
+			]]
+			, url: reportApi.repayManager.investRepay.search
+			, page: true
+			, toolbar: true
+			, where: {"repayStatus": "0"}
+			, defaultToolbar: ['filter', 'exports']
+			, title: '投资人回款查询报表_' + DateUtils.longToDateStringYMD(new Date())
+		});
+
+		$('#investRepayReportSearchForm [id="downloadReportDetail"]').click(function () {
+			location.href = reportApi.repayManager.investRepay.download + "?" + $('#investRepayReportSearchForm').serialize();
+		});
+
+		$('#investRepayReportSearchForm [id="searchReport"]').click(function () {
+			LayTableUtil.reload(investRepayReportDataTable, 'investRepayReportSearchForm');
+		});
+		// SearchForm绑定回车事件
+		$("#investRepayReportSearchForm").bind('keypress', function (event) {
+			if (event.keyCode == "13") {
+				$('#investRepayReportSearchForm [id="searchReport"]').click();
+			}
+		});
+
+	});
+
+
+</script>

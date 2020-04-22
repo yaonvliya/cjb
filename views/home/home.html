@@ -1,0 +1,78 @@
+<div class="animated fadeInDown mb50">
+    <h1>欢迎使用车聚宝后台管理系统</h1>
+    <div class="search-box">
+        <div class="layui-btn-group">
+            <button class="layui-btn layui-btn-primary" type="button" id="ShowOperationSituationBtn"><i
+                    class="layui-icon">&#xe62c;</i>
+                显示运营情况
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="operationSituationBox" class="hide w800">
+    <div id="operationSituationChart" class="w800 h500"></div>
+    <div id="operationSituationInfo" class="fs-18 ta-c"></div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        $('#ShowOperationSituationBtn').on('click', function () {
+            var result = AjaxUtil.ajaxPost(chartReport.operationSituation);
+            if (result) {
+                var info = result.data;
+                var titleData = new Array(), numData = new Array();
+                var list = info.dataList;
+                if (list) {
+                    for (var index in list) {
+                        var item = list[index];
+                        titleData[index] = item.mon;
+                        numData[index] = item.amount;
+                    }
+                    var operationSituationChart = echarts.init(document.getElementById('operationSituationChart'));
+
+                    // 指定图表的配置项和数据
+                    var option = {
+                                title: {text: '运营情况统计柱状图', subtext: '成交额（元）', x: 'center'}
+                                , color: ['#3977c1']
+                                , tooltip: {
+                                    formatter: function (params) {
+                                        var tar = params;
+                                        return tar.name + '月成交额：' + MoneyUtil.formatMoney(tar.value) + '元';
+                                    }
+                                }
+                                , legend: {}
+                                , xAxis: {
+                                    data: titleData,
+                                    axisLabel: {
+                                        interval: 0,
+                                        rotate: 40
+                                    }
+                                }
+                                , yAxis: {}
+                                , series:
+                                        [{
+                                            type: 'bar',
+                                            barWidth : 30,//柱图宽度
+                                            data: numData
+                                        }]
+                            }
+                    ;
+                    // 使用刚指定的配置项和数据显示图表。
+                    operationSituationChart.setOption(option);
+
+                    $('#operationSituationInfo').html('<p>本年度累计放款额：' + MoneyUtil.formatMoney(info.amountByYear)
+                            + ' 元</p><p>平台存量资产总额：' + MoneyUtil.formatMoney(info.loanAmountNotRepay) + ' 元</p>');
+                    $('#operationSituationBox').show();
+
+                    $(this).remove();
+                }
+
+            }
+        })
+
+    });
+
+
+</script>

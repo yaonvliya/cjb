@@ -1,0 +1,96 @@
+<div class="animated fadeInRight">
+	<div class="search-box">
+		<form class="layui-form inline" lay-filter="searchContractTypeForm" id="contracTypeSearchForm">
+			<div class="basic-search">
+				<div class="common-input-inline">
+					<label class="search-form-label">合同类型名称</label>
+					<div class="layui-input-inline">
+						<input class="layui-input" name="contractTypeName" autocomplete="off">
+					</div>
+				</div>
+				<div class="common-input-inline">
+					<label class="search-form-label">状态</label>
+					<div class="layui-input-inline">
+						<select name="contractTypeStatus">
+							<option value=""></option>
+							<option value="online">已上线</option>
+							<option value="offline">已下线</option>
+						</select>
+					</div>
+				</div>
+				<div class="common-input-inline">
+					<label class="search-form-label">作用域</label>
+					<div class="layui-input-inline">
+						<select name="contractScope">
+							<option value=""></option>
+							<option value="assets">资产</option>
+							<option value="finance">资金</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="layui-btn-group">
+				<button type="button" class="layui-btn layui-btn-primary" id="reloadContractType"><i class="layui-icon">&#xe615;</i> 查询</button>
+				<button class="layui-btn layui-btn-primary" type="reset">重置</button>
+				<button type="button" class="layui-btn" id="addContractTypeBtn"><i class="layui-icon">&#xe654;</i> 新增</button>
+			</div>
+		</form>
+	</div>
+
+	<table id="contractType" class="layui-hide" lay-filter="contractType"></table>
+</div>
+
+<form class="layui-form p10 w450 hide" lay-filter="addContractTypeForm" id="addContractTypeForm">
+	<input class="layui-input" type="hidden" name="contractTypeCode">
+	<div class="layui-form-item">
+		<div class="layui-block">
+			<label class="layui-form-label">类型名称：</label>
+			<div class="layui-input-block">
+				<input class="layui-input" lay-verify="required" name="contractTypeName">
+			</div>
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<div class="layui-block">
+			<label class="layui-form-label">状态：</label>
+			<div class="layui-input-block">
+                <input type="text" hidden name="contractTypeStatus" value="online" id="addContractTypeStatus">
+                <input type="radio" name="contractTypeStatusTemp" lay-filter="contractTypeStatusFilter" value="online" title="正常" checked>
+                <input type="radio" name="contractTypeStatusTemp" lay-filter="contractTypeStatusFilter" value="offline" title="停用">
+			</div>
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<div class="layui-block">
+			<label class="layui-form-label">作用域：</label>
+			<div class="layui-input-block">
+				<select name="contractScope" lay-verify="required">
+					<option value=""></option>
+					<option value="assets">资产</option>
+					<option value="finance">资金</option>
+				</select>
+			</div>
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<div class="layui-block">
+			<label class="layui-form-label">业务按钮：</label>
+			<div class="layui-input-block">
+				<textarea class="layui-input h100" id="contractTypeBizButtons" name="bizButtons" placeholder="JSON形式的数据" autocomplete="off"></textarea>
+			</div>
+		</div>
+	</div>
+	<div class="bottom-buttons">
+		<button type="reset" class="layui-btn">重置</button>
+		<button class="layui-btn" lay-submit="" lay-filter="contractTypeSubmit" id="contractTypeSubmit">确认提交</button>
+	</div>
+</form>
+
+<script type="text/html" id="contractTypeOperation">
+	<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail"><i class="layui-icon">&#xe615;</i>详情</a>
+	<a class="layui-btn layui-btn-xs" lay-event="edit"><i class="layui-icon">&#xe642;</i>编辑</a>
+</script>
+<script type="text/html" id="contractTypeStatusTpl">
+    <input type="checkbox" value="{{d.contractTypeCode}}" lay-skin="switch" lay-text="正常|停用" lay-filter="contractTypeStatusTpl" {{ d.contractTypeStatus== '正常' ? 'checked' : '' }}>
+</script>
+<script src="js/message/contract_type.js"></script>

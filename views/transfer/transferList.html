@@ -1,0 +1,337 @@
+<div class="animated fadeInRight">
+	<div class="search-box">
+		<form class="layui-form" lay-filter="searchTransferForm" id="transferSearchForm">
+			<div class="basic-search">
+				<div class="common-input-inline">
+					<label class="search-form-label">转让人手机号：</label>
+					<div class="layui-input-inline">
+						<input class="layui-input" name="transferUserId" autocomplete="off"/>
+					</div>
+				</div>
+				<div class="common-input-inline">
+					<label class="search-form-label">受让人手机号：</label>
+					<div class="layui-input-inline">
+						<input class="layui-input" name="receiveUserId" autocomplete="off"/>
+					</div>
+				</div>
+				<div class="common-input-inline">
+					<label class="search-form-label">受让人姓名：</label>
+					<div class="layui-input-inline">
+						<input class="layui-input" name="receiveUserName" autocomplete="off"/>
+					</div>
+				</div>
+				<div class="common-input-inline">
+					<label class="search-form-label">转让状态：</label>
+					<div class="layui-input-inline">
+						<select name="transferStatus" class="layui-input">
+							<option value=''>全部</option>
+							<option value='transferring' selected>转让中</option>
+							<option value='success'>已转让</option>
+							<option value='cancel'>已取消</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="more-search">
+				<div class="common-input-inline">
+					<label class="search-form-label">转让时间：</label>
+					<div class="layui-input-inline">
+						<input class="layui-input dp-il" name="transferCreateTimeLeftRange"
+							   id="transferCreateTimeLeftRangeSearch" autocomplete="off"/>
+						<span>—</span>
+						<input class="layui-input dp-il" name="transferCreateTimeRightRange"
+							   id="transferCreateTimeRightRangeSearch" autocomplete="off"/>
+					</div>
+				</div>
+				<div class="common-input-inline">
+					<label class="search-form-label">受让时间：</label>
+					<div class="layui-input-inline">
+						<input class="layui-input dp-il" name="receiveTimeLeftRange" id="receiveTimeLeftRangeSearch"
+							   autocomplete="off"/>
+						<span>—</span>
+						<input class="layui-input dp-il" name="receiveTimeRightRange" id="receiveTimeRightRangeSearch"
+							   autocomplete="off"/>
+					</div>
+				</div>
+			</div>
+			<div class="layui-btn-group">
+				<button class="layui-btn layui-btn-primary" type="button" id="queryTransferBtn"><i class="layui-icon">&#xe615;</i>
+					查询
+				</button>
+				<button class="layui-btn layui-btn-primary" type="reset">重置</button>
+				<button type="button" class="layui-btn layui-btn-primary" data-show="off"
+						onclick="showMoreSearch(this,'transferSearchForm')"><i class="layui-icon">&#xe61a;</i> 更多
+			</div>
+		</form>
+	</div>
+
+	<table id="transferListDataTable" class="layui-hide" lay-filter="transferListDataTable"></table>
+</div>
+
+<form class="layui-form p10 w820 hide" lay-filter="transferDetailForm" id="transferDetailForm">
+	<div class="layui-form-item">
+		<div class="layui-block">
+			<label class="layui-form-label w160">债权转让流水：</label>
+			<div class="layui-input-inline">
+				<span class="layui-form-mid" name="transferId"></span>
+			</div>
+			<label class="layui-form-label w160">原始投资流水：</label>
+			<div class="layui-input-inline">
+				<span class="layui-form-mid" name="originInvestId"></span>
+			</div>
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<div class="layui-block">
+			<label class="layui-form-label w160">转让人ID：</label>
+			<div class="layui-input-inline">
+				<span class="layui-form-mid" name="transferUserId"></span>
+			</div>
+			<label class="layui-form-label w160">转让人姓名：</label>
+			<div class="layui-input-inline">
+				<span class="layui-form-mid" name="transferUserName"></span>
+			</div>
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<div class="layui-block">
+			<label class="layui-form-label w160">转让人账号：</label>
+			<div class="layui-input-inline">
+				<span class="layui-form-mid" name="transferUserAccount"></span>
+			</div>
+			<label class="layui-form-label w160">原始金额：</label>
+			<div class="layui-input-inline">
+				<span class="layui-form-mid" name="transferOriginAmt"></span>
+			</div>
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<div class="layui-block">
+			<label class="layui-form-label w160">转让金额：</label>
+			<div class="layui-input-inline">
+				<span class="layui-form-mid" name="transferActualAmt"></span>
+			</div>
+			<label class="layui-form-label w160">转让手续费：</label>
+			<div class="layui-input-inline">
+				<span class="layui-form-mid" name="transferChargeAmt"></span>
+			</div>
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<div class="layui-block">
+			<label class="layui-form-label w160">预期收益：</label>
+			<div class="layui-input-inline">
+				<span class="layui-form-mid" name="remainProceedsAmt"></span>
+			</div>
+			<label class="layui-form-label w160">剩余投资天数：</label>
+			<div class="layui-input-inline">
+				<span class="layui-form-mid" name="remainInvestDays"></span>
+			</div>
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<div class="layui-block">
+			<label class="layui-form-label w160">转让发布时间：</label>
+			<div class="layui-input-inline">
+				<span class="layui-form-mid" name="transferCreateTime"></span>
+			</div>
+			<label class="layui-form-label w160">转让截止时间：</label>
+			<div class="layui-input-inline">
+				<span class="layui-form-mid" name="transferExpireTime"></span>
+			</div>
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<div class="layui-block">
+			<label class="layui-form-label w160">转让状态：</label>
+			<div class="layui-input-inline">
+				<span class="layui-form-mid" name="transferStatus"></span>
+			</div>
+		</div>
+	</div>
+	<div class="transfer_success">
+		<div class="layui-form-item">
+			<div class="layui-block">
+				<label class="layui-form-label w160">债权购入流水：</label>
+				<div class="layui-input-inline">
+					<span class="layui-form-mid" name="receiveId"></span>
+				</div>
+				<label class="layui-form-label w160">购买债权后的投资流水：</label>
+				<div class="layui-input-inline">
+					<span class="layui-form-mid" name="receiveInvestId"></span>
+				</div>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<div class="layui-block">
+				<label class="layui-form-label w160">受让人ID：</label>
+				<div class="layui-input-inline">
+					<span class="layui-form-mid" name="receiveUserId"></span>
+				</div>
+				<label class="layui-form-label w160">受让人账号：</label>
+				<div class="layui-input-inline">
+					<span class="layui-form-mid" name="receiveUserAccount"></span>
+				</div>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<div class="layui-block">
+				<label class="layui-form-label w160">受让人姓名：</label>
+				<div class="layui-input-inline">
+					<span class="layui-form-mid" name="receiveUserName"></span>
+				</div>
+				<label class="layui-form-label w160">受让时间：</label>
+				<div class="layui-input-inline">
+					<span class="layui-form-mid" name="receiveTime"></span>
+				</div>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<div class="layui-block">
+				<label class="layui-form-label w160">项目ID：</label>
+				<div class="layui-input-inline">
+					<span class="layui-form-mid" name="tradeId"></span>
+				</div>
+				<label class="layui-form-label w160">项目名称：</label>
+				<div class="layui-input-inline">
+					<span class="layui-form-mid" name="tradeName"></span>
+				</div>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<div class="layui-block">
+				<label class="layui-form-label w160">历史年化收益率：</label>
+				<div class="layui-input-inline">
+					<span class="layui-form-mid" name="tradeInterestRate"></span>
+				</div>
+				<label class="layui-form-label w160">项目还款方式：</label>
+				<div class="layui-input-inline">
+					<span class="layui-form-mid" name="tradeRepayMethod"></span>
+				</div>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<div class="layui-block">
+				<label class="layui-form-label w160">还款日期：</label>
+				<div class="layui-input-inline">
+					<ul name="repayTimes">
+					</ul>
+				</div>
+				<label class="layui-form-label w160">项目风险等级：</label>
+				<div class="layui-input-inline">
+					<span class="layui-form-mid" name="tradeRiskLevel"></span>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
+
+<script type="text/html" id="transferOperation">
+	<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail"><i class="layui-icon">&#xe615;</i>详情</a>
+</script>
+
+<script type="text/javascript">
+	var transferDetailForm = $('#transferDetailForm');
+	$(document).ready(function () {
+
+		layform.render(null, 'searchTransferForm');
+		laydate.render({elem: '#transferCreateTimeLeftRangeSearch', type: 'date', trigger: 'click'});
+		laydate.render({elem: '#transferCreateTimeRightRangeSearch', type: 'date', trigger: 'click'});
+		laydate.render({elem: '#receiveTimeLeftRangeSearch', type: 'date', trigger: 'click'});
+		laydate.render({elem: '#receiveTimeRightRangeSearch', type: 'date', trigger: 'click'});
+
+		var transferListDataTable = LayTableUtil.render({
+			elem: '#transferListDataTable'
+			, id: 'transferListDataTable'
+			, cols: [[
+				{field: 'transferUserAccount', title: '转让人账号', width: 130, fixed: 'left'}
+				, {field: 'transferUserName', title: '转让人姓名', width: 130, fixed: 'left'}
+				, {field: 'tradeName', title: '项目名称', width: 180, fixed: 'left'}
+				, {field: 'transferOriginAmt', title: '原始金额(元)', width: 120, align: 'right'}
+				, {field: 'transferActualAmt', title: '转让金额(元)', width: 120, align: 'right'}
+				, {field: 'transferChargeAmt', title: '手续费(元)', width: 100, align: 'right'}
+				, {field: 'remainInvestDays', title: '剩余期限(天)', width: 120, align: 'right'}
+				, {field: 'remainProceedsAmt', title: '剩余预期收益(元)', width: 140, align: 'right'}
+				, {field: 'transferCreateTime', title: '发布时间', width: 170}
+				, {field: 'transferExpireTime', title: '截止时间', width: 170}
+				, {field: 'receiveUserAccount', title: '受让人账号', width: 130}
+				, {field: 'receiveUserName', title: '受让人姓名', width: 130}
+				, {field: 'receiveTime', title: '受让时间', width: 170}
+				, {field: 'tradeInterestRate', title: '项目年化', width: 100}
+				, {field: 'tradeRepayMethod', title: '还款方式', width: 160}
+				, {fixed: 'right', field: 'transferStatus', title: '转让状态', width: 100}
+				, {fixed: 'right', align: 'center', toolbar: '#transferOperation', width: 100}
+			]]
+			, url: transferApiUrl.transfer.transferList
+			, page: true
+			, where: {"transferStatus": "transferring"}
+			, toolbar: true
+			, defaultToolbar: ['filter', 'exports']
+			, title: '债权转让明细报表_' + DateUtils.longToDateStringYMD(new Date())
+		});
+
+		//监听工具条
+		laytable.on('tool(transferListDataTable)', function (obj) {
+			var data = obj.data;
+			$('.transfer_success').show();
+			if (obj.event === 'detail') {
+				var res = AjaxUtil.ajaxGetWithLoading(transferApiUrl.transfer.get + data.transferId);
+				if (res) {
+					data = res.data;
+				}
+				LayerUtil.open("转让标详情", transferDetailForm, '840px', null, 'transferDetailForm');
+				if ("success" != data.transferStatus.code) {
+					$('.transfer_success').hide();
+				}
+				layui.each(data, function (k, v) {
+					if (null === v) {
+						v = '---';
+					}
+					var selector = '[name="' + k + '"]';
+					var elt = transferDetailForm.find(selector);
+					elt.text("" + v);
+					if (typeof v == "object") {
+						elt.text("" + v.amount + '元');
+					}
+				});
+				transferDetailForm.find('[name="remainInvestDays"]').text(data.remainInvestDays + '天');
+				transferDetailForm.find('[name="transferCreateTime"]').text(DateUtils.longToDateString(data.transferCreateTime));
+				transferDetailForm.find('[name="transferExpireTime"]').text(DateUtils.longToDateString(data.transferExpireTime));
+				transferDetailForm.find('[name="receiveTime"]').text(DateUtils.longToDateString(data.receiveTime));
+				transferDetailForm.find('[name="transferStatus"]').text(data.transferStatus.message);
+				transferDetailForm.find('[name="tradeInterestRate"]').text(NumberUtil.transfPercentage(data.tradeInterestRate));
+				transferDetailForm.find('[name="tradeRepayMethod"]').text(data.tradeRepayMethod.message);
+
+				transferDetailForm.find('[name="repayTimes"]').html("");
+				layui.each(data.repayDates, function (k, v) {
+					var elm = "<li>第" + (k + 1) + "次还款日期：" + DateUtils.longToDateStringYMD(v) + "</li>"
+					transferDetailForm.find('[name="repayTimes"]').append(elm);
+				});
+			}
+		});
+
+		$('#queryTransferBtn').click(function () {
+			var param = DataDeal.formToJsonObj($('#transferSearchForm'));
+			if (param.transferCreateTimeLeftRange && param.transferCreateTimeRightRange) {
+				if (param.transferCreateTimeLeftRange > param.transferCreateTimeRightRange) {
+					layer.msg("转让日期区间选择有误，请重新选择");
+					return false;
+				}
+			}
+			if (param.receiveTimeLeftRange && param.receiveTimeRightRange) {
+				if (param.receiveTimeLeftRange > param.receiveTimeRightRange) {
+					layer.msg("受让日期区间选择有误，请重新选择");
+					return false;
+				}
+			}
+			LayTableUtil.reload(transferListDataTable, 'transferSearchForm');
+		});
+
+		// SearchForm绑定回车事件
+		$("#transferSearchForm").bind('keypress', function (event) {
+			if (event.keyCode == "13") {
+				$('#queryTransferBtn').click();
+			}
+		});
+	});
+</script>

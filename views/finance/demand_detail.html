@@ -1,0 +1,323 @@
+<style>
+    #demandDetailForm .layui-input-inline {
+        width: 250px;
+    }
+</style>
+<form class="layui-form w950" enctype="multipart/form-data" id="demandDetailForm" lay-filter="demandDetailForm">
+    <button class="hide" type="button" lay-submit lay-filter="demandDetailFormSubmit"
+            id="demandDetailFormSubmitBtn"></button>
+    <span class="fs-16">借款信息</span>
+    <hr class="hr"/>
+    <input type="hidden" name="demandId">
+    <input type="hidden" name="loanApplyId">
+    <input type="hidden" name="draftId">
+
+    <div class="mb0 layui-form-item">
+        <label class="layui-form-label w150">借款用户账号：</label>
+        <div class="layui-input-inline">
+            <span class="layui-form-mid" name="userLoginName"></span>
+        </div>
+        <label class="layui-form-label w150">借款金额（元）：</label>
+        <div class="layui-input-inline">
+            <span class="layui-form-mid" name="loanApplyAmount"></span>
+        </div>
+    </div>
+    <div class="mb0 layui-form-item">
+        <label class="layui-form-label w150">借款用户姓名：</label>
+        <div class="layui-input-inline">
+            <span class="layui-form-mid" name="userRealName"></span>
+        </div>
+        <label class="layui-form-label w150">年化利率：</label>
+        <div class="layui-input-inline">
+            <span class="layui-form-mid" name="loanInterestRate"></span>
+        </div>
+    </div>
+    <div class="mb0 layui-form-item">
+        <label class="layui-form-label w150">身份证：</label>
+        <div class="layui-input-inline">
+            <span class="layui-form-mid" name="certNo"></span>
+        </div>
+        <label class="layui-form-label w150">借款期限：</label>
+        <div class="layui-input-inline">
+            <span class="layui-form-mid" name="loanTerm"></span>
+        </div>
+    </div>
+    <div class="mb0 layui-form-item">
+        <label class="layui-form-label w150">所属商户：</label>
+        <div class="layui-input-inline">
+            <span class="layui-form-mid" name="merchantUserName"></span>
+        </div>
+        <label class="layui-form-label w150">产品名称：</label>
+        <div class="layui-input-inline">
+            <span class="layui-form-mid" name="productName"></span>
+        </div>
+    </div>
+    <div class="mb0 layui-form-item">
+        <label class="layui-form-label w150">还款方式：</label>
+        <div class="layui-input-inline">
+            <span class="layui-form-mid" name="repayMethod"></span>
+        </div>
+        <label class="layui-form-label w150">借款用途：</label>
+        <div class="layui-input-inline">
+            <span class="layui-form-mid" name="loanPurpose"></span>
+        </div>
+    </div>
+    <div class="mb0 layui-form-item">
+        <label class="layui-form-label w150">申请时间：</label>
+        <div class="layui-input-inline">
+            <span class="layui-form-mid" name="loanApplyTime"></span>
+        </div>
+    </div>
+    <div class="mb0 layui-form-item">
+        <label class="layui-form-label w150">账单/发票：</label>
+        <div id="billImg" class="layui-input-block">
+            <span class="layui-form-mid">该笔借款申请没有上传账单或发票。
+                <button class='layui-btn layui-btn-warm layui-btn-sm' id='publishDemandUploadBillImg' type='button'>上传</button>
+            </span>
+            <input type="hidden" id="billImgUrl">
+            <div class="w750 fl" id="billImgList">
+            </div>
+        </div>
+    </div>
+
+    <br/>
+    <div>
+        <span class="fs-16">融资配置</span>
+        <div class="layui-form-item fr pr250">
+            <label class="layui-form-label w150">标的模板</label>
+            <div class="layui-input-inline">
+                <select id="demandDetailDemandTemplateSelect"
+                        lay-filter="demandDetailDemandTemplateSelectFilter"></select>
+            </div>
+            <div class="layui-form-mid layui-word-aux">&emsp;
+                <a href="javascript:;" id="demandDetailDemandTemplateSelectTipInfo"><i class="layui-icon"
+                                                                                       style="color: #005cff;">&#xe60b;</i></a>
+            </div>
+
+            <button type="button" class="layui-btn" id="demandDetailSaveToDemandTemplate">
+                <i class="layui-icon">&#xe660;</i>保存当前页模板
+            </button>
+        </div>
+    </div>
+    <hr class="hr"/>
+    <div class="layui-form-item">
+        <label class="layui-form-label w150">标的名称前缀：</label>
+        <div class="layui-input-inline">
+            <input class="layui-input" lay-verify="required" name="demandName" placeholder="请输入标的名称前缀"
+                   autocomplete="off">
+            <input type="hidden" name="preDemandName">
+        </div>
+        <label class="layui-form-label w150">标的类型：</label>
+        <div class="layui-input-inline float-in-input-div">
+            <select name="demandType" lay-verify="required">
+                <option value=''></option>
+                <option value='保守型'>保守型</option>
+                <option value='稳健型'>稳健型</option>
+                <option value='成长型'>成长型</option>
+                <option value='进取型'>进取型</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label w150">是否支持债权转让：</label>
+        <div class="layui-input-inline">
+            <input type="text" hidden name="transferSwitch" value=true id="demandDetailTransferSwitch">
+            <input type="radio" name="demandDetailTransferSwitchTemp" lay-filter="demandDetailTransferSwitchFilter"
+                   value=true title="是" checked>
+            <input type="radio" name="demandDetailTransferSwitchTemp" lay-filter="demandDetailTransferSwitchFilter"
+                   value=false title="否">
+        </div>
+        <label class="layui-form-label w150 hide">是否支持自动投标：</label>
+        <div class="layui-input-inline hide">
+            <input type="text" hidden name="autoInvestSwitch" value=true id="demandDetailAutoInvestSwitch">
+            <input type="radio" name="demandDetailAutoInvestSwitchTemp" lay-filter="demandDetailAutoInvestSwitchFilter"
+                   value=true title="是" checked>
+            <input type="radio" name="demandDetailAutoInvestSwitchTemp" lay-filter="demandDetailAutoInvestSwitchFilter"
+                   value=false title="否">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label w150">卡券配置：</label>
+        <div class="layui-input-block">
+            <label class="layui-form-label">红包：</label>
+            <div class="layui-input-inline">
+                <input type="text" hidden name="cashCouponSwitch" value=true id="demandDetailCashCouponSwitch">
+                <input type="radio" name="demandDetailCashCouponSwitchTemp"
+                       lay-filter="demandDetailCashCouponSwitchFilter"
+                       value=true title="是" checked>
+                <input type="radio" name="demandDetailCashCouponSwitchTemp"
+                       lay-filter="demandDetailCashCouponSwitchFilter"
+                       value=false title="否">
+            </div>
+            <label class="layui-form-label">加息券：</label>
+            <div class="layui-input-inline">
+                <input type="text" hidden name="interestCouponSwitch" value=true id="demandDetailInterestCouponSwitch">
+                <input type="radio" name="demandDetailInterestCouponSwitchTemp"
+                       lay-filter="demandDetailInterestCouponSwitchFilter"
+                       value=true title="是" checked>
+                <input type="radio" name="demandDetailInterestCouponSwitchTemp"
+                       lay-filter="demandDetailInterestCouponSwitchFilter"
+                       value=false title="否">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label w150">起投金额：</label>
+        <div class="layui-input-inline float-in-input-div">
+            <input type="number" class="layui-input" lay-verify="required|amount" name="singleMinAmount"
+                   placeholder="请输入起投金额"
+                   autocomplete="off">
+            <span class="c-main-blue float-in-input">单位：元</span>
+        </div>
+        <label class="layui-form-label w150">单笔投资限额：</label>
+        <div class="layui-input-inline float-in-input-div">
+            <input type="number" class="layui-input" lay-verify="required|amount" name="singleMaxAmount"
+                   placeholder="请输入单笔投资限额"
+                   autocomplete="off">
+            <span class="c-main-blue float-in-input">单位：元</span>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label w150">递增金额：</label>
+        <div class="layui-input-inline float-in-input-div">
+            <input type="number" class="layui-input" lay-verify="required|amount" name="increaseAmount"
+                   placeholder="请输入递增金额"
+                   autocomplete="off">
+            <span class="c-main-blue float-in-input">单位：元</span>
+        </div>
+        <label class="layui-form-label w150">推荐类型：</label>
+        <div class="layui-input-inline float-in-input-div">
+            <select name="recommendType">
+                <option value=''></option>
+                <option value=''>请选择</option>
+                <option value='selected_demand'>精选标</option>
+                <option value='activity_demand'>活动标</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label w150">满标条件类型：</label>
+        <div class="layui-input-inline">
+            <select name="fullScaleMethod" lay-verify="required" lay-filter="demandDetailFullScaleMethodFilter">
+                <option value='fixed_ratio'>固定比率</option>
+##                <option value='fixed_amount'>固定金额</option>
+##                <option value='fixed_time'>固定时间</option>
+            </select>
+        </div>
+        <label class="layui-form-label w150">满标条件值：</label>
+        <div class="layui-input-inline" id="demandDetailFullScaleValue">
+            <input type="number" class="layui-input" lay-verify="required" name="fullScaleValue" placeholder="请输入满标条件值" value="100"
+                   autocomplete="off" oninput="if(value>100){value=100}else if(value<0){value=0}else{value=value}">
+        </div>
+        <div class="layui-form-mid layui-word-aux">%</div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label w150">是否定向融资：</label>
+        <div class="layui-input-inline">
+            <input type="text" hidden name="directInvestFlag" value=false id="demandDetailDirectInvestFlag">
+            <input type="radio" name="demandDetailDirectInvestFlagTemp" lay-filter="demandDetailDirectInvestFlagFilter"
+                   value=true title="是">
+            <input type="radio" name="demandDetailDirectInvestFlagTemp" lay-filter="demandDetailDirectInvestFlagFilter"
+                   value=false title="否" checked>
+            <div class="layui-form-mid layui-word-aux">&emsp;
+                <a href="javascript:;" id="demandDetailDirectInvestFlagTipInfo"><i class="layui-icon"
+                                                                                   style="color: #005cff;">&#xe60b;</i></a>
+            </div>
+        </div>
+        <label class="layui-form-label w150">定向融资密码：</label>
+        <div class="layui-input-inline">
+            <input type="number" class="layui-input" name="directInvestPass" maxlength="6" placeholder="非定向融资，此项不必填写"
+                   autocomplete="off" disabled>
+        </div>
+        <div class="layui-form-mid layui-word-aux">&emsp;
+            <a href="javascript:;" id="demandDetailDirectInvestPassTipInfo"><i class="layui-icon"
+                                                                               style="color: #005cff;">&#xe60b;</i></a>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label w150">起投时间：</label>
+        <div class="layui-input-inline">
+            <input class="layui-input" lay-verify="required" name="investBeginTime" id="demandDetailInvestStartTime"
+                   placeholder="请选择标的开始投资时间">
+        </div>
+        <label class="layui-form-label w150">投资截止时间：</label>
+        <div class="layui-input-inline">
+            <input class="layui-input" lay-verify="required|beforeTime" name="investTerminalTime"
+                   id="demandDetailInvestEndTime" startTime="" placeholder="请选择标的投资截止时间">
+        </div>
+    </div>
+
+    <span class="fs-16">标的扩展信息</span>
+    <hr class="hr"/>
+    <div class="layui-form-item">
+        <label class="layui-form-label w150">借款人信息：</label>
+        <div class="layui-input-inline">
+            <textarea class="w700 h100" id="demandDetailLoanerInfoText" name="loanerInfo"></textarea>
+        </div>
+    </div>
+    <br>
+##    <div class="layui-form-item">
+##        <label class="layui-form-label w150">第一还款来源：</label>
+##        <div class="layui-input-inline">
+##            <textarea class="demandDetailText" name="">借款人收入</textarea>
+##        </div>
+##    </div>
+##    <div class="layui-form-item">
+##        <label class="layui-form-label w150">第二还款来源：</label>
+##        <div class="layui-input-inline">
+##            <textarea class="demandDetailText" name=""></textarea>
+##        </div>
+##    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label w150">保障措施：</label>
+        <div class="layui-input-inline">
+            <textarea class="demandDetailText" name="safeguards">多重保障（风控管理、隐私保护、法律保障）</textarea>
+        </div>
+    </div>
+</form>
+
+<!--遮罩层-->
+<div class="shade"></div>
+
+<div class="open-model save-demand-template">
+    <p class="fs-18 pt10 pl15 c-grey">保存到标的模板</p>
+    <a href="javascript:closeSave();" title="关闭"><i class="layui-icon suc-close">&#x1006;</i></a>
+    <form class="layui-form p30 w490" lay-filter="addLoanApplyForm" id="demandDetailSaveToDemandTemplateForm"
+          onsubmit="return false">
+        <div class="layui-form-item">
+            <label class="layui-form-label w120">标的模板名称：</label>
+            <div class="layui-input-inline">
+                <input class="layui-input w300" lay-verify="required" name="templateName" autocomplete="off"
+                       placeholder="请输入标的模板名称">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label w120">标的模板状态：</label>
+            <div class="layui-input-inline">
+                <input type="text" hidden name="demandTemplateStatus" value="online"
+                       id="saveToTemplateAddDemandTemplateStatus">
+                <input type="radio" name="demandTemplateStatusTmp"
+                       lay-filter="saveToTemplateAddDemandTemplateStatusFilter" value="online" title="正常" checked>
+                <input type="radio" name="demandTemplateStatusTmp"
+                       lay-filter="saveToTemplateAddDemandTemplateStatusFilter" value="offline" title="停用">
+            </div>
+        </div>
+        <input type="hidden" name="demandType">
+        <input type="hidden" name="autoInvestSwitch">
+        <input type="hidden" name="transferSwitch">
+    ##        <input type="hidden" name="transferLeastHoldingDays">
+        <input type="hidden" name="cashCouponSwitch">
+        <input type="hidden" name="interestCouponSwitch">
+        <input type="hidden" name="singleMinAmount">
+        <input type="hidden" name="singleMaxAmount">
+        <input type="hidden" name="increaseAmount">
+        <input type="hidden" name="fullScaleMethod">
+        <input type="hidden" name="fullScaleValue">
+        <input type="hidden" name="preDemandName">
+        <div class="bottom-buttons">
+            <button type="reset" class="layui-btn" onclick="closeSave();">取消</button>
+            <button class="layui-btn" lay-submit="" lay-filter="demandDetailSaveToDemandTemplateFormSubmit">保存</button>
+        </div>
+    </form>
+</div>
+<script src="js/finance/demand_detail.js"></script>

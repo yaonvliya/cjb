@@ -1,0 +1,133 @@
+<style>
+	#personal-detailForm .layui-input {
+		border: none;
+	}
+</style>
+
+<div class="animated fadeInRight">
+	<div class="search-box">
+		<form class="layui-form" id="frozen-user-search-form" lay-filter="frozen-user-search-form">
+			<div class="basic-search">
+				<div class="common-input-inline">
+					<label class="search-form-label">手机号：</label>
+					<div class="layui-input-inline">
+						<input class="layui-input" name="safeLoginAccount" autocomplete="off"/>
+					</div>
+				</div>
+				<div class="common-input-inline">
+					<label class="search-form-label">真实姓名：</label>
+					<div class="layui-input-inline">
+						<input class="layui-input" name="realname" autocomplete="off"/>
+					</div>
+				</div>
+			</div>
+			<div class="layui-btn-group">
+				<button type="button" class="layui-btn layui-btn-primary" id="frozen-user-search"><i class="layui-icon">&#xe615;</i> 查询</button>
+				<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+				<button type="button" class="layui-btn layui-btn-primary" data-show="off"
+						onclick="showMoreSearch(this,'frozen-user-search-form')"><i class="layui-icon">&#xe61a;</i> 更多
+				</button>
+			</div>
+		</form>
+	</div>
+
+	<table id="frozenUser" class="layui-hide" lay-filter="frozenUser"></table>
+</div>
+
+<form id="freezeUserForm" class="layui-form p10 hide">
+	<input type="hidden" name="userId">
+    <div class="layui-form-item">
+        <label class="layui-form-label">冻结原因：</label>
+        <div class="layui-input-inline">
+            <textarea class="layui-textarea" name="frozenReason" lay-verify="required"></textarea>
+        </div>
+    </div>
+    <div class="bottom-buttons">
+        <button type="button" class="layui-btn" lay-submit lay-filter="freezePersonalUserSubmit">确认提交</button>
+    </div>
+</form>
+
+<script type="text/html" id="frozenUserStatusTpl">
+	{{# if(!d.frozenFlag){ }}
+	正常
+	{{# } else { }}
+	冻结
+	{{# } }}
+</script>
+
+<script type="text/html" id="frozenUserBar">
+    {{# if(!d.frozenFlag){ }}
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="frozen">冻结</a>
+    {{# } else { }}
+    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="enable">解冻</a>
+    {{# } }}
+</script>
+
+<script type="text/javascript">
+
+	$(document).ready(function () {
+
+		layform.render(null, "frozen-user-search-form");
+		var index;
+
+		var personalTableIns = LayTableUtil.render({
+			elem: '#frozenUser'
+			, cols: [[ //表头
+				{field: 'loginAccount', title: '注册手机号', sort: true, width: 130, fixed: 'left'}
+				, {field: 'registerFrom', title: '注册来源', templet: function(d){ return d.registerFrom.message}}
+				, {field: 'registerTerminal', title: '注册终端', width: 100}
+				, {field: 'registerTime', title: '注册时间', width: 180, templet: function(d){ return DateUtils.longToDateString(d.registerTime)}}
+                , {field: 'userType', title: '用户类型', width: 100, templet: function (d) { return d.userType.message}}
+				, {field: 'openDepositStatus', title: '实名状态', width: 100, templet: function (d) { return d.openDepositStatus.message}}
+                , {field: 'realname', title: '真实姓名'}
+				, {field: 'frozenFlag', title: '状态', width: 80, templet: '#frozenUserStatusTpl'}
+				, {title: '操作', fixed: 'right', align: 'center', toolbar: '#frozenUserBar', width: 80}
+
+			]]
+			, url: userManagerApi.searchFrozenUser
+			, page: true
+			, id: 'frozenUserTable'
+		})
+
+		//监听工具条
+		laytable.on('tool(frozenUser)', function (obj) {
+			var data = obj.data;
+			if (obj.event === 'enable') {
+				layer.confirm('确认解冻此用户', function (index) {
+					var jsonParam = JSON.stringify({"userId": data.userId});
+					var result = AjaxUtil.ajaxPost(userManagerApi.unfreezeUser, jsonParam);
+					if (result) {
+						layer.close(index);
+						layer.msg("解冻成功");
+						LayTableUtil.refresh(personalTableIns, "frozen-user-search-form");
+					}
+				});
+			}
+		});
+
+		layform.on('submit(freezePersonalUserSubmit)', function (data) {
+			var result = AjaxUtil.ajaxPost(userManagerApi.freezeUser, JSON.stringify(data.field));
+			if (result) {
+                LayerUtil.close(index);
+				layer.msg("冻结成功");
+				LayTableUtil.refresh(personalTableIns, "frozen-user-search-form");
+			}
+        });
+
+		$('#frozen-user-search').on('click', function () {
+			LayTableUtil.reload(personalTableIns, "frozen-user-search-form");
+		});
+
+        // SearchForm绑定回车事件
+        $("#frozen-user-search-form").bind('keypress', function (event) {
+            if (event.keyCode == "13") {
+                $('#frozen-user-search').click();
+            }
+        });
+
+		// 点击遮罩层关闭窗口
+		$('.mask').click(function () {
+			closeRightWin('personal-detailWin');
+		});
+	});
+</script>

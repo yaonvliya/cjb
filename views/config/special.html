@@ -1,0 +1,377 @@
+<div class="animated fadeInRight">
+    <form class="layui-form">
+        <fieldset class="layui-elem-field layui-field-title" id="specialCompensatory">
+            <legend>根据标的号，手动设置为已申请代偿</legend>
+            <div class="p10">
+                <div class="layui-input-inline">
+                    <input type="text" name="tradeName" class="layui-input" autocomplete="off" placeholder="请输入标的号">
+                </div>
+                <button type="button" class="layui-btn layui-btn-normal" name="sub"><i
+                    class="layui-icon">&#xe605;</i> 设置已申请代偿
+                </button>
+            </div>
+        </fieldset>
+
+
+        <fieldset class="layui-elem-field layui-field-title" id="specialSetCertCardExpireTime">
+            <legend>手动设置用户资料过期</legend>
+            <div class="p10">
+                <div class="layui-block">
+                    <div class="layui-input-inline">
+                        <input type="text" name="loginAccount" class="layui-input" autocomplete="off" placeholder="请输入登录手机号">
+                    </div>
+                    <button type="button" class="layui-btn layui-btn-normal" name="sub"><i
+                        class="layui-icon">&#xe620;</i> 修改资料过期
+                    </button>
+                </div>
+            </div>
+        </fieldset>
+
+
+        <fieldset class="layui-elem-field layui-field-title">
+            <legend>上传图片</legend>
+            <div class="p10">
+                <div class="layui-input-inline">
+                    <select id="specialFileTypeForUploadImg">
+                        <option value=''>请选择上传系统</option>
+                        <option value='banner_pc'>pc端轮播图</option>
+                        <option value='banner_mobile'>mobile端轮播图</option>
+                        <option value='activity'>活动图片</option>
+                    </select>
+                </div>
+                <div class="layui-input-inline">
+                    <img class="layui-upload-img pic" id="specialUploadImg" src="img/upload-default.png">
+                </div>
+            </div>
+        </fieldset>
+
+
+        <fieldset class="layui-elem-field layui-field-title" id="specialMerchantDestroyProcessData">
+            <legend>代偿户销户数据处理</legend>
+            <div class="p10">
+                <div class="layui-input-inline">
+                    <input type="text" name="loginAccount" class="layui-input" autocomplete="off" placeholder="请输入登录手机号">
+                </div>
+                <div class="layui-input-inline">
+                    <select name="userRole">
+                        <option value=''>请选择角色</option>
+                        <option value='investor'>投资人</option>
+                        <option value='loaner'>借款人</option>
+                    </select>
+                </div>
+                <i class="layui-icon c-blue" name="tip">&#xe60b;</i>
+                &emsp;
+                <button type="button" class="layui-btn layui-btn-normal" name="sub"><i
+                    class="layui-icon">&#xe640;</i> 数据处理
+                </button>
+            </div>
+        </fieldset>
+
+        <fieldset class="layui-elem-field layui-field-title" id="specialModifyLoginAccount">
+            <legend>修改用户登陆手机号码</legend>
+            <div class="p10">
+                <div class="layui-input-inline">
+                    <input type="text" name="oldLoginAccount" class="layui-input w200" autocomplete="off" placeholder="请输入要修改登录手机号">
+                </div>
+                <span>——></span>
+                <div class="layui-input-inline">
+                    <input type="text" name="newLoginAccount" class="layui-input w200" autocomplete="off" placeholder="请输入修改后的登录手机号">
+                </div>
+                &emsp;
+                <button type="button" class="layui-btn layui-btn-normal" name="sub"><i
+                    class="layui-icon">&#xe605;</i> 确认修改
+                </button>
+            </div>
+        </fieldset>
+
+        <fieldset class="layui-elem-field layui-field-title" id="specialModifyUserInfo">
+            <legend>修改用户基本信息</legend>
+            <div class="p10">
+                <div class="layui-input-inline">
+                    <input type="text" name="loginAccount" class="layui-input w200" autocomplete="off" placeholder="请输入登录手机号">
+                </div>
+                &emsp;
+                <button type="button" class="layui-btn layui-btn-normal" name="sub"><i
+                    class="layui-icon">&#xe615;</i> 查询并修改
+                </button>
+            </div>
+        </fieldset>
+    </form>
+
+
+</div>
+
+<form class="layui-form hide" lay-filter="modifyUserInfoEditForm" id="modifyUserInfoEditForm">
+    <div class="p10"></div>
+    <div class="bottom-buttons">
+        <button class="layui-btn" type="button" id="modifyUserInfoEditSub">确认修改</button>
+    </div>
+</form>
+<script type="text/javascript">
+    layform.render('select');
+
+    $(document).ready(function () {
+        // 根据标的号，手动设置为已申请代偿
+        var _sc = $('#specialCompensatory');
+        _sc.find('[name="sub"]').on('click', function () {
+            var tradeName = _sc.find('[name="tradeName"]').val();
+            if (!tradeName) {
+                layer.msg("请输入标的号")
+                _sc.find('[name="tradeName"]').focus();
+                return false;
+            }
+
+            var formData = new FormData();
+            formData.append("tradeName", tradeName);
+            formData.append("pageNum", 1);
+            formData.append("pageSize", 2);
+            var tradeInfoRes = AjaxUtil.ajaxFormData(tradeApiUrl.trade.tradeList, formData);
+            if (tradeInfoRes) {
+                if (tradeInfoRes.total == 1) {
+                    var tradeInfo = tradeInfoRes.rows[0];
+                    layer.confirm('确认把标的号：[' + tradeName + ']，借款人：[' + tradeInfo.loanUserName + ']，借款金额：[' + tradeInfo.loanAmount.amount + '元]，的借款记录，手动设置为已申请代偿吗?', {
+                        icon: 3,
+                        title: '提示'
+                    }, function (index) {
+                        var result = AjaxUtil.ajaxGet(specialApi.applyCompensatory + tradeName);
+                        if (result) {
+                            layer.msg(result.data.reason);
+                            layer.close(index);
+                        }
+                    });
+                } else if (tradeInfoRes.total > 1) {
+                    layer.msg('查到多条数据，请精确填写标的号');
+                } else {
+                    layer.msg('未查询到标的信息');
+                }
+            }
+        });
+
+        // 手动设置用户资料过期
+        var _ssccet = $('#specialSetCertCardExpireTime');
+        _ssccet.find('[name="sub"]').on("click", function () {
+            var loginAccount = _ssccet.find('[name="loginAccount"]').val();
+            if (!loginAccount) {
+                layer.msg("请输入用户手机号码")
+                _ssccet.find('[name="loginAccount"]').focus();
+                return false;
+            }
+            var result = AjaxUtil.ajaxPost(userManagerApi.getUserInfoByLoginAccount, JSON.stringify({safeLoginAccount: loginAccount}));
+            if (result) {
+                var userInfo = result.data;
+                if (userInfo.userRole.code != 'loaner') {
+                    layer.msg("该用户不是借款人，无法进行操作！");
+                    return false;
+                }
+                if (userInfo.openDepositStatus.code != '00') {
+                    layer.msg("该用户未开通存管，无法进行操作！");
+                    return false;
+                }
+                layer.confirm('确认把[' + userInfo.realName + ']的资料设置过期?', {icon: 3, title: '⚠️警告'}, function (index) {
+                    var expireResponse = AjaxUtil.ajaxGet(specialApi.setCertCardExpireTime + userInfo.userId);
+                    if(expireResponse){
+                        layer.msg("操作成功！");
+                        layer.close(index);
+                    }
+                });
+            }
+        });
+
+
+        // 上传图片
+        var uploader = new plupload.Uploader({
+            runtimes: 'html5,flash,silverlight,html4',
+            browse_button: "specialUploadImg",
+            multi_selection: false,
+            flash_swf_url: '../../plugins/plupload-2.1.2/js/Moxie.swf',
+            silverlight_xap_url: '../../plugins/plupload-2.1.2/js/Moxie.xap',
+            filters: {
+                mime_types: [ //只允许上传图片和zip文件
+                    {title: "Image files", extensions: "jpg,jpeg,png"},
+                ],
+                max_file_size: '10M', //最大只能上传400kb的文件
+                prevent_duplicates: false //不允许选取重复文件
+            },
+            url: 'https://oss.aliyuncs.com',
+            init: {
+                PostInit: function () {
+                },
+                FilesAdded: function (up, files) {
+                    PluploadUtil.set_upload_param(up, "pub", files[0], $('#specialFileTypeForUploadImg').val(), "000000");
+                },
+                BeforeUpload: function (up, file) {
+                },
+                UploadProgress: function (up, file) {
+                },
+                FileUploaded: function (up, file, info) {
+                    if (info.status == 200) {
+                        var result = AjaxUtil.ajaxPost(commonApiUrl.getSysUploadFileURL, JSON.stringify({'key': file.name}));
+                        if (result) {
+                            var url = result.data;
+                            layer.confirm(url.substring(0, url.indexOf('?Expires')), {
+                                icon: 1,
+                                title: '这是唯一一次记录图片地址的机会！'
+                            }, function (index) {
+                                $('#specialUploadImg').attr("src", "img/upload-default.png")
+                                layer.close(index);
+                            });
+                        }
+                        PluploadUtil.previewImg("specialUploadImg", file, up.settings.multi_selection);
+                    } else {
+                        layer.msg(info.response);
+                    }
+                },
+                Error: function (up, err) {
+                    if (err.code == plupload.FILE_EXTENSION_ERROR) {
+                        layer.msg("图片仅支持JPG、PNG格式");
+                    } else if (err.code == plupload.FILE_SIZE_ERROR) {
+                        layer.msg("图片大小不能超过10M");
+                    } else {
+                        layer.msg(err.message);
+                    }
+                }
+            }
+        });
+
+        uploader.init();
+
+
+        // 代偿户销户数据处理
+        var _smdpd = $('#specialMerchantDestroyProcessData');
+        _smdpd.find('[name="sub"]').on("click", function () {
+            var loginAccount = _smdpd.find('[name="loginAccount"]').val();
+            var userRole = _smdpd.find('[name="userRole"]').val();
+            if (!loginAccount) {
+                layer.msg("请输入用户手机号码")
+                _smdpd.find('[name="loginAccount"]').focus();
+                return false;
+            }
+            if (!userRole) {
+                layer.msg("请选择角色")
+                return false;
+            }
+            layer.confirm('确认清理[' + loginAccount + ']的数据吗?', {icon: 3, title: '⚠️警告'}, function (index) {
+                var formData = new FormData();
+                formData.append("loginAccount", loginAccount);
+                formData.append("userRole", userRole);
+                var res = AjaxUtil.ajaxFormData(specialApi.merchantDestroyProcessData, formData);
+                if(res){
+                    layer.msg("操作成功！");
+                    layer.close(index);
+                }
+            });
+        });
+
+        _smdpd.find('[name="tip"]').on("mouseover", function () {
+            layer.tips('选择销户后需要重新注册的角色', $(this), {
+                tips: 3
+            });
+        });
+
+
+        // 修改用户登陆帐号
+        var _smla = $('#specialModifyLoginAccount');
+        _smla.find('[name="sub"]').on("click", function () {
+            var oldLoginAccount = _smla.find('[name="oldLoginAccount"]').val();
+            var newLoginAccount = _smla.find('[name="newLoginAccount"]').val();
+            if (!oldLoginAccount) {
+                layer.msg("请输入要修改登录手机号")
+                _smla.find('[name="lodLoginAccount"]').focus();
+                return false;
+            }
+            if (!newLoginAccount) {
+                layer.msg("请输入修改后的登录手机号")
+                _smla.find('[name="newLoginAccount"]').focus();
+                return false;
+            }
+            layer.confirm('确认把[' + oldLoginAccount + ']变更为['+ newLoginAccount +']吗?', {icon: 3, title: '⚠️警告'}, function (index) {
+                var formData = new FormData();
+                formData.append("oldLoginAccount", oldLoginAccount);
+                formData.append("newLoginAccount", newLoginAccount);
+                var res = AjaxUtil.ajaxFormData(specialApi.modifyLoginAccount, formData);
+                if(res){
+                    layer.msg("修改成功！");
+                    _smla.find('[name="oldLoginAccount"]').val("");
+                    _smla.find('[name="newLoginAccount"]').val("");
+                    layer.close(index);
+                }
+            });
+        });
+
+
+        // 修改用户基本信息
+        var _smui = $('#specialModifyUserInfo');
+        var _muief = $('#modifyUserInfoEditForm');
+        var userId,modifyUserInfoEditFormIndex;
+        _smui.find('[name="sub"]').on("click", function () {
+            var loginAccount = _smui.find('[name="loginAccount"]').val();
+            if (!loginAccount) {
+                layer.msg("请输入登录手机号")
+                _smui.find('[name="loginAccount"]').focus();
+                return false;
+            }
+
+            var result = AjaxUtil.ajaxPost(userManagerApi.getUserInfoByLoginAccount, JSON.stringify({safeLoginAccount: loginAccount}));
+            if(result){
+                var info = result.data;
+                userId = info.userId;
+                var content = _muief.children("div:first-child");
+                content.empty();
+                content.append('<div class="layui-form-item"><label class="fl w100 p5">角色：'
+                    + info.userRole.message +'</label><label class="fl w250 p5">账号：'
+                    + info.loginAccount +'</label><label class="fl w180 p5">用户类型：'
+                    + info.userType.message +'</label></div>');
+                content.append('<div class="layui-form-item"><label class="fl w100 p5"></label>'
+                    + '<label class="fl w250 p5"><b class="c-blue">原始数据</b></label>'
+                    + '<label class="fl w180 p5"><b class="c-red">需要变更为</b></label></div>');
+                content.append('<div class="layui-form-item"><label class="fl w100 p5">名称：</label>'
+                    + '<label class="fl w250 p5">'+info.realName+'</label>'
+                    + '<input class="layui-input fl w180" name="realName"></div>');
+                if(info.userType.code == 'JG'){
+                    content.append('<div class="layui-form-item"><label class="fl w100 p5">法人姓名：</label>'
+                        + '<label class="fl w250 p5">'+info.legalName+'</label>'
+                        + '<input class="layui-input fl w180" name="legalName"></div>');
+                    content.append('<div class="layui-form-item"><label class="fl w100 p5">法人证件：</label>'
+                        + '<label class="fl w250 p5">'+info.legalCert+'</label>'
+                        + '<input class="layui-input fl w180" name="legalCert"></div>');
+                }
+                content.append('<div class="layui-form-item"><label class="fl w100 p5">银行卡号：</label>'
+                    + '<label class="fl w250 p5">'+info.bankCardNo+'</label>'
+                    + '<input class="layui-input fl w180" name="bankCardNo"></div>');
+                content.append('<div class="layui-form-item"><label class="fl w100 p5">开户行：</label>'
+                    + '<label class="fl w250 p5">'+info.bankCode+'</label>'
+                    + '<input class="layui-input fl w180" name="bankCode"></div>');
+                content.append('<div class="layui-form-item"><label class="fl w100 p5">邮箱：</label>'
+                    + '<label class="fl w250 p5">'+info.email+'</label>'
+                    + '<input class="layui-input fl w180" name="email"></div>');
+
+                modifyUserInfoEditFormIndex = LayerUtil.open('修改用户基本信息', _muief, '650px', null, 'modifyUserInfoEditForm');
+            }
+        });
+        $('#modifyUserInfoEditSub').on("click", function () {
+            var formData = new FormData();
+            var flag = false;
+            layui.each(_muief.serializeArray(), function () {
+                if (this.value) {
+                    flag = true;
+                    formData.append(this.name, this.value);
+                }
+            });
+            if (flag) {
+                formData.append("userId", userId);
+                var res = AjaxUtil.ajaxFormData(specialApi.modifyUserInfo, formData);
+                    if(res){
+                        layer.msg("修改成功！");
+                        layer.close(modifyUserInfoEditFormIndex);
+                    }
+
+            } else {
+                layer.msg("不能所有参数都不填！")
+            }
+        });
+
+
+
+    });
+
+</script>

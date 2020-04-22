@@ -1,0 +1,84 @@
+<div class="animated fadeInRight">
+	<div class="search-box">
+		<form class="layui-form" id="userClassifyDetailReportSearchForm" lay-filter="userClassifyDetailReportSearchForm"
+			  onsubmit="return false">
+			<div class="basic-search">
+				<div class="common-input-inline">
+					<label class="search-form-label">用户名：</label>
+					<div class="layui-input-inline">
+						<input class="layui-input" name="safeLoginAccount" autocomplete="off"/>
+					</div>
+				</div>
+				<div class="common-input-inline">
+					<label class="search-form-label">用户注册日期：</label>
+					<div class="layui-input-inline">
+						<input class="layui-input dp-il" name="registerTimeLeftRange"
+							   autocomplete="off"/>
+						<span>—</span>
+						<input class="layui-input dp-il" name="registerTimeRightRange"
+							   autocomplete="off"/>
+					</div>
+				</div>
+			</div>
+			<div class="layui-btn-group">
+				<button type="button" class="layui-btn layui-btn-primary" id="searchReport">
+					<i class="layui-icon">&#xe615;</i>查询
+				</button>
+				<button class="layui-btn layui-btn-primary" type="reset">重置</button>
+				<button type="button" class="layui-btn" id="downloadReportDetail">
+					<i class="layui-icon">&#xe601;</i>下载数据
+				</button>
+			</div>
+		</form>
+	</div>
+	<table id="userClassifyDetailReportData" class="layui-hide" lay-filter="userClassifyDetailReportData"></table>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function () {
+
+		laydate.render({elem: '#userClassifyDetailReportSearchForm [name="registerTimeLeftRange"]', type: 'date', trigger: 'click'});
+		laydate.render({elem: '#userClassifyDetailReportSearchForm [name="registerTimeRightRange"]', type: 'date', trigger: 'click'});
+
+
+		var userClassifyDetailReportDataTable = LayTableUtil.render({
+			elem: '#userClassifyDetailReportData'
+			, cols: [[ //表头
+				{field: 'loginAccount', title: '用户名', width: 130}
+				, {field: 'realName', title: '实名'}
+				, {field: 'userType', title: '用户类型', width: 130}
+				, {field: 'userRole', title: '用户角色', width: 130}
+				, {field: 'registerTerminal', title: '注册来源', width: 140}
+				, {field: 'openDepositStatus', title: '实名状态', width: 110}
+				, {field: 'depositAccount', title: '实名账号', width: 130}
+				, {field: 'bankCode', title: '银行类别', width: 100}
+				, {field: 'bankCardNo', title: '银行卡号', width: 180}
+				, {field: 'riskLevel', title: '风险测评', width: 100}
+				, {field: 'registerTime', title: '注册时间', width: 170}
+			]]
+			, url: reportApi.dataTable.userClassifyDetail.search
+			, page: true
+			, toolbar: true
+			, defaultToolbar: ['filter', 'exports']
+			, title: '用户分类查询报表_' + DateUtils.longToDateStringYMD(new Date())
+		});
+
+
+		$('#userClassifyDetailReportSearchForm [id="downloadReportDetail"]').click(function () {
+			location.href = reportApi.dataTable.userClassifyDetail.download + "?" + $('#userClassifyDetailReportSearchForm').serialize();
+		});
+
+		$('#userClassifyDetailReportSearchForm [id="searchReport"]').click(function () {
+			LayTableUtil.reload(userClassifyDetailReportDataTable, 'userClassifyDetailReportSearchForm');
+		});
+		// SearchForm绑定回车事件
+		$("#userClassifyDetailReportSearchForm").bind('keypress', function (event) {
+			if (event.keyCode == "13") {
+				$('#userClassifyDetailReportSearchForm [id="searchReport"]').click();
+			}
+		});
+
+	});
+
+
+</script>

@@ -1,0 +1,105 @@
+<div class="animated fadeInRight">
+    <div class="search-box">
+        <form class="layui-form" id="bizIdTemplateSearchForm">
+            <div class="basic-search">
+                <div class="common-input-inline"><label class="search-form-label">ID编码：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" name="bidCode">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-btn-group">
+                <button type="button" class="layui-btn layui-btn-primary" id="bizIdTemplateSearch"><i class="layui-icon">&#xe615;</i> 查询</button>
+                <button class="layui-btn layui-btn-primary" type="reset">重置</button>
+                <button type="button" class="layui-btn" id="bizIdTemplateAdd"><i class="layui-icon">&#xe654;</i> 新增</button>
+            </div>
+        </form>
+    </div>
+
+    <table id="bizIdTemplate" lay-filter="bizIdTemplate"></table>
+</div>
+
+<form class="layui-form p10 hide" id="bizIdTemplateForm" lay-filter="bizIdTemplateForm">
+    <div class="layui-form-item">
+        <label class="layui-form-label w120">ID编码</label>
+        <div class="layui-input-inline">
+            <input type="text" name="bidCode" lay-verify="required" placeholder="请输入ID编码"
+                   autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label w120">ID描述</label>
+        <div class="layui-input-inline">
+            <input type="text" name="bidDesc" lay-verify="required" placeholder="请输入ID描述"
+                   autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label w120">前缀类型</label>
+        <div class="layui-input-inline">
+            <select name="prefixType" lay-verify="required" lay-filter="prefixType" class="layui-input">
+                <option value=""></option>
+                <option value="static_string">固定字符串</option>
+                <option value="dynamic_date">当日日期</option>
+                <option value="complex_string_date">字符串和日期组合</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label w120">前缀字符串值</label>
+        <div class="layui-input-inline">
+            <input type="text" name="prefixStaticValue" lay-verify="required" placeholder="请输入前缀字符串值"
+                   autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label w120">长度</label>
+        <div class="layui-input-inline">
+            <input type="number" name="bidLength" lay-verify="required" placeholder="请输入长度"
+                   autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label w120">填充值</label>
+        <div class="layui-input-inline">
+            <input type="text" name="fillVal" lay-verify="required" placeholder="请输入填充值"
+                   autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label w120">初始值</label>
+        <div class="layui-input-inline">
+            <input type="number" name="initVal" lay-verify="required" placeholder="请输入初始值"
+                   autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label w120">重置策略</label>
+        <div class="layui-input-inline">
+            <select name="resetPolicy" lay-verify="required" lay-filter="resetPolicy" class="layui-input">
+                <option value=""></option>
+                <option value="max_value_mode">最大值即重置</option>
+                <option value="date_change_mode">日期变化即重置</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label w120">重置最大阈值</label>
+        <div class="layui-input-inline">
+            <input type="number" name="resetMaxVal" lay-verify="required" placeholder="请输入重置最大阈值"
+                   autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="bottom-buttons">
+        <button class="layui-btn" type="button" lay-submit lay-filter="bizIdTemplateFormSubmit">立即提交</button>
+        <button type="button" id="bizIdTemplateFromReset" class="layui-btn layui-btn-primary">重置</button>
+    </div>
+</form>
+
+<script type="text/html" id="bizIdTemplateBar">
+    <a class="layui-btn layui-btn-xs" lay-event="edit"><i class="layui-icon">&#xe642;</i>编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon">&#xe640;</i>删除</a>
+</script>
+
+<script src="js/bizconfig/bizIdTemplate.js"></script>

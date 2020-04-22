@@ -1,0 +1,547 @@
+<div class="animated fadeInRight">
+	<div class="search-box">
+		<form class="layui-form" lay-filter="searchLoanApplyForm" id="loanApplySearchForm">
+			<div class="basic-search">
+				<div class="common-input-inline">
+					<label class="search-form-label">借款人用户名：</label>
+					<div class="layui-input-inline">
+						<input class="layui-input" name="userId" autocomplete="off">
+					</div>
+				</div>
+				<div class="common-input-inline">
+					<label class="search-form-label">所属商户：</label>
+					<div class="layui-input-inline">
+						<input class="layui-input" name="merchantUserName" autocomplete="off">
+					</div>
+				</div>
+				<div class="common-input-inline">
+					<label class="search-form-label">借款状态：</label>
+					<div class="layui-input-inline">
+						<select name="loanStatus">
+							<option value=""></option>
+							<option value="committed">商户审核中</option>
+							<option value="merchant_dismiss">商户驳回</option>
+                            <option value="platform_dismiss">风控驳回</option>
+							<option value="wait_publish">待发标</option>
+                            <option value="wait_examine">发标待审核</option>
+							<option value="collecting">融资中</option>
+                            <option value="aborted">已流标</option>
+                            <option value="wait_grant">待放款</option>
+                            <option value="wait_repay">待还款</option>
+                            <option value="finished">已完成</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="more-search">
+				<div class="common-input-inline">
+					<label class="search-form-label">借款申请时间：</label>
+					<div class="layui-input-inline">
+						<input class="layui-input dp-il" name="loanApplyTimeLeftRange" id="loanApplyTimeLeftRangeSearch"
+							   autocomplete="off"/>
+						<span>—</span>
+						<input class="layui-input dp-il" name="loanApplyTimeRightRange"
+							   id="loanApplyTimeRightRangeSearch" autocomplete="off"/>
+					</div>
+				</div>
+				<div class="common-input-inline">
+					<label class="search-form-label">借款期限：</label>
+					<div class="layui-input-inline">
+						<select name="loanApplyDays">
+							<option value="">全部</option>
+							<option value="0~90">3个月以内</option>
+							<option value="90~180">3~6个月</option>
+							<option value="180~365">6~12个月</option>
+							<option value="365~99999">12个月以上</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="layui-btn-group">
+				<button class="layui-btn layui-btn-primary" type="button" id="queryLoanApplyBtn"><i class="layui-icon">&#xe615;</i>
+					查询
+				</button>
+				<button class="layui-btn layui-btn-primary" type="reset">重置</button>
+				<button type="button" class="layui-btn layui-btn-primary" data-show="off"
+						onclick="showMoreSearch(this,'loanApplySearchForm')"><i class="layui-icon">&#xe61a;</i> 更多
+				<button type="button" class="layui-btn" id="downloadLoanApplyDetail">
+					<i class="layui-icon">&#xe601;</i>下载数据
+				</button>
+			</div>
+		</form>
+	</div>
+
+	<table id="loanApply" class="layui-hide" lay-filter="loanApply"></table>
+</div>
+
+<div class="right-win animated fadeInRight w1000" id="loanApplyFormModel">
+	<div class="right-win-top">
+		<a href="javascript:closeLoanApplyModelFrame();" title="关闭"><i
+				class="layui-icon close-right-win">&#x1006;</i></a>
+		<span class="right-win-title">借款详情</span>
+	</div>
+	<form class="layui-form p10 mt50" lay-filter="addLoanApplyForm" id="loanApplyForm">
+		<input class="layui-input hide" name="applyId" autocomplete="off">
+		<input type="button" class="hide" id="loanApplyImitateBtn">
+		<div class="layui-form-item">
+			<div class="layui-block">
+				<label class="layui-form-label w120">借款用户登录名：</label>
+				<div class="layui-input-inline">
+					<span class="layui-form-mid" name="userLoginName"></span>
+				</div>
+				<label class="layui-form-label w120">借款用户名称：</label>
+				<div class="layui-input-inline">
+					<span class="layui-form-mid" name="userRealName"></span>
+				</div>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<div class="layui-block">
+				<label class="layui-form-label w120">借款用户身份证：</label>
+				<div class="layui-input-inline">
+					<span class="layui-form-mid" name="certNo"></span>
+				</div>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<div class="layui-block">
+				<label class="layui-form-label w120">所属商户：</label>
+				<div class="layui-input-inline w240">
+					<span class="layui-form-mid" name="merchantUserName"></span>
+				</div>
+				<label class="layui-form-label w70">产品名称：</label>
+				<div class="layui-input-inline">
+					<span class="layui-form-mid" name="productName"></span>
+				</div>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<div class="layui-block">
+				<label class="layui-form-label w120">借款金额：</label>
+				<div class="layui-input-inline">
+					<span class="layui-form-mid" id="queryLoanApplyAmount"></span>
+				</div>
+				<label class="layui-form-label w120">借款期限值：</label>
+				<div class="layui-input-inline">
+					<span class="layui-form-mid" id="queryLoanApplyLoanTermValue"></span>
+				</div>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<div class="layui-block">
+				<label class="layui-form-label w120">借款年化利率：</label>
+				<div class="layui-input-inline">
+					<span class="layui-form-mid" name="loanInterestRate"></span>
+				</div>
+				<label class="layui-form-label w120">还款方式：</label>
+				<div class="layui-input-inline">
+					<span class="layui-form-mid" id="queryLoanApplyRepayMethod"></span>
+				</div>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<div class="layui-block">
+				<label class="layui-form-label w120">借款申请时间：</label>
+				<div class="layui-input-inline">
+					<span class="layui-form-mid" id="queryLoanApplyTime"></span>
+				</div>
+				<label class="layui-form-label w120">借款用途：</label>
+				<div class="layui-input-inline wa">
+					<span class="layui-form-mid" name="loanPurpose"></span>
+				</div>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<div class="layui-block">
+				<label class="layui-form-label w120">当前借款状态：</label>
+				<div class="layui-input-inline">
+					<span class="layui-form-mid" name="loanStatus"></span>
+				</div>
+				<label class="layui-form-label w120">备注：</label>
+				<div class="layui-input-inline">
+					<span class="layui-form-mid" name="remark"></span>
+				</div>
+			</div>
+		</div>
+
+		<div class="layui-form-item">
+			<label class="layui-form-label w120">账单/发票：</label>
+			<div id="loanApplyBillImg" class="layui-block">
+					<span class="layui-form-mid">该笔借款申请没有上传账单或发票。
+						<button class='layui-btn layui-btn-warm layui-btn-sm' id='loanApplyUploadBillImg' type='button'>上传</button>
+					</span>
+				<input type="hidden" id="loanApplyBillImgUrl">
+				<div class="w750 fl" id="loanApplyBillImgList">
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+
+<div class="right-win animated fadeInRight w1000" id="loanApplyTolaunch">
+	<div class="right-win-top">
+		<a href="javascript:closeLoanApplyModelFrame();" title="关闭"><i
+				class="layui-icon close-right-win">&#x1006;</i></a>
+		<span class="right-win-title">融资发布</span>
+		<span class="right-win-btn">
+            <button type="button" class="layui-btn" id="loanApplyToLaunchBtn">
+				<i class="layui-icon">&#xe609;</i>发布
+			</button>
+			<button type="button" class="layui-btn" id="loanApplyToSaveDraftBtn">
+				<i class="layui-icon">&#xe60a;</i>保存到草稿箱
+			</button>
+            <button type="button" class="layui-btn layui-btn-danger" id="loanApplyLoanFailBtn">
+				<i class="layui-icon">&#xe6c5;</i>驳回
+			</button>
+		</span>
+	</div>
+	<div class="right-win-content-box" id="loanApplyDemandDetail">
+
+	</div>
+</div>
+
+<script type="text/html" id="loanApplyOperation">
+	<div class="fl">
+		<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail"><i class="layui-icon">&#xe615;</i>详情</a>
+		{{# if(d.loanStatus.code == "wait_publish" && !d.serviceFeeStatus && d.serviceFeeType == "pre"){ }}
+		<a class="layui-btn layui-btn-xs layui-btn-disabled loanApplyLaunchTipInfo"><i class="layui-icon">&#xe609;</i>发标</a>
+		{{# } }}
+		{{# if(d.loanStatus.code == "wait_publish" && d.serviceFeeStatus && d.serviceFeeType == "pre"){ }}
+		<a class="layui-btn layui-btn-xs" lay-event="waitPublish"><i class="layui-icon">&#xe609;</i>发标</a>
+		{{# } }}
+		{{# if(d.loanStatus.code == "wait_publish" && d.serviceFeeType == "post"){ }}
+		<a class="layui-btn layui-btn-xs" lay-event="waitPublish"><i class="layui-icon">&#xe609;</i>发标</a>
+		{{# } }}
+		{{# if(d.loanStatus.code == "wait_publish"){ }}
+		<a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="loanApplyFail"><i class="layui-icon">&#xe6c5;</i>驳回</a>
+		{{# } }}
+	</div>
+</script>
+<script type="text/javascript">
+	var cashWin;
+	var loanerUserId, applyId;
+	var demandDetailForm = $("#demandDetailForm");
+	var loanApplyBillImg = $('#loanApplyBillImg');
+	var exportData;
+	var isClick = true;
+	var uploadSize, uploadIndex;
+	$(document).ready(function () {
+		var submitUrl = null;
+		layform.render(null, 'searchLoanApplyForm');
+		laydate.render({elem: '#loanApplyTimeLeftRangeSearch', type: 'date', trigger: 'click'});
+		laydate.render({elem: '#loanApplyTimeRightRangeSearch', type: 'date', trigger: 'click'});
+
+		var loanApplyTable = LayTableUtil.render({
+			elem: '#loanApply'
+			, cols: [[
+				{field: 'userLoginName', title: '借款用户手机号', width: 140}
+				, {field: 'userRealName', title: '借款用户姓名', width: 120}
+                , {field: 'certNo', title: '借款用户/法人身份证号', width: 180}
+                , {field: 'legalName', title: '法人姓名', width: 100}
+				, {field: 'loanApplyAmount', title: '借款金额(元)', width: 120, align: 'right', templet: function (d) {return MoneyUtil.formatMoney(d.loanApplyAmount.amount)}}
+                , {field: 'loanInterestRate', title: '年化利率', width: 90, templet: function (d) {	return NumberUtil.transfPercentage(d.loanInterestRate)}}
+                , {field: 'loanTermValue', title: '借款期限', width: 90, templet: function (d) {return d.loanTermValue + d.loanTermUnit.message}}
+                , {field: 'productName', title: '产品名称', width: 130}
+				, {field: 'merchantUserName', title: '所属商户', width: 180}
+				, {field: 'loanPurpose', title: '借款用途', width: 180}
+				, {field: 'loanApplyTime', title: '借款申请时间', width: 170, templet: function (d) {return DateUtils.longToDateString(d.loanApplyTime)}}
+				, {field: 'loanStatus', title: '当前借款状态', fixed: 'right', width: 120, templet: function (d) {return d.loanStatus.message}}
+				, {fixed: 'right', title: '操作', align: 'center', toolbar: '#loanApplyOperation', width: 200}
+			]]
+			, url: loanApiUrl.loanApply.list
+			, page: true
+			, id: 'loanApplyTable'
+//            , toolbar: true
+//            , defaultToolbar: ['filter', 'exports']
+           	, title: '借款申请_' + DateUtils.longToDateStringYMD(new Date())
+            , done: function (res, curr, count) {
+                exportData = JSON.parse(JSON.stringify(res.rows));
+                layui.each(exportData, function (i, data) {
+                    data.userLoginName = "\t" + data.userLoginName;
+                    data.certNo = "\t" + data.certNo;
+                    data.loanApplyAmount = data.loanApplyAmount.amount;
+                    data.loanInterestRate = NumberUtil.transfPercentage(data.loanInterestRate);
+                    data.loanTermValue = data.loanTermValue + data.loanTermUnit.message;
+                    data.loanApplyTime = "\t" + DateUtils.longToDateString(data.loanApplyTime);
+                    data.loanStatus = data.loanStatus.message;
+                });
+            }
+		});
+
+		//监听工具条
+		laytable.on('tool(loanApply)', function (obj) {
+			var data = obj.data;
+			loanerUserId = data.userId;
+			applyId = data.applyId;
+			if (obj.event === 'detail') {openRightWin('loanApplyFormModel');
+
+				$('#queryLoanApplyLoanTermValue').text(data.loanTermValue + data.loanTermUnit.message);
+				$('#queryLoanApplyRepayMethod').text(data.repayMethod.message);
+				$('#queryLoanApplyAmount').text(MoneyUtil.formatMoney(data.loanApplyAmount.amount) + "元");
+				$('#queryLoanInterestAmount').text(MoneyUtil.formatMoney(data.loanInterestAmount.amount) + "元");
+				$('#queryLoanApplyTime').text(DateUtils.longToDateString(data.loanApplyTime));
+
+				if(data.billImgUrl){
+					loanApplyBillImg.find("span").html("");
+					layui.each(data.billImgUrl, function (index, item) {
+						loanApplyBillImg.append('<div class="w120 fl m5 ta-c pr">' +
+								'<img class="w120 h120 cr-pr" src="' + item + '" alt="账单/发票">' +
+								'</div>');
+					});
+					new Viewer(document.querySelector('#loanApplyForm'));
+				}
+
+				loadFormDataForLoanApply("#loanApplyForm", data);
+			} else if (obj.event === 'waitPublish') {
+				openRightWin('loanApplyTolaunch');
+				$('#loanApplyDemandDetail').load('finance/demand/view');
+				loanFormDataForLoanApply2DemandDetail(data);
+				layform.render(null, 'demandDetailForm');
+			} else if(obj.event == 'loanApplyFail'){
+				layer.confirm('确认驳回?', {icon: 3, title:'提示'}, function(index){
+					var result = AjaxUtil.ajaxGetWithLoading(loanApiUrl.loanApply.reject + data.applyId);
+					if (result) {
+						layer.msg("已驳回", {time: 500}, function () {
+							closeLoanApplyModelFrame();
+							LayTableUtil.refresh(loanApplyTable, 'loanApplySearchForm');
+						});
+					}
+
+					layer.close(index);
+				});
+			}
+		});
+
+		$('#queryLoanApplyBtn').click(function () {
+			var param = DataDeal.formToJsonObj($('#loanApplySearchForm'));
+			if (param.loanApplyTimeLeftRange && param.loanApplyTimeRightRange) {
+				if (param.loanApplyTimeLeftRange > param.loanApplyTimeRightRange) {
+					layer.msg("借款申请时间区间选择有误，请重新选择");
+					return false;
+				}
+			}
+			LayTableUtil.reload(loanApplyTable, 'loanApplySearchForm');
+		});
+
+		// SearchForm绑定回车事件
+		$("#loanApplySearchForm").bind('keypress', function (event) {
+			if (event.keyCode == "13") {
+				$('#queryLoanApplyBtn').click();
+			}
+		});
+
+		$('.mask').click(function () {
+			closeLoanApplyModelFrame();
+		});
+
+		//监听提交
+		layform.on('submit(demandDetailFormSubmit)', function () {
+			var data = DataDeal.formToJsonObj($('#demandDetailForm'));
+			var formData = new FormData();
+			layui.each(data, function (i, item) {
+				formData.append(i, item);
+			});
+			var result = AjaxUtil.ajaxFormData(submitUrl, formData);
+			if (result.code == "20000") {
+				layer.msg('操作成功', {
+					time: 1000 //1秒关闭
+				}, function () {
+					closeLoanApplyModelFrame();
+					LayTableUtil.refresh(loanApplyTable, 'loanApplySearchForm');
+				});
+			} else if (result.code == "40404" || result.code == "40405") {
+				CookieUtil.clearAllCookie();
+				window.location.href = $_GLOBAL.basePath() +'/login';
+			} else {
+				layer.msg(result.message);
+			}
+			return false;
+		});
+
+		$('#loanApplyToSaveDraftBtn').click(function () {
+			submitUrl = financeApiUrl.demand.saveToDraft;
+			$('#demandDetailFormSubmitBtn').click();
+		});
+
+		$('#loanApplyToLaunchBtn').click(function () {
+			var result = AjaxUtil.ajaxGet(financeApiUrl.demand.checkLoaner + loanerUserId);
+			if (result && result.data) {
+				submitUrl = financeApiUrl.demand.publish;
+				$('#demandDetailFormSubmitBtn').click();
+			} else {
+				layer.msg(result.message);
+			}
+
+		});
+
+		$('#loanApplyLoanFailBtn').click(function () {
+			layer.confirm('确认驳回?', {icon: 3, title:'提示'}, function(index){
+				var result = AjaxUtil.ajaxGetWithLoading(loanApiUrl.loanApply.reject + demandDetailForm.find('[name="loanApplyId"]').val());
+				if (result) {
+					layer.msg("已驳回", {time: 500}, function () {
+						closeLoanApplyModelFrame();
+						LayTableUtil.refresh(loanApplyTable, 'loanApplySearchForm');
+					});
+				}
+				layer.close(index);
+			});
+		});
+
+		$('.loanApplyLaunchTipInfo').on('mouseenter', function () {
+			this.index = layer.tips('该借款申请需要缴纳前置服务费。', this, {
+				time: -1
+				, maxWidth: 180
+			});
+		}).on('mouseleave', function () {
+			layer.close(this.index);
+		});
+
+        $('#loanApplySearchForm [id="downloadLoanApplyDetail"]').click(function () {
+           	laytable.exportFile(loanApplyTable.config.id, exportData, 'xls');
+        });
+
+
+		$(document).on('click', '#loanApplyUploadBillImg', function () {
+			console.log(1)
+			if(isClick) {
+				console.log(2)
+				isClick = false;
+				//事件
+				$("#loanApplyImitateBtn").click();
+				//定时器
+				setTimeout(function() {
+					isClick = true;
+				}, 1000);//一秒内不能重复点击
+			}
+		});
+
+		var uploader = new plupload.Uploader({
+			runtimes: 'html5,flash,silverlight,html4',
+			browse_button: "loanApplyImitateBtn",
+			multi_selection: true,
+			flash_swf_url: '../../plugins/plupload-2.1.2/js/Moxie.swf',
+			silverlight_xap_url: '../../plugins/plupload-2.1.2/js/Moxie.xap',
+			filters: {
+				mime_types: [ //只允许上传图片和zip文件
+					{title: "Image files", extensions: "jpg,jpeg,png"},
+				],
+				max_file_size: '10M', //最大只能上传400kb的文件
+				prevent_duplicates: false //不允许选取重复文件
+			},
+			url: 'https://oss.aliyuncs.com',
+
+			init: {
+				PostInit: function () {
+
+				},
+
+				FilesAdded: function (up, files) {
+					uploadSize = files.length;
+					uploadIndex = 0;
+					layui.each(files, function (i, file) {
+						PluploadUtil.set_upload_param(up, "loan_apply", file, "bill", loanerUserId);
+					});
+				},
+
+				BeforeUpload: function (up, file) {
+
+				},
+
+				UploadProgress: function (up, file) {
+
+				},
+
+				FileUploaded: function (up, file, info) {
+					uploadIndex++;
+					loanApplyBillImg.find("span").html("");
+					if (info.status == 200) {
+						var message = file.name;
+						if(up.settings.multi_selection) {
+							message = ($("#loanApplyBillImgUrl").val() ? $("#loanApplyBillImgUrl").val() + ";" : $("#loanApplyBillImgUrl").val()) + file.name;
+						}
+						$("#loanApplyBillImgUrl").val(message);
+						PluploadUtil.previewImg("loanApplyBillImg", file, up.settings.multi_selection);
+					} else {
+						layer.msg(info.response);
+					}
+
+					if(uploadSize == uploadIndex){
+						layer.confirm('确认上传?', {
+							btn: ['确认','取消'] //按钮
+						}, function(){
+							var date = {"applyId": applyId,
+								"billImgUrl":$("#loanApplyBillImgUrl").val()};
+							var result = AjaxUtil.ajaxPost(loanApiUrl.loanApply.modify, JSON.stringify(date));
+							if(result){
+								// LayTableUtil.reload(loanApplyTable, 'loanApplySearchForm');
+								layer.msg("上传修改成功");
+							}
+						}, function(){
+							loanApplyBillImg.find("span").html("该笔借款申请没有上传账单或发票。" +
+									"<button class='layui-btn layui-btn-warm layui-btn-sm' id='loanApplyUploadBillImg' type='button'>上传</button>");
+							$("#loanApplyBillImgList").html("")
+							$("#loanApplyBillImgUrl").val("")
+						});
+					}
+				},
+
+				Error: function (up, err) {
+					errorHandler(err);
+				}
+			}
+		});
+
+		uploader.init();
+	});
+
+	function loadFormDataForLoanApply(elem, data) {
+		layui.each(data, function (k, v) {
+			var selector = '[name="' + k + '"]';
+			var elt = $(elem).find(selector);
+			elt.text("" + v);
+		});
+		$(elem).find("[name='loanStatus']").text(data.loanStatus.message);
+		$(elem).find("[name='loanInterestRate']").text(NumberUtil.transfPercentage(data.loanInterestRate));
+	}
+
+	function loanFormDataForLoanApply2DemandDetail(data) {
+		var loanApplyBillImg = $("#billImg");
+
+		layui.each(data, function (k, v) {
+			var selector = '[name="' + k + '"]';
+			var elt = demandDetailForm.find(selector);
+			elt.text("" + v);
+		});
+		demandDetailForm.find('[name="loanApplyAmount"]').text(MoneyUtil.formatMoney(data.loanApplyAmount) + '元');
+		demandDetailForm.find('[name="loanInterestRate"]').text(NumberUtil.transfPercentage(data.loanInterestRate));
+		demandDetailForm.find('[name="loanTerm"]').text(data.loanTermValue + data.loanTermUnit.message);
+		demandDetailForm.find('[name="repayMethod"]').text(data.repayMethod.message);
+		demandDetailForm.find('[name="loanApplyTime"]').text(DateUtils.longToDateString(data.loanApplyTime));
+		demandDetailForm.find('[name="loanApplyId"]').val(data.applyId);
+
+		if(data.billImgUrl){
+			loanApplyBillImg.find("span").html("")
+			layui.each(data.billImgUrl, function (index, item) {
+				loanApplyBillImg.append('<div class="w120 fl m5 ta-c"><img class="w120 h120 cr-pr" src="' + item + '" alt="账单/发票"></div>');
+			});
+			new Viewer(document.querySelector('body'));
+		}
+
+		var loanUserResult = AjaxUtil.ajaxPost(loanApiUrl.loanUserInfo.get, JSON.stringify({"userId": data.userId}));
+		if (loanUserResult) {
+			$('#demandDetailLoanerInfoText').val(loanUserResult.data.loanUserIntroduce);
+		}
+	}
+
+	function closeLoanApplyModelFrame() {
+		$('#loanApplyDemandDetail').html("");
+		loanApplyBillImg.html('<span class="layui-form-mid">该笔借款申请没有上传账单或发票。' +
+				'<button class="layui-btn layui-btn-warm layui-btn-sm" id="loanApplyUploadBillImg" type="button">上传</button>' +
+				'</span>' +
+				'<input type="hidden" id="loanApplyBillImgUrl">' +
+				'<div class="w750 fl" id="loanApplyBillImgList">' +
+				'</div>')
+		closeRightWin('loanApplyTolaunch');
+		closeRightWin('loanApplyFormModel');
+	}
+</script>

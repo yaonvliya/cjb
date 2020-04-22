@@ -1,0 +1,77 @@
+<div class="animated fadeInRight">
+	<div class="search-box">
+		<form class="layui-form" id="uploadMaterialSearchForm" lay-filter="uploadMaterialForm" onsubmit="return false">
+			<div class="basic-search">
+				<div class="common-input-inline"><label class="search-form-label">用户登录账号：</label>
+					<div class="layui-input-inline">
+						<input type="text" class="layui-input" name="loginAccount" id="uploadMaterialLoainAccount"
+							   placeholder="输入后按回车查询">
+					</div>
+				</div>
+                <div class="common-input-inline ml80"><label class="search-form-label" id="userNameForUploadPic"></label>
+                </div>
+			</div>
+			<div class="layui-btn-group">
+				<button type="button" class="layui-btn layui-btn-primary" id="uploadMaterialSearch"><i
+						class="layui-icon">&#xe615;</i> 查询
+				</button>
+				<button class="layui-btn layui-btn-primary" type="reset">重置</button>
+			</div>
+		</form>
+	</div>
+
+#*上传页面容器*#
+	<div id="uploadMaterialContainer"></div>
+</div>
+<script src="../../plugins/plupload-2.3.6/js/plupload.full.min.js"></script>
+<script type="text/javascript">
+	var userId, userType;
+	$(document).ready(function () {
+		$('#uploadMaterialSearch').on('click', function () {
+			$('#uploadMaterialContainer').empty();
+			var result = AjaxUtil.ajaxPostWithLoading(userManagerApi.getUserInfoByLoginAccount, JSON.stringify({"safeLoginAccount": $('#uploadMaterialLoainAccount').val()}));
+			if (!result.data) {
+				layer.msg("未查到此用户。")
+				return false;
+			}
+			userId = result.data.userId;
+			userType = result.data.userType.code;
+			$('#userNameForUploadPic').text(result.data.realName)
+
+			var auditResult = AjaxUtil.ajaxPost(loanApiUrl.loanUserInfo.get, JSON.stringify({"userId": result.data.userId}));
+			if (auditResult.data && auditResult.data.auditStatus && auditResult.data.auditStatus.code == "pass") {
+				layer.msg("该用户资料已上传。")
+				return false;
+			}
+
+			layui.each(auditResult.data, function (k,v) {
+				if (userType == "JG" && k == "identityCertFlag") {
+					return false;
+				} else if (userType == "GR" && k == "legalPersonIdentityFlag"){
+					return false;
+				}
+				if (StringUtil.isContains(k, "Flag") && v){
+					uploadType.push(k.substring(0, k.length-4));
+				}
+			});
+
+			if (userType == "GR") {
+				$('#uploadMaterialContainer').load('loan/userInfo/upload/personal/view');
+				$('#upload_personal_pic_userId').val(userId);
+				$('#upload_personal_pic_userType').val(userType);
+			} else {
+				$('#uploadMaterialContainer').load('loan/userInfo/upload/company/view');
+				$('#upload_company_pic_userId').val(userId);
+				$('#upload_company_pic_userType').val(userType);
+			}
+			$('.uploadRealName').html(result.data.realName);
+		});
+
+		// SearchForm绑定回车事件
+		$("#uploadMaterialSearchForm").bind('keypress', function (event) {
+			if (event.keyCode == "13") {
+				$('#uploadMaterialSearch').click();
+			}
+		});
+	});
+</script>

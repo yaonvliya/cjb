@@ -1,0 +1,262 @@
+<div class="animated fadeInRight">
+	<div class="search-box">
+		<form class="layui-form" id="interestCouponSearchForm" lay-filter="interestCouponSearchForm">
+			<div class="basic-search">
+				<div class="common-input-inline"><label class="search-form-label">活动名称：</label>
+					<div class="layui-input-inline">
+						<input type="text" name="activityName" placeholder="请输入活动名称" class="layui-input">
+					</div>
+				</div>
+				<div class="common-input-inline"><label class="search-form-label">发放场景：</label>
+					<div class="layui-input-inline">
+						<select name="activityScene">
+							<option value="">全部</option>
+                            <option value="register">注册发放</option>
+                            <option value="realname">实名发放</option>
+                            <option value="invite">邀请发放</option>
+                            <option value="invest">投资发放</option>
+                            <option value="manual">手动发放</option>
+						</select>
+					</div>
+				</div>
+				<div class="common-input-inline"><label class="search-form-label">状态：</label>
+					<div class="layui-input-inline">
+						<select name="activityStatus">
+							<option value="">全部</option>
+							<option value="online">正常</option>
+							<option value="offline">停用</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="layui-btn-group">
+				<button class="layui-btn layui-btn-primary" type="button" id="interestCouponSearchBtn"><i class="layui-icon">&#xe615;</i> 查询</button>
+				<button class="layui-btn layui-btn-primary" type="reset">重置</button>
+				<button class="layui-btn" type="button" id="addInterest"><i class="layui-icon">&#xe654;</i> 新增</button>
+			</div>
+		</form>
+	</div>
+
+	<table id="interestCouponDataList" lay-filter="interestCouponDataList"></table>
+</div>
+
+<div class="right-win animated fadeInRight w680" id="addCashInterest">
+    <div class="right-win-top">
+        <a href="javascript:closeCashInterestModelFrame();" title="关闭"><i class="layui-icon close-right-win">&#x1006;</i></a>
+        <span class="right-win-title" id="addModalInterestCouponTitle">新建红包活动</span>
+        <span class="right-win-btn">
+			<button type="button" class="layui-btn" id="cashInterestSubmit">
+				<i class="layui-icon">&#xe605;</i>保存
+			</button>
+		</span>
+    </div>
+    <div class="right-win-content-box">
+        <form class="layui-form" id="interestCouponForm" lay-filter="interestCouponForm">
+            <button class="hide" type="button" lay-submit lay-filter="addInterestCouponSubmit" id="cashInterestSubmitBtn"></button>
+            <input class="layui-input" type="hidden" name="activityId" autocomplete="off">
+            <div class="layui-form-item">
+                <label class="layui-form-label w100">加息券活动名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="activityName" lay-verify="required|maxlength" maxlength="20" placeholder="请输入加息券活动名称" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label w100">发放总数量</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="totalLimitCount" lay-verify="required|amount|max" max="999999" placeholder="请输入发放总数量" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">张</div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label w100">年化收益率</label>
+                <div class="layui-inline">
+                    <div class="layui-input-inline">
+                        <input type="text" name="singleMinInterest" lay-verify="required|amount|max" max="9" placeholder="请输入最小年化收益率" class="layui-input">
+                    </div>
+                    <div class="layui-form-mid">—</div>
+                    <div class="layui-input-inline">
+                        <input type="text" name="singleMaxInterest" lay-verify="required|amount|max" max="9" placeholder="请输入最大年化收益率" class="layui-input">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">%&emsp;
+                        <a href="javascript:;" id="interestTipInfo"><i class="layui-icon" style="color: #005cff;">&#xe60b;</i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label w100">加息券发放场景</label>
+                <div class="layui-input-inline">
+                    <select name="activityScene" lay-verify="required" lay-filter="interestCouponActivityScene">
+                        <option value=""></option>
+                        <option value="register">注册发放</option>
+                        <option value="realname">实名发放</option>
+                        <option value="invite">邀请发放</option>
+                        <option value="invest">投资发放</option>
+                        <option value="manual">手动发放</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label w100">活动时间</label>
+                <div class="layui-inline w250">
+                    <input type="text" id="interestCouponGrantTime" name="interestCouponGrantTime" lay-verify="required" placeholder="请选择活动有效期" readonly class="layui-input ">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label w100">使用规则</label>
+                <div class="layui-input-inline">
+                    <input type="number" name="leastActivateAmount" lay-verify="required|amount" placeholder="请输入使用规则" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">单笔投资满xx元可使用</div>
+            </div>
+            <div class="layui-form-item hide" id="interestCouponLeastObtainAmountController">
+                <label class="layui-form-label w100">发放规则</label>
+                <div class="layui-input-inline">
+                    <input type="number" name="leastObtainAmount" placeholder="非投资活动，不用填写" class="layui-input" value="0" readonly>
+                </div>
+                <div class="layui-form-mid layui-word-aux">单笔投资满xx元可领取，非投资请填0</div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label w100">加息券有效期</label>
+                <div class="layui-inline">
+                    <input type="radio" name="interestEffectiveType" value="1" lay-filter="interestEffectiveType" title="按日期" checked>
+                </div>
+                <div class="layui-inline w250">
+                    <input type="text" id="interestCouponEffectiveTime" name="interestCouponEffectiveTime" placeholder="请选择加息券有效期" readonly class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label w100"></label>
+                <div class="layui-inline">
+                    <input type="radio" name="interestEffectiveType" value="2" lay-filter="interestEffectiveType" title="按天数">
+                </div>
+                <div class="layui-inline">
+                    <div class="layui-input-inline">
+                        <input type="number" name="couponEffectiveDays" placeholder="请输入加息券有效期天数" class="layui-input" disabled>
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">天</div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label w100">活动状态</label>
+                <div class="layui-inline">
+                    <input type="radio" name="activityStatus" value="online" title="正常" checked>
+                    <input type="radio" name="activityStatus" value="offline" title="停用">
+                </div>
+            </div>
+##            <div class="bottom-buttons">
+##                <button type="button" class="layui-btn" lay-submit lay-filter="interestCouponSubmit">立即提交</button>
+##                <button type="button" class="layui-btn layui-btn-primary" onclick="resetInterestFormData()">重置</button>
+##            </div>
+        </form>
+        #*<form class="layui-form" id="cashCouponForm" lay-filter="cashCouponForm">
+
+            <div class="layui-form-item">
+                <label class="layui-form-label w90">红包活动名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="activityName" lay-verify="required|maxlength" maxlength="20" placeholder="请输入红包活动名称" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label w90">金额允许小数</label>
+                <div class="layui-input-inline">
+                    <input type="radio" name="decimalAllowed" value=true title="是" checked>
+                    <input type="radio" name="decimalAllowed" value=false title="否">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label w90">发放总金额</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="totalLimitAmount" lay-verify="required|amount|max" max="99999999" placeholder="请输入发放总金额" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">元</div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label w90">红包金额</label>
+                <div class="layui-inline">
+                    <div class="layui-input-inline">
+                        <input type="text" name="singleMinAmount" lay-verify="required|amount|max" max="9999" placeholder="请输入红包最小金额" class="layui-input">
+                    </div>
+                    <div class="layui-form-mid">—</div>
+                    <div class="layui-input-inline">
+                        <input type="text" name="singleMaxAmount" lay-verify="required|amount|max" max="9999" placeholder="请输入红包最大金额" class="layui-input">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">元&emsp;
+                        <a href="javascript:;" id="cashAmountTipInfo"><i class="layui-icon" style="color: #005cff;">&#xe60b;</i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label w90">红包发放场景</label>
+                <div class="layui-input-inline">
+                    <select name="activityScene" lay-verify="required">
+                        <option value=""></option>
+                        <option value="register">注册发放</option>
+                        <option value="realname">实名发放</option>
+                        <option value="invite">邀请发放</option>
+                        <option value="invest">投资发放</option>
+                        <option value="manual">手动发放</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label w90">活动时间</label>
+                <div class="layui-inline w250">
+                    <input type="text" id="cashCouponGrantTime" name="cashCouponGrantTime" lay-verify="required" placeholder="请选择活动有效期" readonly class="layui-input ">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label w90">使用规则</label>
+                <div class="layui-input-inline">
+                    <input type="number" name="leastActivateAmount" lay-verify="required|amount" placeholder="请输入使用规则" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">单笔投资满xx元可使用</div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label w90">发放规则</label>
+                <div class="layui-input-inline">
+                    <input type="number" name="leastObtainAmount" lay-verify="required|amount" placeholder="请输入发放规则" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">单笔投资满xx元可领取，非投资请填0</div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label w90">红包有效期</label>
+                <div class="layui-inline">
+                    <input type="radio" name="cashEffectiveType" value="1" lay-filter="cashEffectiveType" title="按日期" checked>
+                </div>
+                <div class="layui-inline w250">
+                    <input type="text" id="cashCouponEffectiveTime" name="cashCouponEffectiveTime" placeholder="请选择红包有效期" readonly class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label w90"></label>
+                <div class="layui-inline">
+                    <input type="radio" name="cashEffectiveType" value="2" lay-filter="cashEffectiveType" title="按天数">
+                </div>
+                <div class="layui-inline">
+                    <div class="layui-input-inline">
+                        <input type="number" name="couponEffectiveDays" placeholder="请输入红包有效期天数" class="layui-input" disabled>
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">天</div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label w90">活动状态</label>
+                <div class="layui-input-inline">
+                    <input type="radio" name="activityStatus" value="online" title="正常" checked>
+                    <input type="radio" name="activityStatus" value="offline" title="停用">
+                </div>
+            </div>
+        </form>*#
+    </div>
+</div>
+
+<script type="text/html" id="interestCouponCurrentStatus">
+	<input type="checkbox" value="{{d.activityId}}" lay-skin="switch" lay-text="正常|停用" lay-filter="interestCouponCurrentStatus" {{ d.activityStatus.code== 'online' ? 'checked' : '' }}>
+</script>
+<script type="text/html" id="interestCouponBar">
+	<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail"><i class="layui-icon">&#xe615;</i>详情</a>
+	<a class="layui-btn layui-btn-xs" lay-event="edit"><i class="layui-icon">&#xe642;</i>编辑</a>
+	<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon">&#xe640;</i>删除</a>
+</script>
+
+<script src="js/coupon/interest_coupon.js"></script>

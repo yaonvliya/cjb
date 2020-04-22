@@ -1,0 +1,266 @@
+{
+  "data": [
+
+    {
+      "menuName": "客户管理",
+      "menuIcon": "&#xe613;",
+      "menuUrl": "",
+      "menuType": "menuGroup",
+      "menuRemark": "",
+      "subMenus": [
+        
+        {
+          "menuName": "客户列表",
+          "menuIcon": "&#xe612;",
+          "menuUrl": "views/user/frozen.html",
+          "menuType": "menuItem",
+          "menuRemark": "",
+          "subMenus": []
+        },
+        {
+          "menuName": "新注册用户",
+          "menuIcon": "&#xe612;",
+          "menuUrl": "views/user/new_register_user.html",
+          "menuType": "menuItem",
+          "menuRemark": "",
+          "subMenus": []
+        }
+      ]
+    },
+    {
+      "menuName": "资方管理",
+      "menuIcon": "&#xe62e;",
+      "menuUrl": "",
+      "menuType": "menuGroup",
+      "menuRemark": "",
+      "subMenus": [
+        {
+          "menuName": "投资方列表",
+          "menuIcon": "&#xe60e;",
+          "menuUrl": "views/finance/invest_record.html",
+          "menuType": "menuItem",
+          "menuRemark": "",
+          "subMenus": []
+        },
+         {
+          "menuName": "投资方登记",
+          "menuIcon": "&#xe60e;",
+          "menuUrl": "views/finance/publish_demand.html",
+          "menuType": "menuItem",
+          "menuRemark": "",
+          "subMenus": []
+        }
+      ]
+    },
+
+    {"menuName": "产品管理",
+      "menuIcon": "&#xe659;",
+      "menuUrl": "",
+      "menuType": "menuGroup",
+      "menuRemark": "",
+      "subMenus": [
+        {
+          "menuName": "产品列表",
+          "menuIcon": "",
+          "menuUrl": "views/finance/demand_template.html",
+          "menuType": "menuItem",
+          "menuRemark": "",
+          "subMenus": []
+        },
+        {
+          "menuName": "产品配置",
+          "menuIcon": "",
+          "menuUrl": "views/finance/demand_draft.html",
+          "menuType": "menuItem",
+          "menuRemark": "",
+          "subMenus": []
+        },
+        {
+          "menuName": "合同配置",
+          "menuIcon": "",
+          "menuUrl": "views/finance/demand_detail.html",
+          "menuType": "menuItem",
+          "menuRemark": "",
+          "subMenus": []
+        }
+      ]
+    },
+    {
+      "menuName": "项目管理",
+      "menuIcon": "&#xe65e;",
+      "menuUrl": "",
+      "menuType": "menuGroup",
+      "menuRemark": "",
+      "subMenus": [
+        {
+          "menuName": "项目列表",
+          "menuIcon": "&#xe756;",
+          "menuUrl": "views/loan/loanApply.html",
+          "menuType": "menuItem",
+          "menuRemark": "",
+          "subMenus": []
+        },
+        {
+          "menuName": "新建项目",
+          "menuIcon": "&#xe756;",
+          "menuUrl": "views/loan/loanUserInfo.html",
+          "menuType": "menuItem",
+          "menuRemark": "",
+          "subMenus": []
+        },
+        {
+          "menuName": "还款计划",
+          "menuIcon": "&#xe756;",
+          "menuUrl": "views/loan/uploadMaterial.html",
+          "menuType": "menuItem",
+          "menuRemark": "",
+          "subMenus": []
+        }
+      ]
+    },
+    {
+      "menuName": "风控管理",
+      "menuIcon": "&#xe65e;",
+      "menuUrl": "",
+      "menuType": "menuGroup",
+      "menuRemark": "",
+      "subMenus": [
+        {
+          "menuName": "尽调企业",
+          "menuIcon": "&#xe756;",
+          "menuUrl": "views/assets/merchant.html",
+          "menuType": "menuItem",
+          "menuRemark": "",
+          "subMenus": []
+        },
+        {
+          "menuName": "风控报告",
+          "menuIcon": "&#xe756;",
+          "menuUrl": "views/assets/credit.html",
+          "menuType": "menuItem",
+          "menuRemark": "",
+          "subMenus": []
+        },
+        {
+          "menuName": "风控调查",
+          "menuIcon": "&#xe756;",
+          "menuUrl": "views/assets/product.html",
+          "menuType": "menuItem",
+          "menuRemark": "",
+          "subMenus": []
+        }
+      ]
+    },
+    {
+      "menuName": "财务管理",
+      "menuIcon": "&#xe659;",
+      "menuUrl": "",
+      "menuType": "menuGroup",
+      "menuRemark": "",
+      "subMenus": [
+        {
+          "menuName": "核销管理",
+          "menuIcon": "",
+          "menuUrl": "views/coupon/cash_coupon.html",
+          "menuType": "menuItem",
+          "menuRemark": "",
+          "subMenus": []
+        },
+        {
+          "menuName": "银行账户管理",
+          "menuIcon": "",
+          "menuUrl": "views/coupon/interest_coupon.html",
+          "menuType": "menuItem",
+          "menuRemark": "",
+          "subMenus": []
+        }
+        ,
+        {
+          "menuName": "资金计划",
+          "menuIcon": "",
+          "menuUrl": "views/coupon/cash_list_coupon.html",
+          "menuType": "menuItem",
+          "menuRemark": "",
+          "subMenus": []
+        }
+      ]
+    },
+    {
+      "menuName": "系统管理",
+      "menuIcon": "&#xe61d;",
+      "menuUrl": "",
+      "menuType": "menuGroup",
+      "menuRemark": "",
+      "subMenus": [
+        {
+          "menuName": "系统参数",
+          "menuIcon": "",
+          "menuUrl": "views/config/sys_param.html",
+          "menuType": "menuItem",
+          "menuRemark": "",
+          "subMenus": []
+        },
+        {
+          "menuName": "短信模板",
+          "menuIcon": "",
+          "menuUrl": "views/config/sms_template.html",
+          "menuType": "menuItem",
+          "menuRemark": "",
+          "subMenus": []
+        },
+        {
+          "menuName": "邮件模板",
+          "menuIcon": "",
+          "menuUrl": "views/config/mail_template.html",
+          "menuType": "menuItem",
+          "menuRemark": "",
+          "subMenus": []
+        },
+        {
+          "menuName": "业务ID模块",
+          "menuIcon": "",
+          "menuUrl": "views/config/bizIdTemplate.html",
+          "menuType": "menuItem",
+          "menuRemark": "",
+          "subMenus": []
+        },
+        {
+          "menuName": "角色管理",
+          "menuIcon": "",
+          "menuUrl": "views/auth/role.html",
+          "menuType": "menuItem",
+          "menuRemark": "",
+          "subMenus": []
+        },
+        {
+          "menuName": "资源管理",
+          "menuIcon": "",
+          "menuUrl": "views/auth/resource.html",
+          "menuType": "menuItem",
+          "menuRemark": "",
+          "subMenus": []
+        },
+        {
+          "menuName": "合同类型",
+          "menuIcon": "",
+          "menuUrl": "views/config/contract_type.html",
+          "menuType": "menuItem",
+          "menuRemark": "",
+          "subMenus": []
+        },
+        {
+          "menuName": "账号管理",
+          "menuIcon": "",
+          "menuUrl": "views/auth/user.html",
+          "menuType": "menuItem",
+          "menuRemark": "",
+          "subMenus": []
+        }
+      ]
+    }
+  ]
+}
+
+
+
+

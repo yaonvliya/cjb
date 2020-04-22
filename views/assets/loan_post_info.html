@@ -1,0 +1,219 @@
+<div class="animated fadeInRight">
+    <div class="search-box">
+        <form class="layui-form inline" id="searchUserLoanPostInfoForm" onsubmit="return false">
+            <div class="basic-search">
+                <div class="common-input-inline">
+                    <label class="search-form-label">用户账号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="safeLoginAccount" class="w200 layui-input" autocomplete="off" placeholder="输入用户账号回车查询">
+                    </div>
+                </div>
+                <div class="common-input-inline">
+                    <label class="search-form-label">用户姓名</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="realname" class="w200 layui-input" autocomplete="off" placeholder="输入用户姓名回车查询">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-btn-group">
+                <button type="button" class="layui-btn layui-btn-primary" id="reloadLoanPostInfo"><i class="layui-icon">&#xe615;</i> 查询</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </form>
+    </div>
+
+    <table id="loanPostInfo" class="layui-hide" lay-filter="loanPostInfo"></table>
+</div>
+
+<div class="right-win animated fadeInRight w700" id="modifyLoanPostInfo">
+    <div class="right-win-top">
+        <a href="javascript:closeLoanPostInfoModelFrame();" title="关闭"><i
+                class="layui-icon close-right-win">&#x1006;</i></a>
+        <span class="right-win-title">贷后管维护</span>
+        <span class="right-win-btn">
+			<button type="button" class="layui-btn" id="loanPostInfoSubmit">
+				<i class="layui-icon">&#xe605;</i>保存
+			</button>
+		</span>
+    </div>
+    <div class="right-win-content-box">
+        <form class="layui-form" enctype="multipart/form-data" id="modifyLoanPostInfoForm" lay-filter="addFaqForm">
+            <button class="hide" type="button" lay-submit lay-filter="loanPostInfoSubmitBtn" id="loanPostInfoSubmitBtn"></button>
+            <input class="layui-input hide" name="userId">
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label w120">借款次数：</label>
+                <div class="layui-input-inline">
+                    <input class="layui-input" name="loanNum" lay-verify=""></input>
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label w120">逾期次数：</label>
+                <div class="layui-input-inline">
+                    <input class="layui-input" name="overdueNum" lay-verify=""></input>
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label w120">逾期总金额：</label>
+                <div class="layui-input-inline">
+                    <input class="layui-input" name="overdueAmount" lay-verify=""></input>
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label w120">经营状况：</label>
+                <div class="layui-input-block">
+                    <textarea class="repayAbility-lawsuitsanction" name="operateCondition" lay-verify=""></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label w120">财务状况：</label>
+                <div class="layui-input-block">
+                    <textarea class="repayAbility-lawsuitsanction" name="financeCondition" lay-verify=""></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label w120">还款能力：</label>
+                <div class="layui-input-block">
+                    <textarea class="repayAbility-lawsuitsanction" name="repayAbility" lay-verify=""></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label w120">涉诉情况：</label>
+                <div class="layui-input-block">
+                    <textarea class="repayAbility-lawsuitsanction" name="lawsuit" lay-verify=""></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label w120">行政处罚：</label>
+                <div class="layui-input-block">
+                    <textarea class="repayAbility-lawsuitsanction" name="sanction" lay-verify=""></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label w150">其它影响还款的情况：</label>
+                <div class="layui-input-block">
+                    <textarea class="repayAbility-lawsuitsanction" name="otherCase" lay-verify=""></textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/html" id="loanPostInfoOperation">
+    <a class="layui-btn layui-btn-xs" lay-event="maintain"><i class="layui-icon">&#xe857;</i>贷后管理维护</a>
+</script>
+
+<script>
+    var searchForm = $('#searchUserLoanPostInfoForm');
+    var modifyForm = $('#modifyLoanPostInfoForm')
+    $(document).ready(function () {
+        var submitUrl = null;
+        var loanPostInfoTable = null;
+
+        $('#reloadLoanPostInfo').click(function () {
+        	var safeLoginAccount = searchForm.find('[name="safeLoginAccount"]').val();
+            var realname = searchForm.find('[name="realname"]').val();
+            loanPostInfoTable  = LayTableUtil.render({
+                elem: '#loanPostInfo'
+                ,cols: [[ //表头
+                    {field: 'loginAccount', title: '用户登录账号', templet: function (d) { return MaskCodeUtil.dealCellphone(d.loginAccount)}}
+                    ,{field: 'realName', title: '用户姓名'}
+                    ,{field: 'openDepositStatus', title: '实名状态', templet: function(d){ return d.openDepositStatus.message}}
+                    ,{field: 'rowAddTime', title: '维护时间', templet: function(d){ return DateUtils.longToDateString(d.rowAddTime)}}
+                    ,{fixed: 'right', align:'center', toolbar: '#loanPostInfoOperation', width: 220}
+                ]]
+                ,url: assetsApi.postInfo.userInfo
+                ,where: {"safeLoginAccount":safeLoginAccount,"realname":realname}
+                ,page: true
+                ,id: 'loanPostInfoTable'
+            });
+        });
+
+        // SearchForm绑定回车事件
+        $("#searchUserLoanPostInfoForm").bind('keypress', function (event) {
+            if (event.keyCode == "13") {
+                $('#reloadLoanPostInfo').click();
+            }
+        });
+
+        //监听工具条
+        laytable.on('tool(loanPostInfo)', function(obj){
+            var data = obj.data;
+            if(obj.event === 'maintain'){
+                openRightWin('modifyLoanPostInfo');
+                submitUrl = assetsApi.postInfo.add;
+                if(data.rowAddTime){
+                    var result = AjaxUtil.ajaxGet(assetsApi.postInfo.get + data.id);
+                    layui.each(result.data, function (k, v) {
+                        var selector = '[name="' + k + '"]';
+                        var elt = modifyForm.find(selector);
+                        elt.val("" + v);
+                    });
+                    if(result.data.overdueAmount){
+                        modifyForm.find('[name="overdueAmount"]').val(result.data.overdueAmount.amount);
+                    }
+                }
+                modifyForm.find('[name="userId"]').val(data.userIdStr);
+            }
+        });
+
+        layform.on('submit(loanPostInfoSubmitBtn)', function(data){
+            var formData = new FormData();
+            layui.each(data.field, function (i, item) {
+                formData.append(i, item);
+            });
+            var result = AjaxUtil.ajaxFormData(submitUrl, formData);
+            if (result.code == "20000") {
+                layer.msg('操作成功', {
+                    time: 1000 //1秒关闭
+                }, function () {
+                    closeLoanPostInfoModelFrame();
+                    LayTableUtil.reload(loanPostInfoTable, 'searchUserLoanPostInfoForm');
+                });
+            } else if(result.code == "40404" || result.code == "40405"){
+                CookieUtil.clearAllCookie();
+                window.location.href = $_GLOBAL.basePath() + '/login';
+            } else {
+                layer.msg(result.message);
+            }
+            return false;
+        });
+
+        $('#loanPostInfoSubmit').click(function () {
+            $('#loanPostInfoSubmitBtn').click();
+        });
+
+        $('.mask').click(function () {
+            closeLoanPostInfoModelFrame();
+        });
+
+        $('.repayAbility-lawsuitsanction').xheditor({
+            tools: 'full',
+            skin: 'default',
+            height:150,
+            upMultiple: true,
+            upImgUrl: "#",
+            upImgExt: "jpg,jpeg,gif,bmp,png",
+            onUpload: insertUploadLoanPostInfo,
+            html5Upload: false
+        });
+    });
+
+    //xhEditor编辑器图片上传回调函数
+    function insertUploadLoanPostInfo(msg) {
+        var _msg = msg.toString();
+        var _picture_name = _msg.substring(_msg.lastIndexOf("/") + 1);
+        var _picture_path = SubstringPostInfo(_msg);
+        var _str = "<input type='checkbox' name='_pictures' value='" + _picture_path + "' checked='checked' onclick='return false'/><label>" + _picture_name + "</label><br/>";
+        $("#xh_editor").append(_msg);
+        $("#uploadList").append(_str);
+    }
+    //处理服务器返回到回调函数的字符串内容,格式是JSON的数据格式.
+    function SubstringPostInfo(s) {
+        return s.substring(s.substring(0, s.lastIndexOf("/")).lastIndexOf("/"), s.length);
+    }
+
+    function closeLoanPostInfoModelFrame() {
+        modifyForm[0].reset();
+        closeRightWin('modifyLoanPostInfo');
+    }
+</script>

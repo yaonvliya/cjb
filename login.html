@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta name="renderer" content="webkit">
+
+	<title>车聚宝金融后台管理系统 -- 登录</title>
+	<!-- 浏览器标签小图标 -->
+	<link rel="shortcut icon" href="img/common/favicon.ico">
+
+	<!-- 齐全的CSS3动画库 -->
+	<link href="css/animate.css" rel="stylesheet">
+	<!-- layui -->
+	<link href="plugins/layui/css/layui.css?v=2.2.45" rel="stylesheet" media="all">
+	<!-- 自定义通用样式 -->
+	<link href="css/style.css" rel="stylesheet">
+	<link href="css/base.css" rel="stylesheet">
+
+</head>
+<body>
+<div class="animated fadeInRight ta-c">
+	<div class="bg-logo"></div>
+	<div class="passwordBox">
+		<form class="layui-form layui-form-pane">
+			<div class="layui-form-item">
+				<label class="layui-form-label">用户名</label>
+				<div class="layui-input-block">
+					<input class="layui-input" type="text" name="userId" id="userId" lay-verify="required"
+						   placeholder="请输入用户名">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">登录密码</label>
+				<div class="layui-input-block">
+					<input class="layui-input" type="password" name="password" id="password" lay-verify="required"
+						   placeholder="请输入登录密码">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">图形验证码</label>
+				<div class="layui-input-inline">
+					<input class="layui-input" type="text" name="imgCode" id="imgCode"
+						   placeholder="请输入图形验证码" maxlength="4">
+				</div>
+				<div class="right-item"><a href="javascript:initCaptcha();" title="看不清？点击换一张！" class="captcha-img">
+					<img id="captchaImg" src=""></a></div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">短信验证码</label>
+				<div class="layui-input-inline">
+					<input class="layui-input" type="text" name="smsCaptcha" id="smsCaptcha" lay-verify="required"
+						   placeholder="请输入短信验证码" maxlength="6">
+				</div>
+				<div class="right-item">
+					<button type="button" class="layui-btn layui-btn-primary w88" id="getMsgBtn">获取验证码</button>
+				</div>
+			</div>
+
+			<button type="button" class="layui-btn w" lay-submit lay-filter="loginBtn">登 录</button>
+			<p class="ta-r p15"><a class="text-muted" href="forgetPwd">忘记密码</a></p>
+		</form>
+	</div>
+</div>
+
+<!-- 基础js -->
+<script src="js/jquery.min.js?v=2.1.4"></script>
+<script src="js/jquery.cookie.js"></script>
+<!-- layui插件 -->
+<script src="plugins/layui/layui.js?v=2.2.45"></script>
+<!-- 配置文件 -->
+<script src="js/host-config.properties.js"></script>
+<!-- 工具类js -->
+<script src="js/base-utils.js"></script>
+<!-- urlAPI -->
+<script src="js/local-api-config.js"></script>
+<!-- layui表单验证扩展js -->
+<script src="js/layui.validata.extends.js"></script>
+<script>
+	var InterValObj, smsFlag = false;
+
+	$(document).ready(function () {
+
+		initCaptcha();
+
+		layui.use(['form', 'layer'], function () {
+			var form = layui.form
+					, layer = layui.layer;
+
+			initLayuiValidataExtends(form);
+
+			//监听提交
+			form.on('submit(loginBtn)', function (data) {
+				if (smsFlag) {
+					var result = AjaxUtil.ajaxPostWithLoading(platformApi.doLogin, JSON.stringify(data.field))
+					if (result) {
+						layer.msg('登录成功', {
+							time: 1000 //1秒关闭
+						}, function () {
+							// 跳转至首页
+							window.location.href = indexApiUrl.index;
+						});
+					}
+				} else {
+					layer.msg('请先获取短信验证码', {icon: 5, anim: 6});
+				}
+				return false;
+			});
+		});
+
+		$("#getMsgBtn").click(function () {
+			// 先验证图形验证码是否正确
+			var userId = $("#userId").val();
+			var imgCode = $("#imgCode").val();
+			if (userId == null || userId == "") {
+				layer.msg("请输入用户名");
+				$("#userId").focus();
+				return;
+			}
+			if (imgCode == null || imgCode == "") {
+				layer.msg('请输入图形验证码', {icon: 5, anim: 6});
+				$("#imgCode").focus();
+				return;
+			}
+
+			// 向后台请求发送短信验证码
+			var result = AjaxUtil.ajaxPost(platformApi.getSmsCaptcha, JSON.stringify({
+				"userId": userId,
+				"imgCode": imgCode,
+				"bizType": "login"
+			}));
+
+			if (result) {
+				smsFlag = true;
+
+				TimerUtil.setRemainTime('getMsgBtn');
+				$('#smsCaptcha').focus();
+			} else {
+				initCaptcha();
+			}
+
+		});
+
+	});
+
+	function initCaptcha() {
+		$('#captchaImg').attr("src", platformApi.getImgCaptcha + "?r=" + Math.random());
+	}
+
+</script>
+</body>
+
+</html>

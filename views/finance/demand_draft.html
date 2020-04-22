@@ -1,0 +1,65 @@
+<div class="animated fadeInRight">
+	<div class="search-box">
+		<form class="layui-form" id="demandDraftSearchForm">
+			<div class="basic-search">
+				<div class="common-input-inline">
+					<label class="search-form-label">标的名称：</label>
+					<div class="layui-input-inline">
+						<input class="layui-input" name="demandName">
+					</div>
+				</div>
+			</div>
+            <div class="basic-search">
+                <div class="common-input-inline">
+                    <label class="search-form-label">商户名称：</label>
+                    <div class="layui-input-inline">
+                        <input class="layui-input" name="loanMerchantName">
+                    </div>
+                </div>
+            </div>
+            <div class="basic-search">
+                <div class="common-input-inline">
+                    <label class="search-form-label">借款用户名称：</label>
+                    <div class="layui-input-inline">
+                        <input class="layui-input" name="loanUserName">
+                    </div>
+                </div>
+            </div>
+			<div class="layui-btn-group">
+				<button type="button" class="layui-btn layui-btn-primary" id="reloadDemandDraft"><i class="layui-icon">&#xe615;</i> 查询</button>
+				<button class="layui-btn layui-btn-primary" type="reset">重置</button>
+			</div>
+		</form>
+	</div>
+
+	<table id="demandDraft" class="layui-hide" lay-filter="demandDraft"></table>
+</div>
+
+<div class="right-win animated fadeInRight w1000" id="demandDraftDiv">
+    <div class="right-win-top">
+        <a href="javascript:closeDemandDraftModelFrame();" title="关闭"><i
+                class="layui-icon close-right-win">&#x1006;</i></a>
+        <span class="right-win-title">融资发布</span>
+        <span class="right-win-btn">
+            <button type="button" class="layui-btn" id="demandDraftToLaunchBtn">
+				<i class="layui-icon">&#xe609;</i>发布
+			</button>
+			<button type="button" class="layui-btn" id="demandDraftToSaveDraftBtn">
+				<i class="layui-icon">&#xe60a;</i>保存
+			</button>
+            <button type="button" class="layui-btn" id="demandDraftLoanFailBtn">
+				<i class="layui-icon">&#xe6c5;</i>流标
+			</button>
+		</span>
+    </div>
+    <div class="right-win-content-box" id="demandDraftDemandDetail">
+
+    </div>
+</div>
+
+<script type="text/html" id="demandDraftOperation">
+##    <a class="layui-btn layui-btn-xs" lay-event="launch"><i class="layui-icon">&#xe609;</i>立即发布</a>
+	<a class="layui-btn layui-btn-xs" lay-event="detail"><i class="layui-icon">&#xe609;</i>查看并发布</a>
+	<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon">&#xe640;</i>删除</a>
+</script>
+<script src="js/finance/demand_draft.js"></script>

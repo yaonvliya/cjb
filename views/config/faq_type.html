@@ -1,0 +1,99 @@
+<div class="animated fadeInRight">
+	<div class="search-box">
+		<form class="layui-form inline" id="searchFaqTypeList" lay-filter="searchFaqTypeForm">
+			<div class="basic-search">
+				<div class="common-input-inline">
+					<label class="search-form-label">问题类型名称</label>
+					<div class="layui-input-inline">
+						<input type="text" name="faqTypeName" class="layui-input">
+					</div>
+				</div>
+				<div class="common-input-inline">
+					<label class="search-form-label">状态</label>
+					<div class="layui-input-inline">
+						<select name="faqTypeStatus" class="layui-input">
+							<option value=''>全部</option>
+							<option value='online'>正常</option>
+							<option value='offline'>停用</option>
+						</select>
+					</div>
+				</div>
+				<div class="common-input-inline">
+					<label class="search-form-label">模块</label>
+					<div class="layui-input-inline">
+						<select name="faqModule" class="layui-input">
+							<option value=''>全部</option>
+							<option value='common'>公共问题</option>
+                            <option value='finance'>资金问题</option>
+                            <option value='assets'>资产问题</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="layui-btn-group">
+				<button type="button" class="layui-btn layui-btn-primary" id="reloadFaqType"><i class="layui-icon">&#xe615;</i> 查询</button>
+				<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+				<button type="button" class="layui-btn" id="addFaqTypeBtn"><i class="layui-icon">&#xe654;</i> 新增</button>
+			</div>
+		</form>
+	</div>
+
+	<table id="faqType" class="layui-hide" lay-filter="faqType"></table>
+</div>
+
+<form class="layui-form p10 hide w460" lay-filter="addFaqTypeForm" id="faqTypeForm">
+    <input class="layui-input hide" name="faqTypeId" autocomplete="off">
+    <div class="layui-form-item">
+        <div class="layui-block">
+            <label class="layui-form-label">问题模块：</label>
+            <div class="layui-input-block">
+                <select lay-verify="required" name="faqModule">
+                    <option value=''>请选择</option>
+                    <option value='common'>公共问题</option>
+                    <option value='finance'>资金问题</option>
+                    <option value='assets'>资产问题</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-block">
+            <label class="layui-form-label">类型名称：</label>
+            <div class="layui-input-block">
+                <input class="layui-input" lay-verify="required" name="faqTypeName">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-block">
+            <label class="layui-form-label">状态：</label>
+            <div class="layui-input-block">
+                <input type="text" hidden name="faqTypeStatus" value="online" id="addFaqTypeStatus">
+                <input type="radio" name="faqTypeStatusTemp" lay-filter="faqTypeStatusFilter" value="online" title="正常" checked>
+                <input type="radio" name="faqTypeStatusTemp" lay-filter="faqTypeStatusFilter" value="offline" title="停用">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-block">
+            <label class="layui-form-label">显示顺序：</label>
+            <div class="layui-input-block">
+                <input type="number" class="layui-input" lay-verify="required" name="sortValue">
+            </div>
+        </div>
+    </div>
+    <div class="bottom-buttons">
+        <button type="reset" class="layui-btn">重置</button>
+        <button class="layui-btn" lay-submit="" lay-filter="faqTypeFormSubmit" id="faqTypeSubmit">确认提交</button>
+    </div>
+</form>
+
+<script type="text/html" id="faqTypeOperation">
+	<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail"><i class="layui-icon">&#xe615;</i>详情</a>
+	<a class="layui-btn layui-btn-xs" lay-event="edit"><i class="layui-icon">&#xe642;</i>编辑</a>
+	<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon">&#xe640;</i>删除</a>
+</script>
+<script type="text/html" id="faqTypeStatusTpl">
+    <input type="checkbox" value="{{d.faqTypeId}}" lay-skin="switch" lay-text="正常|停用" lay-filter="faqTypeStatusTpl" {{ d.faqTypeStatus.code== 'online' ? 'checked' : '' }}>
+</script>
+<script src="js/message/faq_type.js"></script>

@@ -1,0 +1,172 @@
+<div class="animated fadeInRight">
+    <div class="search-box">
+        <form class="layui-form" id="loanUserInfoSearchForm" lay-filter="loanUserInfoSearchForm">
+            <div class="basic-search">
+                <div class="common-input-inline"><label class="search-form-label">用户姓名：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" name="userName">
+                    </div>
+                </div>
+                <div class="common-input-inline"><label class="search-form-label">用户登录账号：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" name="safeLoginAccount">
+                    </div>
+                </div>
+                <div class="common-input-inline"><label class="search-form-label">审核状态：</label>
+                    <div class="layui-input-inline">
+                        <select name="auditStatus">
+                            <option value=""></option>
+                            <option value="auditing" selected>审核中</option>
+                            <option value="pass">审核通过</option>
+                            <option value="reject">审核驳回</option>
+                            <option value="expire">到期</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-btn-group">
+                <button type="button" class="layui-btn layui-btn-primary" id="loanUserInfoSearch"><i class="layui-icon">&#xe615;</i>
+                    查询
+                </button>
+                <button class="layui-btn layui-btn-primary" type="reset">重置</button>
+                <button type="button" class="layui-btn" id="downloadLoanUserInfoDetail">
+                    <i class="layui-icon">&#xe601;</i>下载数据
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <table id="loanUserInfo" lay-filter="loanUserInfo"></table>
+</div>
+
+<div class="right-win animated fadeInRight" id="loanUserInfoModel">
+    <div class="right-win-top">
+        <a href="javascript:closeRightWin('loanUserInfoModel');" title="关闭"><i
+                class="layui-icon close-right-win">&#x1006;</i></a>
+        <span class="right-win-title">查看借款资料</span>
+    </div>
+    <div class="right-win-content-box">
+        <input class="hide" type="button" id="luiDrivingLicenseImg">
+        <form class="layui-form" id="loanUserInfoForm" lay-filter="loanUserInfoForm">
+            <div class="layui-form-item">
+                <label class="layui-form-label w150">用户登录账号</label>
+                <div class="layui-input-inline">
+                    <span name="showLoginAccount" autocomplete="off" class="layui-form-mid w300"></span>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label w150">用户名</label>
+                <div class="layui-input-inline">
+                    <span type="text" name="userName" autocomplete="off" class="layui-form-mid w300"></span>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label w150">用户/法人身份证号</label>
+                <div class="layui-input-inline">
+                    <span name="certNo" autocomplete="off" class="layui-form-mid w300"></span>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label w150">法人姓名</label>
+                <div class="layui-input-inline">
+                    <span type="text" name="legalName" autocomplete="off" class="layui-form-mid w300"></span>
+                </div>
+            </div>
+        #*<div class="layui-form-item">
+            <label class="layui-form-label w150">身份证到期时间</label>
+            <div class="layui-input-inline">
+                <span type="text" name="certCardExpireTime" autocomplete="off" class="layui-form-mid"></span>
+            </div>
+        </div>*#
+            <div class="businessInfo" hidden>
+            #*<div class="layui-form-item">
+                <label class="layui-form-label w150">企业营业执照到期时间</label>
+                <div class="layui-input-inline">
+                    <span type="text" name="businessLicenseExpireTime" autocomplete="off" class="layui-form-mid"></span>
+                </div>
+            </div>*#
+                <div class="layui-form-item">
+                    <label class="layui-form-label w150">企业经营范围</label>
+                    <div class="layui-input-inline">
+                        <span type="text" name="operateScope" autocomplete="off" class="layui-form-mid"></span>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label w150">企业经营状况</label>
+                    <div class="layui-input-inline">
+                        <span type="text" name="operateStatus" autocomplete="off" class="layui-form-mid"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label w150">证件照片</label>
+                <div id="userLoanInfoImg" class="layui-input-block"></div>
+            </div>
+            <div class="layui-form-item hide">
+                <label class="layui-form-label w150">行驶证</label>
+                <div id="drivingLicenseImgUrl" class="layui-input-block"></div>
+            </div>
+            <div class="layui-form-item hide">
+                <label class="layui-form-label w150">驾驶证/挂靠协议</label>
+                <div id="auditDriverLicenseImg" class="layui-input-block"></div>
+            </div>
+            <div class="layui-form-item hide">
+                <label class="layui-form-label w150">道路运输经营许可证</label>
+                <div id="auditRoadTransportLicense" class="layui-input-block"></div>
+            </div>
+            <div class="layui-form-item hide">
+                <label class="layui-form-label w150">法人征信报告</label>
+                <div id="auditLegalPersonCreditReporting" class="layui-input-block"></div>
+            </div>
+            <div class="layui-form-item hide">
+                <label class="layui-form-label w150">企业征信报告</label>
+                <div id="auditEnterpriseCreditReporting" class="layui-input-block"></div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label w150">运输合同</label>
+                <div id="auditTransportContract" class="layui-input-block"></div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label w150">状态</label>
+                <div class="layui-input-inline">
+                    <span type="text" name="auditStatus" autocomplete="off" class="layui-form-mid"></span>
+                </div>
+            </div>
+
+            <div id="loanUserInfoFormButton" class="bottom-buttons">
+                <button id="loanUserInfoAuditPass" lay-submit lay-filter="loanUserInfoAuditPass" class="layui-btn"
+                        type="button">通过
+                </button>
+                <button id="loanUserInfoAuditReject" class="layui-btn layui-btn-danger" type="button">驳回</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<form class="layui-form p10 hide" id="loanUserInfoAuditRejectForm" lay-filter="loanUserInfoAuditRejectForm">
+    <div class="layui-form-item">
+        <label class="layui-form-label">驳回原因</label>
+        <div class="layui-input-inline">
+            <textarea name="rejectReason" class="layui-textarea" lay-verify="required" maxlength="15"></textarea>
+        </div>
+    </div>
+    <div class="bottom-buttons">
+        <button class="layui-btn" lay-submit lay-filter="loanUserInfoAuditRejectSubmit" type="button">提交</button>
+    </div>
+</form>
+
+
+<script type="text/html" id="loanUserInfoBar">
+    <div class="fl">
+        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail"><i class="layui-icon">&#xe615;</i>详情</a>
+        {{# if(d.auditStatus.code == "auditing" && d.auditor != d.currentUser){ }}
+        <a class="layui-btn layui-btn-xs" lay-event="audit"><i class="layui-icon">&#xe642;</i>审核</a>
+        {{# } }}
+        {{# if(d.auditStatus.code == "auditing" && d.auditor == d.currentUser){ }}
+        <a class="layui-btn layui-btn-xs layui-btn-disabled" ><i class="layui-icon">&#xe642;</i>审核</a>
+        {{# } }}
+    </div>
+</script>
+
+<script src="js/loan/loanUserInfo.js"></script>

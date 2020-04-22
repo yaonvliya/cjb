@@ -1,0 +1,257 @@
+<style type="text/css">
+	#setSignPositionForm .layui-input-inline{
+		width: 80px;
+	}
+</style>
+
+<div class="animated fadeInRight">
+	<div class="search-box">
+		<form class="layui-form inline" lay-filter="searchContractTemplateForm" id="searchContractTemplateForm">
+			<div class="basic-search">
+                <div class="common-input-inline">
+                    <label class="search-form-label">模版名称</label>
+                    <div class="layui-input-inline">
+                        <input class="layui-input" name="contractTemplateName" autocomplete="off">
+                    </div>
+                </div>
+                <div class="common-input-inline">
+                    <label class="search-form-label">模板ID</label>
+                    <div class="layui-input-inline">
+                        <input class="layui-input" name="contractTemplateId" autocomplete="off">
+                    </div>
+                </div>
+                <div class="common-input-inline">
+                    <label class="search-form-label">状态</label>
+                    <div class="layui-input-inline">
+                        <select name="contractTemplateStatus">
+                            <option value=""></option>
+                            <option value="online">正常</option>
+                            <option value="offline">停用</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="common-input-inline">
+                    <label class="search-form-label">类型代码</label>
+                    <div class="layui-input-inline">
+                        <input class="layui-input" name="contractTypeCode" autocomplete="off">
+                    </div>
+                </div>
+            </div>
+			<div class="layui-btn-group">
+				<button type="button" class="layui-btn layui-btn-primary" id="reloadContractTemplate"><i class="layui-icon">&#xe615;</i> 查询</button>
+				<button class="layui-btn layui-btn-primary" type="reset">重置</button>
+				<button type="button" class="layui-btn" id="addContractTemplateBtn"><i class="layui-icon">&#xe654;</i> 新增</button>
+			</div>
+		</form>
+	</div>
+
+	<table id="contractTemplate" class="layui-hide" lay-filter="contractTemplate"></table>
+</div>
+
+<div class="right-win animated fadeInRight" id="addContractTemplate">
+	<div class="right-win-top">
+		<a href="javascript:closeContracTemplateModelFrame();" title="关闭"><i
+				class="layui-icon close-right-win">&#x1006;</i></a>
+		<span class="right-win-title" id="addModalContractTemplateTitle"></span>
+		<span class="right-win-btn">
+			<button type="button" class="layui-btn" id="contractTemplateSubmit">
+				<i class="layui-icon">&#xe605;</i>保存
+			</button>
+		</span>
+	</div>
+	<div class="right-win-content-box">
+		<form class="layui-form" enctype="multipart/form-data" id="addContractTemplateForm"
+			  lay-filter="addContractTemplateForm">
+			<button class="hide" type="button" lay-submit lay-filter="addContractTemplateSubmit"
+					id="contractTemplateSubmitBtn"></button>
+			<input class="layui-input hide" name="contractTemplateId" autocomplete="off">
+            <div class="layui-form-item">
+                <label class="layui-form-label">产品类型：</label>
+                <div class="layui-input-inline">
+                    <input class="layui-input hide" id="contractProductTypeName" name="productTypeName" autocomplete="off">
+                    <select id="contractProductTypeId" name="productTypeId" lay-filter="contractProductTypeId" lay-verify="required" class="layui-input">
+                        <option value=""></option>
+                    </select>
+                </div>
+            </div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">合同类型：</label>
+				<div class="layui-input-inline">
+					<select lay-filter="contractTypeScope">
+						<option value=""></option>
+						<option value="assets">资产</option>
+						<option value="finance">资金</option>
+					</select>
+				</div>
+				<div class="layui-input-inline">
+					<select id="addContractTempSelectContractType" lay-filter="addContractTempSelectContractType">
+						<option value=""></option>
+					</select>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">业务按钮：</label>
+				<div class="layui-input-block layui-btn-container" id="contractTempLoadMsg">
+					<div class="layui-input-inline">
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item layui-form-text">
+				<label class="layui-form-label">模版内容：</label>
+				<div class="layui-input-block">
+                    <textarea id="contractTemplateContent" name="contractTemplateContent"
+							  lay-verify="contact"></textarea>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">模版名称：</label>
+				<div class="layui-input-inline">
+					<input class="layui-input" lay-verify="required" name="contractTemplateName" autocomplete="off">
+				</div>
+				<label class="layui-form-label">文件名称：</label>
+				<div class="layui-input-inline">
+					<input class="layui-input" lay-verify="required" name="contractFileName" autocomplete="off">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">合同状态：</label>
+				<div class="layui-inline">
+					<input type="text" hidden name="contractTemplateStatus" value="online" id="addContractTemplateStatus">
+                    <input type="radio" name="contractTemplateStatusTemp" lay-filter="contractTemplateStatusFilter" value="online" title="正常" checked>
+                    <input type="radio" name="contractTemplateStatusTemp" lay-filter="contractTemplateStatusFilter" value="offline" title="停用">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">类型代码：</label>
+				<div class="layui-input-inline">
+					<input class="layui-input" placeholder="选择合同类型自动补录" id="addContractTempContractTypeCode"
+						   lay-verify="required" name="contractTypeCode" readonly>
+				</div>
+				<label class="layui-form-label">类型名称：</label>
+				<div class="layui-input-inline">
+					<input class="layui-input" placeholder="选择合同类型自动补录" id="addContractTempContractTypeName"
+						   lay-verify="required" name="contractTypeName" readonly>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+<form class="layui-form p10 hide" lay-filter="setSignPositionForm" id="setSignPositionForm">
+    <input class="layui-input" type="hidden" id="contractTemplateId" name="contractTemplateId">
+    <div class="layui-form-item">
+        <label class="layui-form-label w100">签章角色：</label>
+        <div class="layui-input-block">
+            <label class="layui-form-label w10"></label>
+            <input title="甲方" name="signRole" lay-filter="firstCheckbox" type="checkbox" checked>
+            <input title="乙方" name="signRole" lay-filter="secondCheckbox" type="checkbox" checked>
+            <input title="丙方" name="signRole" lay-filter="thirdCheckbox" type="checkbox" checked>
+            <input title="丁方" name="signRole" lay-filter="fourthCheckbox" type="checkbox" checked>
+        </div>
+    </div>
+    <div id="firstDiv">
+        <div class="layui-form-item">
+            <label class="layui-form-label w100">甲方坐标：</label>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label w100"></label>
+            <div class="layui-inline">
+                <label class="layui-form-label w60">页码：</label>
+                <div class="layui-input-inline">
+                    <input type="number" class="layui-input" lay-verify="required" name="firstPagenum">
+                </div>
+                <label class="layui-form-label w60">X坐标：</label>
+                <div class="layui-input-inline">
+                    <input type="number" class="layui-input" lay-verify="required" name="firstX">
+                </div>
+                <label class="layui-form-label w60">Y坐标：</label>
+                <div class="layui-input-inline">
+                    <input type="number" class="layui-input" lay-verify="required" name="firstY">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="secondDiv">
+        <div class="layui-form-item">
+            <label class="layui-form-label w100">乙方坐标：</label>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label w100"></label>
+            <div class="layui-inline">
+                <label class="layui-form-label w60">页码：</label>
+                <div class="layui-input-inline">
+                    <input type="number" class="layui-input" lay-verify="required" name="secondPagenum">
+                </div>
+                <label class="layui-form-label w60">X坐标：</label>
+                <div class="layui-input-inline">
+                    <input type="number" class="layui-input" lay-verify="required" name="secondX">
+                </div>
+                <label class="layui-form-label w60">Y坐标：</label>
+                <div class="layui-input-inline">
+                    <input type="number" class="layui-input" lay-verify="required" name="secondY">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="thirdDiv">
+        <div class="layui-form-item">
+            <label class="layui-form-label w100">丙方坐标：</label>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label w100"></label>
+            <div class="layui-inline">
+                <label class="layui-form-label w60">页码：</label>
+                <div class="layui-input-inline">
+                    <input type="number" class="layui-input" lay-verify="required" name="thirdPagenum">
+                </div>
+                <label class="layui-form-label w60">X坐标：</label>
+                <div class="layui-input-inline">
+                    <input type="number" class="layui-input" lay-verify="required" name="thirdX">
+                </div>
+                <label class="layui-form-label w60">Y坐标：</label>
+                <div class="layui-input-inline">
+                    <input type="number" class="layui-input" lay-verify="required" name="thirdY">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="fourthDiv">
+        <div class="layui-form-item">
+            <label class="layui-form-label w100">丁方坐标：</label>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label w100"></label>
+            <div class="layui-inline">
+                <label class="layui-form-label w60">页码：</label>
+                <div class="layui-input-inline">
+                    <input type="number" class="layui-input" lay-verify="required" name="fourthPagenum">
+                </div>
+                <label class="layui-form-label w60">X坐标：</label>
+                <div class="layui-input-inline">
+                    <input type="number" class="layui-input" lay-verify="required" name="fourthX">
+                </div>
+                <label class="layui-form-label w60">Y坐标：</label>
+                <div class="layui-input-inline">
+                    <input type="number" class="layui-input" lay-verify="required" name="fourthY">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-buttons">
+        <button type="button" onclick="resetSignPositionForm()" class="layui-btn">重置</button>
+        <button class="layui-btn" lay-submit="setSignPositionFormSubmit" lay-filter="setSignPositionFormSubmit">确认提交</button>
+    </div>
+</form>
+
+<script type="text/html" id="contractTemplateOperation">
+    <a class="layui-btn layui-btn-xs" lay-event="preview">合同预览</a>
+	<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail"><i class="layui-icon">&#xe615;</i>详情</a>
+	<a class="layui-btn layui-btn-xs" lay-event="edit"><i class="layui-icon">&#xe642;</i>编辑</a>
+	<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon">&#xe640;</i>删除</a>
+    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="setSignPosition"><i class="layui-icon">&#xe631;</i>签章坐标设置</a>
+</script>
+<script type="text/html" id="contractTemplateStatusTpl">
+    <input type="checkbox" value="{{d.contractTemplateId}}" lay-skin="switch" lay-text="正常|停用" lay-filter="contractTemplateStatusTpl" {{ d.contractTemplateStatus.code== 'online' ? 'checked' : '' }}>
+</script>
+<script src="js/message/contract_template.js"></script>

@@ -1,0 +1,475 @@
+<div class="animated fadeInRight">
+	<div class="search-box">
+		<form class="layui-form" lay-filter="searchTradeForm" id="tradeSearchForm">
+			<div class="basic-search">
+				<div class="common-input-inline">
+					<label class="search-form-label">交易名称：</label>
+					<div class="layui-input-inline">
+						<input class="layui-input" name="tradeName" autocomplete="off"/>
+					</div>
+				</div>
+				<div class="common-input-inline">
+					<label class="search-form-label">标的类型：</label>
+					<div class="layui-input-inline">
+						<select name="riskLevel" class="layui-input">
+							<option value=''>全部</option>
+							<option value='保守型'>保守型</option>
+							<option value='稳健型'>稳健型</option>
+							<option value='成长型'>成长型</option>
+							<option value='进取型'>进取型</option>
+						</select>
+					</div>
+				</div>
+				<div class="common-input-inline">
+					<label class="search-form-label">交易状态：</label>
+					<div class="layui-input-inline">
+						<select name="tradeStatusArray" class="layui-input">
+							<option value=''>全部</option>
+							<option value='collecting'>筹标中</option>
+                            <option value='full_collected'>已满标</option>
+							<option value='grant_processing'>放款处理中</option>
+							<option value='wait_repay'>待还款</option>
+							<option value='repay_processing'>还款处理中</option>
+                            <option value='abort_processing'>流标处理中</option>
+							<option value='aborted'>已流标</option>
+							<option value='finished'>交易完成</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="more-search">
+				<div class="common-input-inline">
+					<label class="search-form-label">融资金额：</label>
+					<div class="layui-input-inline">
+						<input type="number" name="loanAmountLeftRange" class="layui-input  dp-il">
+						<span>—</span>
+						<input type="number" name="loanAmountRightRange" class="layui-input  dp-il">
+						<span>元&nbsp;&nbsp;</span>
+					</div>
+				</div>
+				<div class="common-input-inline">
+					<label class="search-form-label">交易创建时间：</label>
+					<div class="layui-input-inline">
+						<input class="layui-input dp-il" name="tradeCreateTimeLeftRange"
+							   id="tradeCreateTimeLeftRangeSearch" autocomplete="off"/>
+						<span>—</span>
+						<input class="layui-input dp-il" name="tradeCreateTimeRightRange"
+							   id="tradeCreateTimeRightRangeSearch" autocomplete="off"/>
+					</div>
+				</div>
+			</div>
+			<div class="layui-btn-group">
+				<button class="layui-btn layui-btn-primary" type="button" id="queryTradeBtn"><i class="layui-icon">&#xe615;</i>
+					查询
+				</button>
+				<button class="layui-btn layui-btn-primary" type="reset">重置</button>
+				<button type="button" class="layui-btn layui-btn-primary" data-show="off"
+						onclick="showMoreSearch(this,'tradeSearchForm')"><i class="layui-icon">&#xe61a;</i> 更多
+			</div>
+		</form>
+	</div>
+
+	<table id="trade" class="layui-hide" lay-filter="trade"></table>
+</div>
+
+<div class="right-win animated fadeInRight w1000" id="tradeModule">
+	<div class="right-win-top">
+		<a href="javascript:closeRightWin('tradeModule');" title="关闭"><i
+				class="layui-icon close-right-win">&#x1006;</i></a>
+		<span class="right-win-title">交易详情</span>
+	</div>
+	<div class="right-win-content-box">
+		<form class="layui-form" lay-filter="tradeDetailForm" id="tradeDetailForm">
+			<div class="layui-form-item">
+				<div class="layui-block">
+					<label class="layui-form-label w160">交易流水：</label>
+					<div class="layui-input-inline">
+						<span class="layui-form-mid" name="tradeId"></span>
+					</div>
+					<label class="layui-form-label w160">交易名称：</label>
+					<div class="layui-input-inline wa">
+						<span class="layui-form-mid" name="tradeName"></span>
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-block">
+					<label class="layui-form-label w160">融资标的编号：</label>
+					<div class="layui-input-inline">
+						<span class="layui-form-mid" name="demandId"></span>
+					</div>
+					<label class="layui-form-label w160">借款申请ID：</label>
+					<div class="layui-input-inline wa">
+						<span class="layui-form-mid" name="loanApplyId"></span>
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-block">
+					<label class="layui-form-label w160">融资用户ID：</label>
+					<div class="layui-input-inline">
+						<span class="layui-form-mid" name="loanUserId"></span>
+					</div>
+					<label class="layui-form-label w160">融资用户姓名：</label>
+					<div class="layui-input-inline wa">
+						<span class="layui-form-mid" name="loanUserName"></span>
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-block">
+					<label class="layui-form-label w160">融资商户ID：</label>
+					<div class="layui-input-inline">
+						<span class="layui-form-mid" name="loanMerchantId"></span>
+					</div>
+					<label class="layui-form-label w160">融资商户名称：</label>
+					<div class="layui-input-inline wa">
+						<span class="layui-form-mid" name="loanMerchantName"></span>
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-block">
+					<label class="layui-form-label w160">融资金额：</label>
+					<div class="layui-input-inline">
+						<span class="layui-form-mid" name="loanAmount"></span>
+					</div>
+					<label class="layui-form-label w160">融资用途：</label>
+					<div class="layui-input-inline wa">
+						<span class="layui-form-mid" name="loanPurpose"></span>
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-block">
+					<label class="layui-form-label w160">融资期限：</label>
+					<div class="layui-input-inline">
+						<span class="layui-form-mid" name="loanTerm"></span>
+					</div>
+					<label class="layui-form-label w160">还款方式：</label>
+					<div class="layui-input-inline wa">
+						<span class="layui-form-mid" name="repayMethod"></span>
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-block">
+					<label class="layui-form-label w160">预期年化收益率：</label>
+					<div class="layui-input-inline">
+						<span class="layui-form-mid" name="tradeInterestRate"></span>
+					</div>
+					<label class="layui-form-label w160">起投金额：</label>
+					<div class="layui-input-inline wa">
+						<span class="layui-form-mid" name="singleMinAmount"></span>
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-block">
+					<label class="layui-form-label w160">单笔投资限额：</label>
+					<div class="layui-input-inline">
+						<span class="layui-form-mid" name="singleMaxAmount"></span>
+					</div>
+					<label class="layui-form-label w160">递增金额：</label>
+					<div class="layui-input-inline wa">
+						<span class="layui-form-mid" name="singleIncrAmount"></span>
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-block">
+					<label class="layui-form-label w160 hide">是否支持自动投标：</label>
+					<div class="layui-input-inline hide">
+						<span class="layui-form-mid" name="autoInvestSwitch"></span>
+					</div>
+					<label class="layui-form-label w160">是否支持债权转让：</label>
+					<div class="layui-input-inline wa">
+						<span class="layui-form-mid" name="transferSwitch"></span>
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-block">
+					<label class="layui-form-label w160">是否支持代金券：</label>
+					<div class="layui-input-inline">
+						<span class="layui-form-mid" name="cashCouponSwitch"></span>
+					</div>
+					<label class="layui-form-label w160">是否支持加息券：</label>
+					<div class="layui-input-inline wa">
+						<span class="layui-form-mid" name="interestCouponSwitch"></span>
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-block">
+					<label class="layui-form-label w160">是否定向融资：</label>
+					<div class="layui-input-inline">
+						<span class="layui-form-mid" name="investDirectFlag"></span>
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-block">
+					<label class="layui-form-label w160">起投时间：</label>
+					<div class="layui-input-inline">
+						<span class="layui-form-mid" name="investBeginTime"></span>
+					</div>
+					<label class="layui-form-label w160">投资截止时间：</label>
+					<div class="layui-input-inline wa">
+						<span class="layui-form-mid" name="investDeadline"></span>
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-block">
+					<label class="layui-form-label w160">风险等级：</label>
+					<div class="layui-input-inline">
+						<span class="layui-form-mid" name="riskLevel"></span>
+					</div>
+					<label class="layui-form-label w160">投资天数：</label>
+					<div class="layui-input-inline wa">
+						<span class="layui-form-mid" name="investDays"></span>
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-block">
+					<label class="layui-form-label w160">已募集金额：</label>
+					<div class="layui-input-inline">
+						<span class="layui-form-mid" name="collectedAmount"></span>
+					</div>
+					<label class="layui-form-label w160">交易状态：</label>
+					<div class="layui-input-inline wa">
+						<span class="layui-form-mid" name="tradeStatus"></span>
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-block">
+					<label class="layui-form-label w160">创建时间：</label>
+					<div class="layui-input-inline">
+						<span class="layui-form-mid" name="tradeCreateTime"></span>
+					</div>
+					<label class="layui-form-label w160">满标时间：</label>
+					<div class="layui-input-inline wa">
+						<span class="layui-form-mid" name="tradeFullTime"></span>
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-block">
+					<label class="layui-form-label w160">交易放款时间：</label>
+					<div class="layui-input-inline">
+						<span class="layui-form-mid" name="tradeGrantTime"></span>
+					</div>
+					<label class="layui-form-label w160">交易完成时间：</label>
+					<div class="layui-input-inline wa">
+						<span class="layui-form-mid" name="tradeFinishTime"></span>
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-block">
+					<label class="layui-form-label w160">流标时间：</label>
+					<div class="layui-input-inline">
+						<span class="layui-form-mid" name="tradeAbortTime"></span>
+					</div>
+					<label class="layui-form-label w160">流标原因：</label>
+					<div class="layui-input-inline wa">
+						<span class="layui-form-mid" name="tradeAbortReason"></span>
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-block">
+					<label class="layui-form-label w160">放款审核人用户编码：</label>
+					<div class="layui-input-inline">
+						<span class="layui-form-mid" name="grantAuditUserId"></span>
+					</div>
+					<label class="layui-form-label w160">放款审核人姓名：</label>
+					<div class="layui-input-inline wa">
+						<span class="layui-form-mid" name="grantAuditUserName"></span>
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-block">
+					<label class="layui-form-label w160">放款审核时间：</label>
+					<div class="layui-input-inline">
+						<span class="layui-form-mid" name="grantAuditTime"></span>
+					</div>
+					<label class="layui-form-label w160">放款审核说明：</label>
+					<div class="layui-input-inline wa">
+						<span class="layui-form-mid" name="grantAuditDesc"></span>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+
+<script type="text/html" id="tradeOperation">
+	<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail"><i class="layui-icon">&#xe615;</i>详情</a>
+	<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="investDetail"><i class="layui-icon">&#xe615;</i>投资明细</a>
+	<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="rebuildContract"><i class="layui-icon">&#xe615;</i>重新生成合同</a>
+</script>
+
+<script type="text/html" id="topSwitchTpl">
+    <input type="checkbox" name="topSwitch" value="{{d.tradeId}}" title="置顶" lay-filter="topSwitch" {{ d.topSwitch ? 'checked' : '' }}>
+</script>
+
+<script type="text/javascript">
+	var cashWin;
+	var tradeDetailForm = $('#tradeDetailForm');
+	$(document).ready(function () {
+		layform.render(null, 'searchTradeForm');
+
+		var tradeTable = LayTableUtil.render({
+			elem: '#trade'
+			, cols: [[
+				{field: 'tradeName', title: '交易名称', width: 165}
+				, {
+					field: 'tradeCreateTime', title: '交易创建时间', width: 170, templet: function (d) {
+						return DateUtils.longToDateString(d.tradeCreateTime)
+					}
+				}
+				, {
+					field: 'tradeFullTime', title: '满标时间', width: 170, templet: function (d) {
+						return DateUtils.longToDateString(d.tradeFullTime)
+					}
+				}
+				, {
+					field: 'tradeGrantTime', title: '放款时间', width: 170, templet: function (d) {
+						return DateUtils.longToDateString(d.tradeGrantTime)
+					}
+				}
+				, {
+					field: 'tradeFinishTime', title: '到期时间', width: 170, templet: function (d) {
+                        if(d.tradeStatus.code == "wait_repay" || d.tradeStatus.code == "finished"){
+                            return DateUtils.longToDateString(d.tradeEndDate)
+                        } else {
+                            return "";
+                        }
+					}
+				}
+				, {
+					field: 'loanAmount', title: '申请融资金额(元)', width: 140, align: 'right', templet: function (d) {
+						return MoneyUtil.formatMoney(d.loanAmount.amount)
+					}
+				}
+				, {
+					field: 'collectedAmount', title: '实际融资金额(元)', width: 140, align: 'right', templet: function (d) {
+						return MoneyUtil.formatMoney(d.collectedAmount.amount)
+					}
+				}
+				, {
+					field: 'tradeStatus', title: '交易状态', width: 100, templet: function (d) {
+						return d.tradeStatus.message
+					}
+				}
+                , {field: 'topSwitch', title: '是否置顶', width: 110, templet: '#topSwitchTpl', fixed: 'right'}
+                , {fixed: 'right', title: '操作', align: 'center', toolbar: '#tradeOperation', width: 290}
+			]]
+			, url: tradeApiUrl.trade.tradeList
+			, page: true
+			, id: 'tradeTable'
+		});
+
+		laydate.render({elem: '#tradeCreateTimeLeftRangeSearch', type: 'date', trigger: 'click'});
+		laydate.render({elem: '#tradeCreateTimeRightRangeSearch', type: 'date', trigger: 'click'});
+
+		$('#queryTradeBtn').click(function () {
+			LayTableUtil.reload(tradeTable, 'tradeSearchForm');
+		});
+
+		// SearchForm绑定回车事件
+		$("#tradeSearchForm").bind('keypress', function (event) {
+			if (event.keyCode == "13") {
+				$('#queryTradeBtn').click();
+			}
+		});
+
+		//监听工具条
+		laytable.on('tool(trade)', function (obj) {
+			var data = obj.data;
+			if (obj.event === 'detail') {
+				var res = AjaxUtil.ajaxGetWithLoading(tradeApiUrl.trade.get + data.tradeId);
+				if (res) {
+					data = res.data;
+				}
+				openRightWin('tradeModule');
+				layui.each(data, function (k, v) {
+					if (null === v) {
+						v = '---';
+					}
+					var selector = '[name="' + k + '"]';
+					var elt = tradeDetailForm.find(selector);
+					elt.text("" + v);
+					if (typeof v == "object") {
+						elt.text("" + v.amount + '元');
+					} else if (typeof v == 'boolean') {
+						if (v) {
+							elt.text("支持");
+						} else {
+							elt.text("不支持");
+						}
+					}
+				});
+				tradeDetailForm.find('[name="loanTerm"]').text(data.loanTerm + data.loanTermUnit.message);
+				tradeDetailForm.find('[name="investDays"]').text(data.loanTerm + data.investDays + "天");
+				tradeDetailForm.find('[name="investBeginTime"]').text(DateUtils.longToDateString(data.investBeginTime));
+				tradeDetailForm.find('[name="investDeadline"]').text(DateUtils.longToDateString(data.investDeadline));
+				tradeDetailForm.find('[name="tradeCreateTime"]').text(DateUtils.longToDateString(data.tradeCreateTime));
+				tradeDetailForm.find('[name="tradeFullTime"]').text(DateUtils.longToDateString(data.tradeFullTime));
+				tradeDetailForm.find('[name="tradeGrantTime"]').text(DateUtils.longToDateString(data.tradeGrantTime));
+				tradeDetailForm.find('[name="tradeFinishTime"]').text(DateUtils.longToDateString(data.tradeFinishTime));
+				tradeDetailForm.find('[name="tradeAbortTime"]').text(DateUtils.longToDateString(data.tradeAbortTime));
+				tradeDetailForm.find('[name="tradeStatus"]').text(data.tradeStatus.message);
+				tradeDetailForm.find('[name="tradeInterestRate"]').text(NumberUtil.transfPercentage(data.tradeInterestRate));
+				tradeDetailForm.find('[name="repayMethod"]').text(data.repayMethod.message);
+
+				tradeDetailForm.find('[name="repayTimes"]').html("");
+				layui.each(data.repayDates, function (k, v) {
+					var elm = "<li>第" + (k + 1) + "次还款日期：" + DateUtils.longToDateStringYMD(v) + "</li>"
+					tradeDetailForm.find('[name="repayTimes"]').append(elm);
+				});
+			} else if (obj.event === 'investDetail') {
+				sessionStorage.setItem("currTradeId", data.tradeId);
+				var jumpUrl = "finance/invest/trade/view";
+				var flag = $('#rightBoxTitle li[lay-id="' + jumpUrl + '"]').text();
+				if (StringUtil.isEmpty(flag)) {
+					tabAction.tabAdd("标的投资明细", jumpUrl);
+				} else {
+					tabAction.tabChange(jumpUrl);
+					$("#rightBoxContent .layui-show").load(jumpUrl);
+				}
+			} else if (obj.event === 'rebuildContract') {
+				AjaxUtil.ajaxPost(tradeApiUrl.trade.rebuildContract, data.tradeId, function (result) {
+					console.log(1)
+				});
+			}
+		});
+
+		$('.mask').click(function () {
+			closeRightWin('tradeModule');
+		});
+
+        layform.on('checkbox(topSwitch)', function (obj) {
+            var data;
+            if (obj.elem.checked) {
+                data = {"tradeId": this.value, "topSwitch": "true"};
+            } else {
+                data = {"tradeId": this.value, "topSwitch": "false"};
+            }
+            var result = AjaxUtil.ajaxPost(tradeApiUrl.trade.topSwitch, JSON.stringify(data));
+            if (result) {
+                layer.tips(obj.elem.checked ? "置顶成功" : "取消置顶", obj.othis);
+                LayTableUtil.reload(tradeTable, "tradeSearchForm");
+            } else {
+                obj.elem.checked = obj.elem.checked ? false : true;
+                layform.render('checkbox');
+            }
+        });
+	});
+</script>

@@ -1,0 +1,183 @@
+<div class="animated fadeInRight">
+	<div class="search-box">
+		<form class="layui-form" id="userDepositSearchForm" lay-filter="userDepositForm" onsubmit="return false">
+			<div class="basic-search">
+				<div class="common-input-inline"><label class="search-form-label">用户登录账号：</label>
+					<div class="layui-input-inline">
+						<input type="text" class="layui-input" name="safeLoginAccount"
+							   placeholder="输入后按回车查询">
+					</div>
+				</div>
+                <div class="common-input-inline"><label class="search-form-label">富友帐号：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" name="depositAccount"
+                               placeholder="输入后按回车查询">
+                    </div>
+                </div>
+			</div>
+			<div class="layui-btn-group">
+				<button type="button" class="layui-btn layui-btn-primary" id="userDepositSearch"><i
+						class="layui-icon">&#xe615;</i> 查询
+				</button>
+				<button class="layui-btn layui-btn-primary" type="reset">重置</button>
+			</div>
+		</form>
+	</div>
+    <form class="layui-form ml200 hide" lay-filter="addLoanApplyForm" id="userDepositForm">
+        <div class="layui-form-item">
+            <div class="layui-block">
+                <label class="layui-form-label w200">富友用户账号：</label>
+                <div class="layui-input-inline">
+                    <span class="layui-form-mid" name="login_id"></span>
+                </div>
+                <label class="layui-form-label w200">用户姓名（企业名称）：</label>
+                <div class="layui-input-inline">
+                    <span class="layui-form-mid w300" name="cust_nm"></span>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-block">
+                <label class="layui-form-label w200">银行卡类别：</label>
+                <div class="layui-input-inline">
+                    <span class="layui-form-mid" name="parent_bank_id"></span>
+                </div>
+                <label class="layui-form-label w200">银行卡号：</label>
+                <div class="layui-input-inline">
+                    <span class="layui-form-mid" name="card_no"></span>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-block">
+                <label class="layui-form-label w200">授权状态：</label>
+                <div class="layui-input-inline">
+                    <span class="layui-form-mid" name="auth_st"></span>
+                </div>
+                <label class="layui-form-label w200">自动出借授权期限：</label>
+                <div class="layui-input-inline">
+                    <span class="layui-form-mid" name="auto_lend_term"></span>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-block">
+                <label class="layui-form-label w200">自动出借授权额度：</label>
+                <div class="layui-input-inline">
+                    <span class="layui-form-mid" name="auto_lend_amt"></span>
+                </div>
+                <label class="layui-form-label w200">自动出借已使用额度：</label>
+                <div class="layui-input-inline">
+                    <span class="layui-form-mid" name="used_lend_amt"></span>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-block">
+                <label class="layui-form-label w200">自动出借剩余额度：</label>
+                <div class="layui-input-inline">
+                    <span class="layui-form-mid" name="b_auto_lend_amt"></span>
+                </div>
+                <label class="layui-form-label w200">自动还款授权期限：</label>
+                <div class="layui-input-inline">
+                    <span class="layui-form-mid" name="auto_repay_term"></span>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-block">
+                <label class="layui-form-label w200">自动还款授权额度：</label>
+                <div class="layui-input-inline">
+                    <span class="layui-form-mid" name="auto_repay_amt"></span>
+                </div>
+                <label class="layui-form-label w200">自动代偿授权期限：</label>
+                <div class="layui-input-inline">
+                    <span class="layui-form-mid" name="auto_compen_term"></span>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-block">
+                <label class="layui-form-label w200">自动代偿授权额度：</label>
+                <div class="layui-input-inline">
+                    <span class="layui-form-mid" name="auto_compen_amt"></span>
+                </div>
+                <label class="layui-form-label w200">自动缴费授权期限：</label>
+                <div class="layui-input-inline">
+                    <span class="layui-form-mid" name="auto_fee_term"></span>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-block">
+                <label class="layui-form-label w200">自动缴费授权额度：</label>
+                <div class="layui-input-inline">
+                    <span class="layui-form-mid" name="auto_fee_amt"></span>
+                </div>
+                <label class="layui-form-label w200">借款人剩余可借额度：</label>
+                <div class="layui-input-inline">
+                    <span class="layui-form-mid" name="b_credit_limit_amt"></span>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-block">
+                <label class="layui-form-label w200">用户状态：</label>
+                <div class="layui-input-inline">
+                    <span class="layui-form-mid" name="user_st"></span>
+                </div>
+                <label class="layui-form-label w200">用户类型：</label>
+                <div class="layui-input-inline">
+                    <span class="layui-form-mid" name="user_tp"></span>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-block">
+                <label class="layui-form-label w200">用户属性：</label>
+                <div class="layui-input-inline">
+                    <span class="layui-form-mid" name="usr_attr"></span>
+                </div>
+                <label class="layui-form-label w200">企业开户审核状态：</label>
+                <div class="layui-input-inline">
+                    <span class="layui-form-mid" name="audit_st"></span>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript">
+	$(document).ready(function () {
+		$('#userDepositSearch').on('click', function () {
+			var result = AjaxUtil.ajaxPost(userManagerApi.getUserDepositInfo,JSON.stringify(DataDeal.formToJsonObj($("#userDepositSearchForm"))));
+			if(result){
+			    $('#userDepositForm').show();
+                loadUserDepositInfo('#userDepositForm', result.data);
+            } else {
+                $('#userDepositForm').hide();
+            }
+		});
+
+		// SearchForm绑定回车事件
+		$("#userDepositSearchForm").bind('keypress', function (event) {
+			if (event.keyCode == "13") {
+				$('#userDepositSearch').click();
+			}
+		});
+	});
+	function loadUserDepositInfo(elem, data) {
+        layui.each(data, function (k, v) {
+            var selector = '[name="' + k + '"]';
+            var elt = $(elem).find(selector);
+            elt.text("" + v);
+        });
+        $(elem).find("[name='user_st']").text(data.user_st.message);
+        $(elem).find("[name='auto_lend_amt']").text(MoneyUtil.formatMoney(data.auto_lend_amt/100));
+        $(elem).find("[name='used_lend_amt']").text(MoneyUtil.formatMoney(data.used_lend_amt/100));
+        $(elem).find("[name='b_auto_lend_amt']").text(MoneyUtil.formatMoney(data.b_auto_lend_amt/100));
+        $(elem).find("[name='auto_repay_amt']").text(MoneyUtil.formatMoney(data.auto_repay_amt/100));
+        $(elem).find("[name='auto_compen_amt']").text(MoneyUtil.formatMoney(data.auto_compen_amt/100));
+        $(elem).find("[name='auto_fee_amt']").text(MoneyUtil.formatMoney(data.auto_fee_amt/100));
+        $(elem).find("[name='b_credit_limit_amt']").text(MoneyUtil.formatMoney(data.b_credit_limit_amt/100));
+    }
+</script>

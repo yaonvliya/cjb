@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="format-detection" content="telephone=no,email=no,address=no"/>
+    <title>开户</title>
+    <link rel="shortcut icon" href="../../img/common/favicon.ico"/>
+    <link href="../../css/base.css" rel="stylesheet">
+    <link href="../../plugins/layui/css/layui.css" rel="stylesheet">
+
+    <style type="text/css">
+        .realname-form{
+            width: 400px;
+            margin: 100px auto 0;
+            padding: 10px;
+        }
+
+    </style>
+</head>
+<body class="bg-white">
+
+    <form class="layui-form realname-form" id="realnameForm">
+        <div class="layui-form-item">
+            <label class="layui-form-label">手机号:</label>
+            <div class="layui-input-inline">
+                <input type="text" name="userAccount" value="" lay-verify="required" placeholder="请输入法人身份证" class="layui-input" autocomplete="off">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">公司名称:</label>
+            <div class="layui-input-inline">
+                <input type="text" name="realname" value="上海开颜金融服务有限公司" lay-verify="required" placeholder="请输入公司名称" class="layui-input" autocomplete="off">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">法人姓名:</label>
+            <div class="layui-input-inline">
+                <input type="text" name="legalName" value="车聚宝" lay-verify="required" placeholder="请输入法人姓名" class="layui-input" autocomplete="off">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">法人身份证:</label>
+            <div class="layui-input-inline">
+                <input type="text" name="legalCert" value="342622198808080808" lay-verify="required" placeholder="请输入法人身份证" class="layui-input" autocomplete="off">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">企业营业执照:</label>
+            <div class="layui-input-inline">
+                <input type="text" name="businessLicense" value="342622198808080808" lay-verify="required" placeholder="请输入法人身份证" class="layui-input" autocomplete="off">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">账户类型:</label>
+            <div class="layui-input-inline">
+                <select name="userRole" lay-verify="required">
+                    <option value="marketing">营销账户</option>
+                    <option value="fees">手续费账户</option>
+                    <option value="7">平台资金账户</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label"></label>
+            <div class="layui-input-inline">
+                <button class="layui-btn" type="button" lay-submit lay-filter="realnameFormSubmit">下一步</button>
+            </div>
+        </div>
+    </form>
+
+
+<script src="../../js/jquery.min.js"></script>
+<script src="../../plugins/layui/layui.js?v=2.1.5"></script>
+<script src="../../js/jquery.cookie.js"></script>
+<script src="../../js/host-config.properties.js"></script>
+<script src="../../js/local-api-config.js"></script>
+<script src="../../js/base-utils.js"></script>
+<script>
+    var layform;
+    $(document).ready(function () {
+        layui.use(['form'], function () {
+            layform = layui.form;
+            layform.on('submit(realnameFormSubmit)', function (data) {
+                var result = AjaxUtil.ajaxPost(fuiouAccountApi.realname, JSON.stringify(data.field));
+                if (result) {
+                    var token = result.data;
+                    window.open('../../fuiou/jump2Fuiou?token=' + token, '_self');
+                }
+                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+            });
+        });
+
+	});
+</script>
+</body>
+</html>
+

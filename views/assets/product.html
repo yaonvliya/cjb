@@ -1,0 +1,220 @@
+<div class="animated fadeInRight">
+	<div class="search-box">
+		<form class="layui-form" id="productSearchForm" lay-filter="productSearchForm">
+			<div class="basic-search">
+				<div class="common-input-inline"><label class="search-form-label">商户名称：</label class="layui-form-label">
+					<div class="layui-input-inline">
+						<input type="hidden" name="merchantId">
+						<span class="layui-form-mid" name="merchantName"></span>
+					</div>
+				</div>
+			</div>
+            <div class="layui-btn-group">
+                <button type="button" class="layui-btn layui-btn-primary" id="productSearch">
+                    <i class="layui-icon">&#xe615;</i> 查询
+                </button>
+                <button type="button" class="layui-btn" id="productAdd"><i class="layui-icon">&#xe654;</i> 新增</button>
+            </div>
+		</form>
+	</div>
+
+	<table id="product" class="layui-hide" lay-filter="product"></table>
+
+	<fieldset class="layui-elem-field layui-field-title">
+		<legend>子产品列表</legend>
+	</fieldset>
+
+	<table id="productItem" class="layui-hide" lay-filter="productItem"></table>
+</div>
+
+<form class="layui-form p10 w400 hide" id="productForm" lay-filter="productForm">
+	<input type="hidden" name="productId">
+    <div class="layui-form-item">
+        <label class="layui-form-label">产品类型</label>
+        <div class="layui-input-inline w260">
+            <input type="hidden" id="productTypeName" name="productTypeName">
+            <select id="productTypeId" name="productTypeId" lay-filter="productTypeId" lay-verify="required" lay-search="" placeholder="产品类型"
+                    autocomplete="off" class="layui-input">
+            </select>
+        </div>
+    </div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">产品名称</label>
+		<div class="layui-input-inline w260">
+			<input type="text" name="productName" required lay-verify="required" placeholder="产品名称"
+				   autocomplete="off" class="layui-input">
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">产品描述</label>
+		<div class="layui-input-inline w260">
+			<input type="text" name="productDesc" required lay-verify="required" placeholder="产品描述"
+				   autocomplete="off" class="layui-input">
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">状态</label>
+		<div class="layui-input-inline fl">
+			<input type="hidden" name="productStatus" value="online">
+			<input id="productStatusChk" lay-skin="switch" lay-text="正常|停用" lay-filter="productStatus" type="checkbox" checked="">
+		</div>
+	</div>
+	<div class="bottom-buttons">
+		<button class="layui-btn" type="button" lay-submit lay-filter="productSubmit">立即提交</button>
+		<button class="layui-btn layui-btn-primary" type="button" id="productReset">重置</button>
+	</div>
+</form>
+<div id="productItemDetailWin" class="right-win animated fadeInRight w700">
+    <div class="right-win-top">
+        <a href="javascript:closeRightModelForProduct();" title="关闭"><i
+                class="layui-icon close-right-win">&#x1006;</i></a>
+        <span class="right-win-title" id="productItemDetailWinTitle"></span>
+        <span class="right-win-btn">
+			<button class="layui-btn" type="button" id="productItemSubmit">
+				<i class="layui-icon">&#xe605;</i>提交
+			</button>
+		</span>
+    </div>
+    <div class="right-win-content-box">
+        <div class="slimScrollDiv win-content fl">
+            <form class="layui-form" id="productItemForm" lay-filter="productItemForm">
+                <input type="hidden" name="productItemId">
+                <div class="layui-form-item">
+                    <label class="layui-form-label w110">子产品名称</label>
+                    <div class="layui-input-inline" style="width: 220px">
+                        <input name="productItemName" lay-verify="required" placeholder="子产品名称"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label w110">借款期限</label>
+                    <div class="layui-inline w20">
+                        <input type="radio" name="loanTermUnit" lay-filter="loanTermUnit" value="M" checked="">
+                    </div>
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <select id="loanTermMonthValue">
+                                <option value=""></option>
+                                <option value="1">1个月</option>
+                                <option value="2">2个月</option>
+                                <option value="3">3个月</option>
+                                <option value="4">4个月</option>
+                                <option value="5">5个月</option>
+                                <option value="6">6个月</option>
+                                <option value="7">7个月</option>
+                                <option value="8">8个月</option>
+                                <option value="9">9个月</option>
+                                <option value="10">10个月</option>
+                                <option value="11">11个月</option>
+                                <option value="12">12个月</option>
+                                <option value="13">13个月</option>
+                                <option value="14">14个月</option>
+                                <option value="15">15个月</option>
+                                <option value="16">16个月</option>
+                                <option value="17">17个月</option>
+                                <option value="18">18个月</option>
+                                <option value="19">19个月</option>
+                                <option value="20">20个月</option>
+                                <option value="21">21个月</option>
+                                <option value="22">22个月</option>
+                                <option value="23">23个月</option>
+                                <option value="24">24个月</option>
+                            </select>
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">月</div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label w110"></label>
+                    <div class="layui-inline w20">
+                        <input type="radio" name="loanTermUnit" lay-filter="loanTermUnit" value="D">
+                    </div>
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <input type="number" id="loanTermDayValue" placeholder=""
+                                   autocomplete="off" class="layui-input">
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">天</div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label w110">借款年化利率</label>
+                    <div class="layui-input-inline" style="width: 220px">
+                        <input type="number" name="loanInterestRate" lay-verify="required" placeholder="借款年化利率"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">%</div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label w110">还款方式</label>
+                    <div class="layui-input-inline" style="width: 220px">
+                        <select name="repayMethod" lay-verify="required">
+                            <option value=""></option>
+                            <option value="maturity_all_principal_interest">到期归还本金及利息</option>
+                            <option value="month_interest_maturity_principal">按月还息，到期还本</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label w110">服务费率</label>
+                    <div class="layui-input-inline" style="width: 220px">
+                        <input type="number" name="serviceFeeRate" lay-verify="required" placeholder="服务费率"
+                               autocomplete="off" class="layui-input">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">%</div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label w110">服务费收取方式</label>
+                    <div class="layui-input-inline" style="width: 220px">
+                        <select name="serviceFeeType" lay-verify="required">
+                            <option value=""></option>
+                            <option value="pre">前置收取</option>
+                            <option value="post">后置收取</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item fl">
+                    <label class="layui-form-label w110">状态</label>
+                    <div class="layui-input-inline" style="width: 220px">
+                        <input type="hidden" name="productItemStatus" value="online">
+                        <input id="productItemStatusChk" lay-skin="switch" lay-text="正常|停用" lay-filter="productItemStatus" type="checkbox" checked="">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label w110">描述</label>
+                    <div class="layui-input-inline" style="width: 220px;">
+                        <textarea name="productItemDesc" placeholder="描述"
+                                  autocomplete="off" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+
+                <button class="hide" type="button" lay-submit lay-filter="productItemSubmit" id="productItemSubmitBtn"></button>
+##                <div class="bottom-buttons">
+##                    <button class="layui-btn" type="button" lay-submit lay-filter="productItemSubmit">立即提交</button>
+##                    <button class="layui-btn layui-btn-primary" type="button" id="productItemReset">重置</button>
+##                </div>
+            </form>
+        </div>
+        <div class="right-win-drag" data-winId="productItemDetailWin"></div>
+    </div>
+</div>
+
+
+<script type="text/html" id="productBar">
+	<a class="layui-btn layui-btn-xs" lay-event="edit"><i class="layui-icon">&#xe642;</i>编辑</a>
+	<a class="layui-btn layui-btn-xs" lay-event="addItem"><i class="layui-icon">&#xe654;</i>添加子产品</a>
+</script>
+
+<script type="text/html" id="productItemBar">
+	<a class="layui-btn layui-btn-xs" lay-event="editItem"><i class="layui-icon">&#xe642;</i>编辑</a>
+</script>
+
+<script type="text/html" id="productStatusTpl">
+    <input type="checkbox" name="productStatus" value="{{d.productId}}" lay-skin="switch" lay-text="正常|停用" lay-filter="currProductStatus" {{d.productStatus.code == 'online' ? 'checked' : '' }}>
+</script>
+
+<script type="text/html" id="productItemStatusTpl">
+    <input type="checkbox" name="productItemStatus" value="{{d.productItemId}}" lay-skin="switch" lay-text="正常|停用" lay-filter="currProductItemStatus" {{ d.productItemStatus.code == 'online' ? 'checked' : '' }}>
+</script>
+
+<script src="js/assets/product.js"></script>

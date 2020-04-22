@@ -1,0 +1,353 @@
+<style>
+    #enterprise-detailForm .layui-input {
+        border: none;
+    }
+</style>
+
+<div class="animated fadeInRight">
+    <div class="search-box">
+        <form class="layui-form" id="enterprise-search-form" lay-filter="enterprise-search-form">
+            <div class="basic-search">
+                <div class="common-input-inline">
+                    <label class="search-form-label">手机号码：</label>
+                    <div class="layui-input-inline">
+                        <input class="layui-input" name="safeLoginAccount"/>
+                    </div>
+                </div>
+                <div class="common-input-inline">
+                    <label class="search-form-label">企业名称：</label>
+                    <div class="layui-input-inline">
+                        <input class="layui-input" name="realname"/>
+                    </div>
+                </div>
+                <div class="common-input-inline">
+                    <label class="search-form-label">是否已实名：</label>
+                    <div class="layui-input-inline">
+                        <select name="realnameStatus">
+                            <option value="">全部</option>
+                            <option value=true>已实名</option>
+                            <option value=false>未实名</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="common-input-inline">
+                    <label class="search-form-label">用户状态：</label>
+                    <div class="layui-input-inline">
+                        <select name="frozenFlag">
+                            <option value="">全部</option>
+                            <option value="false">正常</option>
+                            <option value="true">冻结</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="more-search">
+                <div class="common-input-inline">
+                    <label class="search-form-label">用户角色：</label>
+                    <div class="layui-input-inline">
+                        <select name="userRole">
+                            <option value="">全部</option>
+                            <option value="investor">投资人</option>
+                            <option value="loaner">借款人</option>
+                            <option value="compensatory">代偿户</option>
+                        #*<option value="3">营销户</option>
+                        <option value="4">手续费户</option>
+                        <option value="7">平台资金账户</option>*#
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-btn-group">
+                <button class="layui-btn layui-btn-primary" type="button" id="enterprise-search"><i class="layui-icon">&#xe615;</i>
+                    查询
+                </button>
+                <button class="layui-btn layui-btn-primary" type="reset">重置</button>
+                <button class="layui-btn layui-btn-primary" data-show="off" type="button"
+                        onclick="showMoreSearch(this,'enterprise-search-form')"><i class="layui-icon">&#xe61a;</i> 更多
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <table id="enterpriseUser" class="layui-hide" lay-filter="enterpriseUser"></table>
+</div>
+
+
+<form id="freezeEnterpriseUserForm" class="layui-form p10 hide">
+    <input type="hidden" name="userId">
+    <div class="layui-form-item">
+        <label class="layui-form-label">冻结原因：</label>
+        <div class="layui-input-inline">
+            <textarea class="layui-textarea" name="frozenReason" lay-verify="required"></textarea>
+        </div>
+    </div>
+    <div class="bottom-buttons">
+        <button type="button" class="layui-btn" lay-submit lay-filter="freezeEnterpriseUserSubmit">确认提交</button>
+    </div>
+</form>
+
+<div id="enterprise-detailWin" class="right-win animated fadeInRight w600">
+    <div class="right-win-top">
+        <a href="javascript:closeRightWin('enterprise-detailWin');" title="关闭"><i
+            class="layui-icon close-right-win">&#x1006;</i></a>
+        <span class="right-win-title">企业用户信息</span>
+    </div>
+    <div class="right-win-content-box">
+        <div class="slimScrollDiv win-content">
+            <form class="layui-form" style="white-space:nowrap;" id="enterprise-detailForm">
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>基本信息</legend>
+                    <div class="layui-field-box">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label w160">手机号：</label>
+                            <div class="layui-input-inline">
+                                <input class="layui-input" name="safeLoginAccount"/>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label w160">邮箱：</label>
+                            <div class="layui-input-inline">
+                                <input class="layui-input" name="safeEmail"/>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label w160">用户角色：</label>
+                            <div class="layui-input-inline">
+                                <input class="layui-input" name="userRole"/>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label w160">注册来源：</label>
+                            <div class="layui-input-inline">
+                                <input class="layui-input" name="registerFrom"/>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label w160">注册渠道：</label>
+                            <div class="layui-input-inline">
+                                <input class="layui-input" name="registerTerminal"/>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label w160">注册时间：</label>
+                            <div class="layui-input-inline">
+                                <input class="layui-input" name="registerTime"/>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label w160">实名时间：</label>
+                            <div class="layui-input-inline">
+                                <input class="layui-input" name="realnameTime"/>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label w160">实名状态：</label>
+                            <div class="layui-input-inline">
+                                <input class="layui-input" name="realnameStatus"/>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label w160">邀请人ID：</label>
+                            <div class="layui-input-inline">
+                                <input class="layui-input" name="inviteUserId"/>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label w160">状态：</label>
+                            <div class="layui-input-inline">
+                                <input class="layui-input" name="frozenFlag"/>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>实名信息</legend>
+                    <div class="layui-field-box">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label w160">实名账户：</label>
+                            <div class="layui-input-inline">
+                                <input class="layui-input" name="depositAccount"/>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label w160">公司名称：</label>
+                            <div class="layui-input-inline">
+                                <input class="layui-input" name="realName"/>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label w160">法人姓名：</label>
+                            <div class="layui-input-inline">
+                                <input class="layui-input" name="legalName"/>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label w160">法人身份证号：</label>
+                            <div class="layui-input-inline">
+                                <input class="layui-input" name="safeLegalCert"/>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label w160">开户银行：</label>
+                            <div class="layui-input-inline">
+                                <input class="layui-input" name="bankCode"/>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label w160">银行卡号：</label>
+                            <div class="layui-input-inline">
+                                <input class="layui-input" name="bankCardNo"/>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+        <div class="right-win-drag" data-winId="enterprise-detailWin"></div>
+    </div>
+
+</div>
+
+<script type="text/html" id="userStatusTpl">
+    {{# if(!d.frozenFlag){ }}
+    正常
+    {{# } else { }}
+    冻结
+    {{# } }}
+</script>
+
+<script type="text/html" id="enterpriseUserBar">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail"><i class="layui-icon">&#xe615;</i>详情</a>
+    {{# if(!d.frozenFlag){ }}
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="frozen">冻结</a>
+    {{# } else { }}
+    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="enable">解冻</a>
+    {{# } }}
+</script>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        layform.render(null, "enterprise-search-form");
+
+        var index;
+
+        var tableIns = LayTableUtil.render({
+            elem: '#enterpriseUser'
+            , cols: [[ //表头
+                {field: 'safeLoginAccount', title: '注册手机号', sort: true, width: 130, fixed: 'left'}
+                , {
+                    field: 'registerFrom', title: '注册来源', width: 110, templet: function (d) {
+                        return d.registerFrom.message
+                    }
+                }
+                , {field: 'registerTerminal', title: '注册终端'}
+                , {
+                    field: 'registerTime', title: '注册时间', width: 180, templet: function (d) {
+                        return DateUtils.longToDateString(d.registerTime)
+                    }
+                }
+                , {
+                    field: 'userRole', title: '用户角色', width: 120, templet: function (d) {
+                        return d.userRole.message
+                    }
+                }
+                , {
+                    field: 'openDepositStatus', title: '实名状态', width: 100, templet: function (d) {
+                        return d.openDepositStatus != null ? d.openDepositStatus.message : "已销户"
+                    }
+                }
+                , {field: 'realName', title: '企业名称', width: 200}
+                , {
+                    field: 'businessLicense', title: '企业营业执照号', width: 160, templet: function (d) {
+                        return MaskCodeUtil.dealBusinessNo(d.businessLicense)
+                    }
+                }
+                , {field: 'userStatus', title: '状态', templet: '#userStatusTpl'}
+                , {field: 'depositAccount', title: '实名账户', width: 180}
+                , {title: '操作', fixed: 'right', align: 'center', toolbar: '#enterpriseUserBar', width: 140}
+
+            ]]
+            , url: userManagerApi.searchEnterpriseUser
+            , page: true
+            , id: 'enterpriseUserTable'
+
+        });
+
+        //监听工具条
+        laytable.on('tool(enterpriseUser)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'detail') {
+                var jsonParam = JSON.stringify({"userId": data.userId});
+                var result = AjaxUtil.ajaxPost(userManagerApi.getUserDetail, jsonParam);
+                if (result) {
+                    var resData = result.data;
+                    loadFormData("#enterprise-detailForm", resData);
+                    $("#enterprise-detailForm").find("[name='registerTime']").val(DateUtils.longToDateString(resData.registerTime));
+                    $("#enterprise-detailForm").find("[name='realnameTime']").val(DateUtils.longToDateString(resData.openDepositTime));
+                    $("#enterprise-detailForm").find("[name='registerFrom']").val(resData.registerFrom.message);
+                    $("#enterprise-detailForm").find("[name='userRole']").val(resData.userRole.message);
+                    $("#enterprise-detailForm").find("[name='realnameStatus']").val(resData.openDepositStatus.message);
+                    if (resData.frozenFlag) {
+                        $("#enterprise-detailForm").find("[name='frozenFlag']").val("冻结");
+                    } else {
+                        $("#enterprise-detailForm").find("[name='frozenFlag']").val("正常");
+                    }
+                    openRightWin('enterprise-detailWin');
+                }
+
+            } else if (obj.event === 'frozen') {
+                index = LayerUtil.open("冻结用户", $("#freezeEnterpriseUserForm"), '400px');
+                $("#freezeEnterpriseUserForm")[0].reset();
+                $("#freezeEnterpriseUserForm").find("[name='userId']").val(data.userId);
+            } else if (obj.event === 'enable') {
+                layer.confirm('确认解冻此账户', function (index) {
+                    var jsonParam = JSON.stringify({"userId": data.userId});
+                    var result = AjaxUtil.ajaxPost(userManagerApi.unfreezeUser, jsonParam);
+                    if (result) {
+                        layer.close(index);
+                        layer.msg("解冻成功");
+                        LayTableUtil.refresh(tableIns, "enterprise-search-form");
+                    }
+                });
+            }
+        });
+
+        layform.on('submit(freezeEnterpriseUserSubmit)', function (data) {
+            var result = AjaxUtil.ajaxPost(userManagerApi.freezeUser, JSON.stringify(data.field));
+            if (result) {
+                LayerUtil.close(index);
+                layer.msg("冻结成功");
+                LayTableUtil.refresh(tableIns, "enterprise-search-form");
+            }
+        });
+
+        $('#enterprise-search').on('click', function () {
+            //执行重载
+            LayTableUtil.reload(tableIns, "enterprise-search-form");
+        });
+
+        // SearchForm绑定回车事件
+        $("#enterprise-search-form").bind('keypress', function (event) {
+            if (event.keyCode == "13") {
+                $('#enterprise-search').click();
+            }
+        });
+
+        // 点击遮罩层关闭窗口
+        $('.mask').click(function () {
+            closeRightWin('enterprise-detailWin');
+        });
+    });
+
+    function loadFormData(elem, data) {
+        layui.each(data, function (k, v) {
+            var selector = '[name="' + k + '"]';
+            var elt = $(elem).find(selector);
+            elt.val(v);
+        });
+    }
+
+
+</script>

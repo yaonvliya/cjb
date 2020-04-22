@@ -1,0 +1,85 @@
+<div class="animated fadeInRight">
+	#*<div class="no-search-box">
+		<div class="layui-btn-group">
+			<button class="layui-btn" type="button" id="addTransferRule"><i class="layui-icon">&#xe654;</i> 新增</button>
+		</div>
+	</div>*#
+	<table id="transferRuleDataList" lay-filter="transferRuleDataList"></table>
+</div>
+
+<form class="layui-form layui-form-pane p8 w680 hide" id="transferRuleFormBox" lay-filter="transferRuleFormBox">
+	<input type="hidden" name="ruleId">
+    <div class="layui-form-item layui-form-text mb5-i">
+        <label class="layui-form-label">1、债权持有期设置(债权持有N天后可以转让)</label>
+        <div class="layui-input-block p8">
+			<div class="layui-inline">
+				<input type="number" name="leastHoldDays" lay-verify="number" class="layui-input" value="0" autocomplete="off">
+			</div>
+			<div class="layui-inline">天&nbsp;<span class="c-main-red">(输入'0'表示最少持有投资期限的1/3天数后才可以转让)</span></div>
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-form-text mb5-i">
+        <label class="layui-form-label">2、债权持有期设置(债权回款N天前可以转让)</label>
+        <div class="layui-input-block p8">
+            <div class="layui-input-inline">
+                <div class="layui-inline">
+                    <input type="number" name="mostAdvanceDays" lay-verify="number" class="layui-input" autocomplete="off">
+                </div>
+                <div class="layui-inline">天</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-form-text mb5-i">
+        <label class="layui-form-label">3、债权转让有效期设置(债权转让需要在N天内完成转让，未完成则转让失败)</label>
+        <div class="layui-input-block p8">
+            <div class="layui-input-inline">
+                <div class="layui-inline">
+                    <input type="number" name="effectiveDays" lay-verify="number" class="layui-input" autocomplete="off">
+                </div>
+                <div class="layui-inline">天</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item layui-form-text mb5-i">
+        <label class="layui-form-label">4、债权转让服务费设置(转让成功后，平台将在转让价格的基础上收取转让服务费)</label>
+        <div class="layui-input-block p8">
+            <div class="layui-input-inline">
+                <div class="layui-inline">
+                    <input type="text" name="serviceChargeAmt" lay-verify="number" class="layui-input" autocomplete="off">
+                </div>
+                <div class="layui-inline">元/笔</div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item layui-form-text mb5-i">
+        <label class="layui-form-label">5、活动状态(只允许有一个在线的转让规则)</label>
+        <div class="layui-input-block p8">
+			<input type="hidden" name="currentStatus" value="online">
+            <div class="layui-input-inline">
+                <input type="radio" name="currentStatusTemp" value="online" lay-filter="transferRuleStatusFilter" title="正常" checked>
+                <input type="radio" name="currentStatusTemp" value="offline" lay-filter="transferRuleStatusFilter" title="停用">
+            </div>
+        </div>
+    </div>
+    <div class="bottom-buttons">
+        <button type="button" class="layui-btn" lay-submit lay-filter="transferRuleSubmit">立即提交</button>
+        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+    </div>
+</form>
+
+<script type="text/html" id="transferRuleStatus">
+    <input type="checkbox" lay-skin="switch" lay-text="正常|停用" lay-filter="cashCouponCurrentStatus" disabled {{ d.currentStatus.code== 'online' ? 'checked' : '' }}>
+</script>
+<script type="text/html" id="transferRuleBar">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail"><i class="layui-icon">&#xe615;</i>详情</a>
+    <a class="layui-btn layui-btn-xs" lay-event="edit"><i class="layui-icon">&#xe642;</i>编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon">&#xe640;</i>删除</a>
+</script>
+<script type="text/html" id="addTransferRuleToolBar">
+	<button class="layui-btn layui-btn-sm" type="button" lay-event="addTransferRule"><i class="layui-icon">&#xe654;</i> 新增</button>
+</script>
+
+<script src="js/transfer/transfer_rule.js"></script>

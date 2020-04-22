@@ -1,0 +1,75 @@
+<div class="animated fadeInRight">
+	<div class="search-box">
+		<form class="layui-form" id="userInvestStockAmtReportSearchForm" lay-filter="userInvestStockAmtReportSearchForm"
+			  onsubmit="return false">
+			<div class="basic-search">
+				<div class="common-input-inline">
+					<label class="search-form-label">投资人用户名：</label>
+					<div class="layui-input-inline">
+						<input class="layui-input" name="loginAccount" autocomplete="off"/>
+					</div>
+				</div>
+				<div class="common-input-inline">
+					<label class="search-form-label">投资时间：</label>
+					<div class="layui-input-inline">
+						<input class="layui-input dp-il" name="leftTime" autocomplete="off"/>
+						<span>—</span>
+						<input class="layui-input dp-il" name="rightTime" autocomplete="off"/>
+					</div>
+                    <span class="ml100 c-red">注：投资时间只能用来筛选累计投资</span>
+				</div>
+			</div>
+			<div class="layui-btn-group">
+				<button type="button" class="layui-btn layui-btn-primary" id="searchReport">
+					<i class="layui-icon">&#xe615;</i>查询
+				</button>
+				<button class="layui-btn layui-btn-primary" type="reset">重置</button>
+				<button type="button" class="layui-btn" id="downloadReportDetail">
+					<i class="layui-icon">&#xe601;</i>下载数据
+				</button>
+			</div>
+		</form>
+	</div>
+	<table id="userInvestStockAmtReportData" class="layui-hide" lay-filter="userInvestStockAmtReportData"></table>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function () {
+		laydate.render({elem: '#userInvestStockAmtReportSearchForm [name="leftTime"]', type: 'date', trigger: 'click'});
+		laydate.render({elem: '#userInvestStockAmtReportSearchForm [name="rightTime"]', type: 'date', trigger: 'click'});
+
+		var userInvestStockAmtReportDataTable = LayTableUtil.render({
+			elem: '#userInvestStockAmtReportData'
+			, cols: [[ //表头
+				{field: 'invest_user_account', title: '投资人用户名'}
+				, {field: 'invest_user_name', title: '投资人姓名'}
+				, {field: 'deposit_account', title: '资金账户名'}
+				, {field: 'first_invest_time', title: '首投时间'}
+				, {field: 'stock_amt', title: '在投资金(元)', align: 'right'}
+				, {field: 'total_invest_amt', title: '累计投资(元)', align: 'right'}
+			]]
+			, url: reportApi.dataTable.userInvestStockAmt.search
+			, page: true
+			, toolbar: true
+			, defaultToolbar: ['filter', 'exports']
+			, title: '用户投资存量资金报表_' + DateUtils.longToDateStringYMD(new Date())
+		});
+
+		$('#userInvestStockAmtReportSearchForm [id="downloadReportDetail"]').click(function () {
+			location.href = reportApi.dataTable.userInvestStockAmt.download + "?" + $('#userInvestStockAmtReportSearchForm').serialize();
+		});
+
+		$('#userInvestStockAmtReportSearchForm [id="searchReport"]').click(function () {
+			LayTableUtil.reload(userInvestStockAmtReportDataTable, 'userInvestStockAmtReportSearchForm');
+		});
+		// SearchForm绑定回车事件
+		$("#userInvestStockAmtReportSearchForm").bind('keypress', function (event) {
+			if (event.keyCode == "13") {
+				$('#userInvestStockAmtReportSearchForm [id="searchReport"]').click();
+			}
+		});
+
+	});
+
+
+</script>

@@ -1,0 +1,118 @@
+<style>
+	#personal-detailForm .layui-input {
+		border: none;
+	}
+</style>
+
+<div class="animated fadeInRight">
+	<div class="search-box">
+		<form class="layui-form" id="new-register-user-search-form" lay-filter="new-register-user-search-form">
+			<div class="basic-search">
+				<div class="common-input-inline">
+					<label class="search-form-label">用户类型：</label>
+					<div class="layui-input-inline">
+						<select name="userType">
+							<option value="">全部</option>
+							<option value="GR">个人用户</option>
+							<option value="JG">机构用户</option>
+						</select>
+					</div>
+				</div>
+                <div class="common-input-inline">
+                    <label class="search-form-label">用户角色：</label>
+                    <div class="layui-input-inline">
+                        <select name="userRole">
+                            <option value="">全部</option>
+                            <option value="investor">投资人</option>
+                            <option value="loaner">借款人</option>
+                            <option value="compensatory">代偿户</option>
+                            #*<option value="3">营销户</option>
+                            <option value="4">手续费户</option>
+                            <option value="7">平台资金账户</option>*#
+                        </select>
+                    </div>
+                </div>
+                <div class="common-input-inline">
+                    <label class="search-form-label">是否已实名：</label>
+                    <div class="layui-input-inline">
+                        <select name="realnameStatus">
+                            <option value="">全部</option>
+                            <option value=true>已实名</option>
+                            <option value=false>未实名</option>
+                        </select>
+                    </div>
+                </div>
+			</div>
+			<div class="more-search">
+                <div class="common-input-inline">
+                    <label class="search-form-label">用户注册日期：</label>
+                    <div class="layui-input-inline">
+                        <input class="layui-input dp-il" name="registerTimeLeftRange" id="registerTimeLeftRangeSearch" autocomplete="off"/>
+						<span>—</span>
+                        <input class="layui-input dp-il" name="registerTimeRightRange" id="registerTimeRightRangeSearch" autocomplete="off"/>
+                    </div>
+                </div>
+			</div>
+			<div class="layui-btn-group">
+				<button type="button" class="layui-btn layui-btn-primary" id="new-register-user-search"><i class="layui-icon">&#xe615;</i> 查询</button>
+				<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+				<button type="button" class="layui-btn layui-btn-primary" data-show="off"
+						onclick="showMoreSearch(this,'new-register-user-search-form')"><i class="layui-icon">&#xe61a;</i> 更多
+				</button>
+			</div>
+		</form>
+	</div>
+
+	<table id="newRegisterUser" class="layui-hide" lay-filter="newRegisterUser"></table>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function () {
+
+		layform.render(null, "new-register-user-search-form");
+        laydate.render({elem: '#registerTimeLeftRangeSearch', type: 'date', trigger: 'click', value: new Date()});
+        laydate.render({elem: '#registerTimeRightRangeSearch', type: 'date', trigger: 'click'});
+
+		var personalTableIns = LayTableUtil.render({
+			elem: '#newRegisterUser'
+			, cols: [[ //表头
+				{field: 'loginAccount', title: '注册手机号', sort: true, width: 130, fixed: 'left'}
+				, {field: 'registerFrom', title: '注册来源', width: 120}
+				, {field: 'registerTerminal', title: '注册终端', width: 140}
+				, {field: 'registerTime', title: '注册时间', width: 180}
+                , {field: 'userType', title: '用户类型', width: 100}
+                , {field: 'realName', title: '用户姓名', width: 100}
+                , {field: 'userRole', title: '用户角色', width: 120}
+                , {field: 'investAmt', title: '总投资额（元）', width: 180}
+                , {field: 'firstInvestAmt', title: '首次投资金额（元）', width: 160}
+                , {field: 'firstInvestTime', title: '首次投资时间', width: 180}
+                , {fixed: 'right', field: 'openDepositStatus', title: '实名状态', width: 100}
+                , {fixed: 'right', field: 'openDepositTime', title: '实名时间', width: 180}
+			]]
+			, url: userManagerApi.searchNewRegisterUser
+            , page: true
+            , toolbar: true
+            , where: {registerTime : DateUtils.dateToStr("yyyy-MM-dd", new Date())}
+            , defaultToolbar: ['filter', 'exports']
+			, id: 'newRegisterUserTable'
+		})
+
+		$('#new-register-user-search').on('click', function () {
+			var param = DataDeal.formToJsonObj($('#new-register-user-search-form'));
+			if(param.registerTimeLeftRange && param.registerTimeRightRange){
+				if(param.registerTimeLeftRange > param.registerTimeRightRange){
+					layer.msg("用户注册日期区间选择有误，请重新选择");
+					return false;
+				}
+			}
+			LayTableUtil.refresh(personalTableIns, "new-register-user-search-form");
+		});
+
+        // SearchForm绑定回车事件
+        $("#new-register-user-search-form").bind('keypress', function (event) {
+            if (event.keyCode == "13") {
+                $('#new-register-user-search').click();
+            }
+        });
+	});
+</script>

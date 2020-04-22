@@ -1,0 +1,135 @@
+<div class="animated fadeInRight">
+	<div class="search-box">
+		<form class="layui-form" id="publishDemandExamineSearchForm" lay-filter="publishDemandExamineSearchForm">
+			<div class="basic-search">
+				<div class="common-input-inline">
+					<label class="search-form-label">标的名称：</label>
+					<div class="layui-input-inline">
+						<input class="layui-input" name="demandName">
+					</div>
+				</div>
+				<div class="common-input-inline">
+					<label class="search-form-label">商户名称：</label>
+					<div class="layui-input-inline">
+						<input class="layui-input" name="loanMerchantName">
+					</div>
+				</div>
+				<div class="common-input-inline">
+					<label class="search-form-label">借款用户名称：</label>
+					<div class="layui-input-inline">
+						<input class="layui-input" name="loanUserName">
+					</div>
+				</div>
+				<div class="common-input-inline">
+					<label class="search-form-label">发布状态：</label>
+					<div class="layui-input-inline">
+						<select name="demandPublishStatus">
+							<option value="">全部</option>
+							<option value="committed" selected>已提交</option>
+							<option value="published">已发布</option>
+							<option value="reviewed">已审核</option>
+							<option value="refused">已驳回</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="layui-btn-group">
+				<button type="button" class="layui-btn layui-btn-primary" id="reloadPublishDemandExamine"><i
+						class="layui-icon">&#xe615;</i> 查询
+				</button>
+				<button class="layui-btn layui-btn-primary" type="reset">重置</button>
+			</div>
+		</form>
+	</div>
+
+	<table id="publishDemandExamine" class="layui-hide" lay-filter="publishDemandExamine"></table>
+</div>
+
+<div class="right-win animated fadeInRight w1000" id="publishDemandExamineDiv">
+	<div class="right-win-top">
+		<a href="javascript:closePublishDemandExamineModelFrame();" title="关闭"><i
+				class="layui-icon close-right-win">&#x1006;</i></a>
+		<span class="right-win-title">融资审核</span>
+		<span class="right-win-btn">
+            <button type="button" class="layui-btn" id="publishDemandExamineImmediatelyBtn">
+				<i class="layui-icon">&#xe66c;</i>通过
+			</button>
+            <button type="button" class="layui-btn layui-btn-danger" id="publishDemandExamineRefusedBtn">
+				<i class="layui-icon">&#x1007;</i>驳回
+			</button>
+		</span>
+	</div>
+	<div class="right-win-content-box" id="publishDemandExamineDemandDetail">
+	</div>
+
+	<div class="open-model review-immediately">
+		<p class="fs-18  pt10 pl15 c-grey">审核通过</p>
+		<a href="javascript:closePublishDemandExamine();" title="关闭"><i class="layui-icon suc-close">&#x1006;</i></a>
+		<form class="layui-form p30 w490" lay-filter="publishDemandReviewImmediatelyForm"
+			  id="publishDemandReviewImmediatelyForm" onsubmit="return false">
+			<input id="pdeImmediatelyDemandId" type="hidden" name="demandId">
+            <input type="hidden" name="investBeginTime">
+            <input type="hidden" name="investTerminalTime">
+			<input type="text" hidden name="reviewResult" value=true>
+			<input class="pdeRefusedLoanApplyId" type="hidden" name="loanApplyId">
+			<div class="layui-form-item">
+				<label class="layui-form-label w120">标的发布方式：</label>
+				<div class="layui-input-block">
+					<input type="text" hidden name="demandPublishMethod" value="immediately"
+						   id="pdeDemandPublishMethodFlag">
+					<input type="radio" name="demandPublishMethodTemp" lay-filter="pdeDemandPublishMethodFilter"
+						   value="immediately" title="立即发布" checked>
+					<input type="radio" name="demandPublishMethodTemp" lay-filter="pdeDemandPublishMethodFilter"
+						   value="planning" title="计划发布">
+				</div>
+			</div>
+			<div class="layui-form-item hide" id="pdePlanningTime">
+				<label class="layui-form-label w120">计划发布时间：</label>
+				<div class="layui-input-inline">
+					<input class="layui-input w300" id="pdeDemandPublishPlanningTime" name="demandPublishPlanningTime"
+						   placeholder="请选择发布时间">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label w120">审核原因：</label>
+				<div class="layui-input-inline">
+					<textarea name="reviewRemark" class="layui-textarea w300"></textarea>
+				</div>
+			</div>
+			<div class="bottom-buttons">
+				<button type="reset" class="layui-btn" onclick="closePublishDemandExamine();">取消</button>
+				<button class="layui-btn" lay-submit="" lay-filter="publishDemandReviewImmediatelyFormSubmit">确定
+				</button>
+			</div>
+		</form>
+	</div>
+
+	<div class="open-model review-refused">
+		<p class="fs-18  pt10 pl15 c-grey">审核驳回</p>
+		<a href="javascript:closePublishDemandExamine();" title="关闭"><i class="layui-icon suc-close">&#x1006;</i></a>
+		<form class="layui-form p30 w490" lay-filter="publishDemandReviewRefusedForm"
+			  id="publishDemandReviewRefusedForm" onsubmit="return false">
+			<input id="pdeRefusedDemandId" type="hidden" name="demandId">
+			<input type="hidden" name="reviewResult" value=false>
+			<input type="hidden" name="demandPublishMethod" value="planning">
+			<input class="pdeRefusedLoanApplyId" type="hidden" name="loanApplyId">
+			<div class="layui-form-item">
+				<label class="layui-form-label w120">驳回原因：</label>
+				<div class="layui-input-inline">
+					<textarea name="reviewRemark" class="layui-textarea w300"></textarea>
+				</div>
+			</div>
+			<div class="bottom-buttons">
+				<button type="reset" class="layui-btn" onclick="closePublishDemandExamine();">取消</button>
+				<button class="layui-btn" lay-submit="" lay-filter="publishDemandReviewRefusedFormSubmit">确定</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script type="text/html" id="publishDemandExamineOperation">
+	{{# if(d.publishStatus.code == "committed"){ }}
+		<a class="layui-btn layui-btn-xs" lay-event="review"><i class="layui-icon">&#xe60e;</i>审核</a>
+	{{# } }}
+</script>
+<script src="js/finance/publish_demand_examine.js"></script>

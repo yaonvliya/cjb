@@ -1,0 +1,74 @@
+<div class="animated fadeInRight">
+	<div class="search-box">
+		<form class="layui-form" id="auth-role-search-form">
+			<div class="basic-search">
+				<div class="common-input-inline"><label class="search-form-label">角色ID：</label>
+					<div class="layui-input-inline">
+						<input type="text" class="layui-input" name="roleId">
+					</div>
+				</div>
+				<div class="common-input-inline"><label class="search-form-label">角色名称：</label>
+					<div class="layui-input-inline">
+						<input type="text" class="layui-input" name="roleName">
+					</div>
+				</div>
+			</div>
+			<div class="layui-btn-group">
+				<button type="button" class="layui-btn layui-btn-primary" id="auth-role-search"><i class="layui-icon">&#xe615;</i> 查询</button>
+				<button class="layui-btn layui-btn-primary" type="reset">重置</button>
+				<button type="button" class="layui-btn" id="auth-role-add"><i class="layui-icon">&#xe654;</i> 新增</button>
+			</div>
+		</form>
+	</div>
+
+	<table id="auth-role" class="layui-hide" lay-filter="auth-role"></table>
+</div>
+
+<form class="layui-form p10 w400 hide" id="auth-role-form" lay-filter="auth-role-form">
+	<div class="layui-form-item">
+		<label class="layui-form-label">角色ID</label>
+		<div class="layui-input-block">
+			<input type="text" id="auth-role_roleId" name="roleId" required lay-verify="required" placeholder="请输入角色ID"
+				   autocomplete="off" class="layui-input">
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">角色名称</label>
+		<div class="layui-input-block">
+			<input type="text" name="roleName" required lay-verify="required" placeholder="请输入角色名称" autocomplete="off"
+				   class="layui-input">
+		</div>
+	</div>
+	<div class="bottom-buttons">
+		<button class="layui-btn" type="button" lay-submit lay-filter="authRoleSubmit">立即提交</button>
+		<button type="button" id="auth-role-from-reset" class="layui-btn layui-btn-primary">重置</button>
+	</div>
+</form>
+
+<div id="role-resource-win" class="right-win animated fadeInRight w500">
+	<div class="right-win-top">
+		<a href="javascript:closeRightWin('role-resource-win');" title="关闭"><i
+				class="layui-icon close-right-win">&#x1006;</i></a>
+		<span class="right-win-title">角色授权</span>
+		<span class="right-win-btn">
+			<button class="layui-btn" type="button" onclick="roleAuthorize()"><i class="layui-icon">&#x1005;</i>保存</button>
+		</span>
+	</div>
+	<div class="right-win-content-box">
+		<div class="slimScrollDiv win-content">
+			<ul id="roleResourceTree" class="ztree" style="margin-top:0;"></ul>
+		</div>
+		<div class="right-win-drag" data-winId="role-resource-win">
+
+		</div>
+	</div>
+
+</div>
+
+<script type="text/html" id="authRoleBar">
+	<a class="layui-btn layui-btn-xs" lay-event="edit"><i class="layui-icon">&#xe642;</i>编辑</a>
+	<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="authorize"><i class="layui-icon">&#xe631;</i>授权</a>
+	<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon">&#xe640;</i>删除</a>
+</script>
+
+<script src="js/auth/role.js"></script>

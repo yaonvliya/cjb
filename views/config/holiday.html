@@ -1,0 +1,93 @@
+<div class="animated fadeInRight">
+    <div class="search-box">
+        <form class="layui-form inline" lay-filter="holidaySearchForm" id="holidaySearchForm">
+            <div class="basic-search">
+                <div class="common-input-inline">
+                    <label class="search-form-label">法定节假日年份</label>
+                    <div class="layui-input-inline">
+                        <input class="layui-input holidayYear" name="holidayYear" id="holidayYear" placeholder="法定节假日年份">
+                    </div>
+                </div>
+                <div class="common-input-inline">
+                    <label class="search-form-label">法定节假日名称</label>
+                    <div class="layui-input-inline">
+                        <select name="holidayName" id="holidayName">
+                            <option value=''>全部</option>
+                            <option value='元旦'>元旦</option>
+                            <option value='春节'>春节</option>
+                            <option value='清明节'>清明节</option>
+                            <option value='劳动节'>劳动节</option>
+                            <option value='端午节'>端午节</option>
+                            <option value='中秋节'>中秋节</option>
+                            <option value='国庆节'>国庆节</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-btn-group">
+                <button type="button" class="layui-btn layui-btn-primary" id="reloadHoliday"><i class="layui-icon">&#xe615;</i> 查询</button>
+                <button class="layui-btn layui-btn-primary" type="reset">重置</button>
+                <button type="button" class="layui-btn" id="addHolidayBtn"><i class="layui-icon">&#xe654;</i> 新增</button>
+            </div>
+        </form>
+    </div>
+
+    <table id="holiday" class="layui-hide" lay-filter="holiday"></table>
+</div>
+
+<form class="layui-form p10 hide" lay-filter="holidayForm"
+      id="holidayForm">
+    <div class="layui-form-item">
+        <div class="layui-block">
+            <label class="layui-form-label">法定节假日年份：</label>
+            <div class="layui-input-block">
+                <input class="layui-input holidayYear" lay-verify="required" name="holidayYear">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-block">
+            <label class="layui-form-label">法定节假日名称：</label>
+            <div class="layui-input-block">
+                <select name="holidayName" lay-verify="required">
+                    <option value=''>请选择</option>
+                    <option value='元旦'>元旦</option>
+                    <option value='春节'>春节</option>
+                    <option value='清明节'>清明节</option>
+                    <option value='劳动节'>劳动节</option>
+                    <option value='端午节'>端午节</option>
+                    <option value='中秋节'>中秋节</option>
+                    <option value='国庆节'>国庆节</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">放假日期：</label>
+            <div class="layui-input-inline w280">
+                <div class="site-demo-laydate" id="holidayDiv">
+                    <div class="layui-inline" id="holidayDates" />
+                </div>
+            </div>
+            <label class="layui-form-label">补班日期：</label>
+            <div class="layui-input-inline">
+                <div class="site-demo-laydate" id="workDiv">
+                    <div class="layui-inline" id="workDates" />
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="bottom-buttons">
+        <button type="reset" class="layui-btn" id="holidayReset">重置</button>
+        <button class="layui-btn" lay-submit="" lay-filter="holidayForm" id="holidaySubmit">确认提交</button>
+    </div>
+</form>
+
+<script type="text/html" id="holidayOperation">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail"><i class="layui-icon">&#xe615;</i>详情</a>
+    <a class="layui-btn layui-btn-xs" lay-event="edit"><i class="layui-icon">&#xe642;</i>编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon">&#xe640;</i>删除</a>
+</script>
+<script src="js/bizconfig/holiday.js"></script>

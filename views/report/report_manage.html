@@ -1,0 +1,170 @@
+<div class="animated fadeInRight">
+	<div class="search-box">
+		<form class="layui-form" id="reportManageSearchForm" lay-filter="reportManageSearchForm"
+			  onsubmit="return false">
+			<div class="basic-search">
+				<div class="common-input-inline"><label class="search-form-label">报表ID：</label>
+					<div class="layui-input-inline">
+						<input type="text" class="layui-input" name="reportId">
+					</div>
+				</div>
+				<div class="common-input-inline"><label class="search-form-label">报表名称：</label>
+					<div class="layui-input-inline">
+						<input type="text" class="layui-input" name="reportName">
+					</div>
+				</div>
+			</div>
+			<div class="layui-btn-group">
+				<button type="button" class="layui-btn layui-btn-primary" id="reportSearch"><i class="layui-icon">&#xe615;</i>
+					查询
+				</button>
+				<button class="layui-btn layui-btn-primary" type="reset">重置</button>
+				<button type="button" class="layui-btn" id="addReportBtn"><i class="layui-icon">&#xe654;</i> 新增</button>
+			</div>
+		</form>
+	</div>
+	<table id="reportManageDataTable" class="layui-hide" lay-filter="reportManageDataTable"></table>
+</div>
+
+
+<form class="layui-form p10 hide w450" id="reportManageForm" lay-filter="reportManageForm" onsubmit="return false">
+	<div class="layui-form-item">
+		<div class="layui-block">
+			<label class="layui-form-label">报表ID：</label>
+			<div class="layui-input-block">
+				<input class="layui-input" lay-verify="required" name="reportId">
+			</div>
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<div class="layui-block">
+			<label class="layui-form-label">报表名称：</label>
+			<div class="layui-input-block">
+				<input class="layui-input" lay-verify="required" name="reportName" autocomplete="off">
+			</div>
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<div class="layui-block">
+			<label class="layui-form-label">报表类型：</label>
+			<div class="layui-input-inline">
+				<select name="reportType" lay-verify="required">
+					<option value="">请选择报表类型</option>
+                    <option value="user">用户相关</option>
+                    <option value="invest">投资相关</option>
+                    <option value="loan">借款相关</option>
+                    <option value="repay">还款相关</option>
+                    <option value="other">其他</option>
+				</select>
+			</div>
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<div class="layui-block">
+			<label class="layui-form-label">报表编码：</label>
+			<div class="layui-input-block">
+				<input class="layui-input" lay-verify="required" name="reportCode" autocomplete="off">
+			</div>
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<div class="layui-block">
+			<label class="layui-form-label">备注：</label>
+			<div class="layui-input-block">
+				<textarea placeholder="请输入备注内容" class="layui-textarea" name="remark" autocomplete="off"></textarea>
+			</div>
+		</div>
+	</div>
+	<div class="bottom-buttons">
+		<button type="reset" class="layui-btn">重置</button>
+		<button class="layui-btn" lay-submit="" lay-filter="reportManageForm" id="reportSubmit">确认提交</button>
+	</div>
+</form>
+
+<script type="text/html" id="reportManageOperation">
+	<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit"><i class="layui-icon">&#xe642;</i>修改</a>
+</script>
+
+<script type="text/html" id="reportManageStatusTpl">
+	<input type="checkbox" name="status" value="{{d.reportId}}" lay-skin="switch" lay-text="正常|停用" lay-filter="reportManageStatus" {{ d.status ? 'checked' : '' }}>
+</script>
+
+<script>
+    var reportLoadUrl;
+    $(document).ready(function () {
+
+		layform.render("select", "reportManageForm");
+
+    	var index = null;
+        var reportTable = LayTableUtil.render({
+            elem: '#reportManageDataTable'
+            , cols: [[ //表头
+                {field: 'reportId', title: '报表ID', width: 80}
+                , {field: 'reportName', title: '报表名称', width: 180}
+                , {field: 'reportType', title: '报表类型', width: 120}
+                , {field: 'reportCode', title: '报表编码', width: 180}
+                , {field: 'status', title: '报表状态', width: 100,templet: '#reportManageStatusTpl'}
+                , {field: 'remark', title: '备注'}
+                , {fixed: 'right', title: '操作',width: 80, toolbar: '#reportManageOperation'}
+            ]]
+            , url: reportApi.list
+            , page: true
+            , id: 'reportManageDataTable'
+        });
+
+        //监听工具条
+        laytable.on('tool(reportManageDataTable)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'edit') {
+
+				layer.msg("修改功能建设中。。。");
+				/*var result = AjaxUtil.ajaxGetWithLoading(reportApi.get + data.reportId);
+				if (result) {
+					index = LayerUtil.open("修改报表", reportManageForm, '500px', null, 'reportManageForm', null, true);
+				}*/
+            }
+        });
+
+		//监听状态开关
+		layform.on('switch(reportManageStatus)', function (obj) {
+			var data;
+			if (obj.elem.checked) {
+				data = {"reportId": this.value, "status": true};
+			} else {
+				data = {"reportId": this.value, "status": false};
+			}
+			var result = AjaxUtil.ajaxPost(reportApi.updateStatus, JSON.stringify(data));
+			if (result) {
+				layer.tips(obj.elem.checked ? "启用成功" : "停用成功", obj.othis);
+			} else {
+				obj.elem.checked = obj.elem.checked ? false : true;
+				layform.render('checkbox');
+			}
+		});
+
+        $('#reportManageSearchForm [id="reportSearch"]').click(function () {
+            LayTableUtil.reload(reportTable, 'reportManageSearchForm');
+        });
+        // SearchForm绑定回车事件
+        $("#reportManageSearchForm").bind('keypress', function (event) {
+            if (event.keyCode == "13") {
+				$('#reportManageSearchForm [id="reportSearch"]').click();
+            }
+        });
+
+        $('#addReportBtn').click(function () {
+            index = LayerUtil.open("新建报表", $("#reportManageForm"), '500px', null, 'reportManageForm', null, true);
+        });
+
+        //监听提交
+        layform.on('submit(reportManageForm)', function (data) {
+            var result = AjaxUtil.ajaxPostWithLoading(reportApi.add, JSON.stringify(data.field));
+            if (result) {
+                layer.close(index);
+                layer.msg("操作成功");
+                LayTableUtil.reload(reportTable, 'reportManageSearchForm');
+            }
+            return false;
+        });
+    });
+</script>
